@@ -1,4 +1,4 @@
-package com.example.onlineshop.view.adapter;
+package com.example.onlineshop.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -28,7 +28,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     }
 
     public ProductAdapter(Context context, List<ProductItem> items){
-        mContext = context;
+        mContext = context.getApplicationContext();
         mItems = items;
     }
 

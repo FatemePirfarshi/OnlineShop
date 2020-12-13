@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.activity.ProductListActivity">
+        tools:context=".view.activity.CategoriesActivity">
 
         <TextView
             android:id="@+id/list_title"

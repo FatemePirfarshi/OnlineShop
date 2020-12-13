@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".view.activity.ProductListActivity"
+        tools:context=".view.activity.CategoriesActivity"
         android:background="#E8E8E8">
 
         <FrameLayout

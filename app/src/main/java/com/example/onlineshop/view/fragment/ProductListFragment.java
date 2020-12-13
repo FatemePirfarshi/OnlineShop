@@ -1,35 +1,39 @@
 package com.example.onlineshop.view.fragment;
 
 import android.os.Bundle;
-
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.example.onlineshop.R;
+import com.example.onlineshop.adapter.ProductAdapter;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.FragmentProductListBinding;
-import com.example.onlineshop.view.adapter.ProductAdapter;
+import com.example.onlineshop.viewmodel.ProductListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductListFragment extends Fragment {
 
+    public static final String ARGS_STATE_OF_LIST = "stateOfList";
     private FragmentProductListBinding mBinding;
+    private int state;
+    private ProductListViewModel mProductListViewModel;
 
     public ProductListFragment() {
         // Required empty public constructor
     }
 
-    public static ProductListFragment newInstance() {
+    public static ProductListFragment newInstance(int state) {
         ProductListFragment fragment = new ProductListFragment();
         Bundle args = new Bundle();
+        args.putInt(ARGS_STATE_OF_LIST, state);
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,6 +42,8 @@ public class ProductListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        state = getArguments().getInt(ARGS_STATE_OF_LIST);
+        mProductListViewModel= new ViewModelProvider(this).get(ProductListViewModel.class);
     }
 
     @Override
@@ -46,7 +52,7 @@ public class ProductListFragment extends Fragment {
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.item_product_list,
+                R.layout.fragment_product_list,
                 container,
                 false);
 
