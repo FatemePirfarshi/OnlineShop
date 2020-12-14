@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -44,6 +45,18 @@ public class ProductListFragment extends Fragment {
 
         state = getArguments().getInt(ARGS_STATE_OF_LIST);
         mProductListViewModel= new ViewModelProvider(this).get(ProductListViewModel.class);
+
+        mProductListViewModel.fetchItems();
+        setLiveDataObservers();
+    }
+
+    private void setLiveDataObservers() {
+        mProductListViewModel.getListLiveData().observe(this, new Observer<List<ProductItem>>() {
+            @Override
+            public void onChanged(List<ProductItem> productItems) {
+                setupAdapter(productItems);
+            }
+        });
     }
 
     @Override
@@ -57,7 +70,7 @@ public class ProductListFragment extends Fragment {
                 false);
 
         initViews();
-        setupAdapter();
+
         return mBinding.getRoot();
     }
 
@@ -68,13 +81,8 @@ public class ProductListFragment extends Fragment {
                 false));
     }
 
-    private void setupAdapter(){
-        //todo
-        List<ProductItem> items = new ArrayList<>();
-        items.add(new ProductItem());
-        items.add(new ProductItem());
-        items.add(new ProductItem());
-        ProductAdapter adapter = new ProductAdapter(getActivity(), items);
+    private void setupAdapter(List<ProductItem> items){
+        ProductAdapter adapter = new ProductAdapter(mProductListViewModel);
         mBinding.recyclerViewProducts.setAdapter(adapter);
     }
 }

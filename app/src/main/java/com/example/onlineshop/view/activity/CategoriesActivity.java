@@ -45,8 +45,6 @@ public class CategoriesActivity extends AppCompatActivity {
                 if (aBoolean) {
                     if (!mBinding.drawerLayoutCategories.isDrawerOpen(GravityCompat.START))
                         mBinding.drawerLayoutCategories.openDrawer(GravityCompat.START);
-                    else
-                        mBinding.drawerLayoutCategories.openDrawer(GravityCompat.END);
                 }
             }
         });

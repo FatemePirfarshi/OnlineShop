@@ -1,12 +1,10 @@
 package com.example.onlineshop.viewmodel;
 
 import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -34,30 +32,37 @@ public class ProductListViewModel extends AndroidViewModel {
     public ProductListViewModel(@NonNull Application application) {
         super(application);
 
-        mRepository =  ProductRepository.getInstance(getApplication());
-        mListLiveData = mRepository.getCurrentList();
+        mRepository = ProductRepository.getInstance();
+        mListLiveData = mRepository.getListLiveData();
     }
 
 //    public LiveData<List<ProductItem>> getCurrentList(){
 //
 //    }
 
-    public void openDrawer(){
+    public void openDrawer() {
         mOpenedLiveData.setValue(true);
         Log.d(TAG, "open drawer from view model called");
     }
 
-    public void fetchItems(int state){
-        switch (state){
-            case 0:
-                mRepository.fetchLatestItems();
-                break;
-            case 1:
-                mRepository.fetchPopularItems();
-                break;
-            case 2:
-                mRepository.fetchMostVisited();
-                break;
-        }
+    public List<ProductItem> getCurrentItems() {
+        return mListLiveData.getValue();
     }
+
+    public void fetchItems() {
+        mRepository.fetchItemsAsync();
+    }
+    //    public void fetchItems(int state){
+//        switch (state){
+//            case 0:
+//                mRepository.fetchLatestItems();
+//                break;
+//            case 1:
+//                mRepository.fetchPopularItems();
+//                break;
+//            case 2:
+//                mRepository.fetchMostVisited();
+//                break;
+//        }
+//    }
 }

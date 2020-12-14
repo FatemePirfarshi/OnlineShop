@@ -1,6 +1,5 @@
 package com.example.onlineshop.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -11,32 +10,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.onlineshop.R;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.ItemProductListBinding;
-
-import java.util.List;
+import com.example.onlineshop.viewmodel.ProductListViewModel;
+import com.squareup.picasso.Picasso;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductHolder> {
 
-    private List<ProductItem> mItems;
-    private Context mContext;
+    public static final String TAG = "productAdapter";
+    private ProductListViewModel mViewModel;
 
-    public List<ProductItem> getItems() {
-        return mItems;
-    }
-
-    public void setItems(List<ProductItem> items) {
-        mItems = items;
-    }
-
-    public ProductAdapter(Context context, List<ProductItem> items){
-        mContext = context.getApplicationContext();
-        mItems = items;
+    public ProductAdapter(ProductListViewModel viewModel) {
+        mViewModel = viewModel;
     }
 
     @NonNull
     @Override
     public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ProductHolder(DataBindingUtil.inflate(
-                LayoutInflater.from(mContext),
+                LayoutInflater.from(mViewModel.getApplication()),
                 R.layout.item_product_list,
                 parent,
                 false));
@@ -44,13 +34,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
 
     @Override
     public void onBindViewHolder(@NonNull ProductHolder holder, int position) {
-        ProductItem item = mItems.get(position);
+        ProductItem item = mViewModel.getCurrentItems().get(position);
         holder.bindProductItem(item);
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return mViewModel.getCurrentItems().size();
     }
 
     class ProductHolder extends RecyclerView.ViewHolder {
@@ -60,11 +50,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         public ProductHolder(ItemProductListBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
+
         }
 
-        public void bindProductItem(ProductItem item){
+        public void bindProductItem(ProductItem item) {
             mBinding.titleProduct.setText(item.getProductName());
-            mBinding.priceProduct.setText(item.getProductPrice());
+            mBinding.priceProduct.setText("تومان " + item.getProductPrice());
+
+            Picasso.get()
+                    .load(item.getImages().get(0))
+                    .into(mBinding.imageProduct);
         }
     }
 }
