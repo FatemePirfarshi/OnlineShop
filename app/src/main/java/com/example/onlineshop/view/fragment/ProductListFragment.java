@@ -17,24 +17,26 @@ import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.FragmentProductListBinding;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductListFragment extends Fragment {
 
     public static final String ARGS_STATE_OF_LIST = "stateOfList";
+    public static final String ARGS_NAME_OF_LIST = "nameOfList";
     private FragmentProductListBinding mBinding;
     private int state;
+    private String title;
     private ProductListViewModel mProductListViewModel;
 
     public ProductListFragment() {
         // Required empty public constructor
     }
 
-    public static ProductListFragment newInstance(int state) {
+    public static ProductListFragment newInstance(int state, String name) {
         ProductListFragment fragment = new ProductListFragment();
         Bundle args = new Bundle();
         args.putInt(ARGS_STATE_OF_LIST, state);
+        args.putString(ARGS_NAME_OF_LIST, name);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,7 +46,9 @@ public class ProductListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         state = getArguments().getInt(ARGS_STATE_OF_LIST);
-        mProductListViewModel= new ViewModelProvider(this).get(ProductListViewModel.class);
+        title = getArguments().getString(ARGS_NAME_OF_LIST);
+
+        mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
 
         mProductListViewModel.fetchItems();
         setLiveDataObservers();
@@ -74,14 +78,17 @@ public class ProductListFragment extends Fragment {
         return mBinding.getRoot();
     }
 
-    private void initViews(){
-        mBinding.recyclerViewProducts.setLayoutManager(new LinearLayoutManager(
+    private void initViews() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
                 getActivity(),
                 LinearLayoutManager.HORIZONTAL,
-                false));
+                true);
+        layoutManager.setReverseLayout(true);
+        mBinding.recyclerViewProducts.setLayoutManager(layoutManager);
+//        mBinding.listTitle.setText(title);
     }
 
-    private void setupAdapter(List<ProductItem> items){
+    private void setupAdapter(List<ProductItem> items) {
         ProductAdapter adapter = new ProductAdapter(mProductListViewModel);
         mBinding.recyclerViewProducts.setAdapter(adapter);
     }

@@ -12,15 +12,25 @@ public class NetworkParams {
     public static final Map<String, String> BASE_OPTIONS = new HashMap<String, String>() {{
         put("consumer_key", CONSUMER_KEY);
         put("consumer_secret", CONSUMER_SECRET);
-     //   put("_jsonp", "callback");
     }};
 
-//    public static final Map<String, String> PRODUCT_OPTIONS = new HashMap<String, String>(){{
-//        putAll(BASE_OPTIONS);
-//    }};
-    public static Map<String, String> getProductsOptions(){
+    public static Map<String, String> getProductsOptions(int page) {
         Map<String, String> productOptions = new HashMap<>();
         productOptions.putAll(BASE_OPTIONS);
+//        productOptions.put("page", String.valueOf(page));
         return productOptions;
+    }
+
+    public static Map<String, String> getPageOptions() {
+        Map<String, String> pageOptions = new HashMap<>();
+        pageOptions.put("rel", "next");
+        return pageOptions;
+    }
+
+    public static Map<String, String> getCategoryOptions(int page) {
+        Map<String, String> categoryOptions = new HashMap<>();
+        categoryOptions.putAll(BASE_OPTIONS);
+        categoryOptions.put("page", String.valueOf(page));
+        return categoryOptions;
     }
 }
