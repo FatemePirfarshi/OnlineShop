@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.onlineshop.R;
 import com.example.onlineshop.adapter.ProductAdapter;
@@ -27,6 +29,7 @@ public class ProductListFragment extends Fragment {
     private int state;
     private String title;
     private ProductListViewModel mProductListViewModel;
+    private int page = 1;
 
     public ProductListFragment() {
         // Required empty public constructor
@@ -49,13 +52,14 @@ public class ProductListFragment extends Fragment {
         title = getArguments().getString(ARGS_NAME_OF_LIST);
 
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
-
-        mProductListViewModel.fetchItems();
+//        mPage = mProductListViewModel.getCurrentPage().getValue();
+//        mProductListViewModel.getAllProductItems();
+//        mProductListViewModel.fetchProductItems();
         setLiveDataObservers();
     }
 
     private void setLiveDataObservers() {
-        mProductListViewModel.getListLiveData().observe(this, new Observer<List<ProductItem>>() {
+        mProductListViewModel.getProductListLiveData().observe(this, new Observer<List<ProductItem>>() {
             @Override
             public void onChanged(List<ProductItem> productItems) {
                 setupAdapter(productItems);
@@ -74,7 +78,7 @@ public class ProductListFragment extends Fragment {
                 false);
 
         initViews();
-
+        scrollListener();
         return mBinding.getRoot();
     }
 
@@ -84,12 +88,30 @@ public class ProductListFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL,
                 true);
         layoutManager.setReverseLayout(true);
-        mBinding.recyclerViewProducts.setLayoutManager(layoutManager);
+        mBinding.rvProducts.setLayoutManager(layoutManager);
 //        mBinding.listTitle.setText(title);
+    }
+
+    private void scrollListener() {
+        mBinding.rvProducts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (page <= mProductListViewModel.getPageCount().getValue() &&
+                        mProductListViewModel.getProductListLiveData().getValue().size() == 10)
+
+                    mProductListViewModel.fetchProductItems(++page);
+//                if (recyclerView.canScrollHorizontally(1)) {
+//                if (page <= mProductListViewModel.getPageCount().getValue())
+                /*mProductListViewModel.fetchProductItems(++mPage);*/
+//                }
+            }
+        });
     }
 
     private void setupAdapter(List<ProductItem> items) {
         ProductAdapter adapter = new ProductAdapter(mProductListViewModel);
-        mBinding.recyclerViewProducts.setAdapter(adapter);
+        mBinding.rvProducts.setAdapter(adapter);
     }
 }

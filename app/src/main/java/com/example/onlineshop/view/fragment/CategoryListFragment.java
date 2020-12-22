@@ -27,7 +27,6 @@ public class CategoryListFragment extends Fragment {
     private FragmentCategoryListBinding mBinding;
     private CategoryListViewModel mCategoryListViewModel;
     private int page = 1;
-    private int totalPage;
 
     public CategoryListFragment() {
         // Required empty public constructor
@@ -78,9 +77,17 @@ public class CategoryListFragment extends Fragment {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if (recyclerView.canScrollHorizontally(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (page <= mCategoryListViewModel.getPageCount().getValue())
+                        mCategoryListViewModel.fetchCategoryItemsAsync(++page);
+                }
+            }
 
-                if (page <= mCategoryListViewModel.getCountLiveData().getValue())
-                    mCategoryListViewModel.fetchCategoryItemsAsync(++page);
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                dx = recyclerView.FOCUS_LEFT;
+
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
     }

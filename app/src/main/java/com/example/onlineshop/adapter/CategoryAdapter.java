@@ -34,7 +34,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
         CategoryItem item = mViewModel.getCurrentCategories().get(position);
-        holder.bindCategoryItem(item);
+        holder.bindCategoryItem(position, item);
     }
 
     @Override
@@ -49,11 +49,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         public CategoryHolder(ItemCategoryListBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
+            mBinding.setCategoryListViewModel(mViewModel);
         }
 
-        public void bindCategoryItem(CategoryItem item) {
-            mBinding.titleCategory.setText(item.getName());
-            mBinding.countProduct.setText(item.getCount() + " کالا ");
+        public void bindCategoryItem(int position, CategoryItem item) {
+            mBinding.setPosition(position);
 
             Picasso.get()
                     .load(item.getImage())

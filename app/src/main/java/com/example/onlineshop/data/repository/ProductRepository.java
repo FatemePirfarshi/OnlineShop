@@ -22,23 +22,27 @@ public class ProductRepository {
 
     public static final String TAG = "ProductRepository";
     private static ProductRepository sInstance;
-    private WoocommerceService mWoocommerceService;
-    private int totalPage;
-    private int currentPage = 1;
-    private boolean readNumberOfPages = false;
-    private List<ProductItem> mProductItems = new ArrayList<>();
+    private WoocommerceService mWoocommerceServiceCategory;
+    private WoocommerceService mWoocommerceServiceProduct;
+
+    private List<ProductItem> mProductItems;
     private List<CategoryItem> mCategoryItems = new ArrayList<>();
 
-    private MutableLiveData<List<ProductItem>> mListLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<ProductItem>> mProductListLiveData = new MutableLiveData<>();
     private MutableLiveData<List<CategoryItem>> mCategoriesListLiveData = new MutableLiveData<>();
     private MutableLiveData<Integer> mPageCount = new MutableLiveData<>();
+    private MutableLiveData<Integer> mCategoryItemId = new MutableLiveData<>();
 
-    public MutableLiveData<List<ProductItem>> getListLiveData() {
-        return mListLiveData;
+    public MutableLiveData<List<ProductItem>> getProductListLiveData() {
+        return mProductListLiveData;
     }
 
     public MutableLiveData<List<CategoryItem>> getCategoriesListLiveData() {
         return mCategoriesListLiveData;
+    }
+
+    public MutableLiveData<Integer> getCategoryItemId() {
+        return mCategoryItemId;
     }
 
     public MutableLiveData<Integer> getPageCount() {
@@ -52,70 +56,23 @@ public class ProductRepository {
     }
 
     private ProductRepository() {
-        mWoocommerceService = RetrofitInstance.getInstance().create(WoocommerceService.class);
-    }
-
-//    public List<ProductItem> fetchPopularItems(){
-////        String pages = mWoocommerceService.getPages("");
-//
-//        Call<List<ProductItem>> call =
-//                mWoocommerceService.listProductItems(NetworkParams.PRODUCT_OPTIONS);
-//        try {
-//            Response<List<ProductItem>> response = call.execute();
-//            Log.e(TAG, response.headers().toString());
-//            return response.body();
-//        } catch (IOException e) {
-//           Log.e(TAG, e.getMessage(), e);
-//           return null;
-//        }
-//    }
-
-    public void fetchItemsAsync() {
-
-        Call<List<ProductItem>> call = mWoocommerceService.listProductItems(
-                NetworkParams.getPageOptions(),
-                NetworkParams.getProductsOptions(currentPage));
-
-        call.enqueue(new Callback<List<ProductItem>>() {
-            @Override
-            public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
-                List<ProductItem> items = response.body();
-                currentPage++;
-                Log.e(TAG, "current page is: " + currentPage);
-                if (!readNumberOfPages) {
-                    Headers headerList = response.headers();
-                    for (int i = 0; i < headerList.size(); i++) {
-                        totalPage = Integer.parseInt(headerList.get("X-WP-TotalPages"));
-                        Log.e(TAG, "total page is: " + totalPage);
-                    }
-                    readNumberOfPages = true;
-                }
-
-                mProductItems.addAll(items);
-                mListLiveData.setValue(mProductItems);
-            }
-
-            @Override
-            public void onFailure(Call<List<ProductItem>> call, Throwable t) {
-                Log.e(TAG, t.getMessage(), t);
-            }
-        });
+        mWoocommerceServiceCategory = RetrofitInstance.getCategoryInstance().create(WoocommerceService.class);
+        mWoocommerceServiceProduct = RetrofitInstance.getProductInstance().create(WoocommerceService.class);
     }
 
     public void fetchCategoryItemsAsync(int page) {
 
-        Call<List<CategoryItem>> call = mWoocommerceService.listCategoryItems(
+        Call<List<CategoryItem>> call = mWoocommerceServiceCategory.listCategoryItems(
                 NetworkParams.getCategoryOptions(page));
         call.enqueue(new Callback<List<CategoryItem>>() {
             @Override
             public void onResponse(Call<List<CategoryItem>> call, Response<List<CategoryItem>> response) {
                 Headers headerList = response.headers();
                 for (int i = 0; i < headerList.size(); i++) {
-                    totalPage = Integer.parseInt(headerList.get("X-WP-TotalPages"));
+                    int totalPage = Integer.parseInt(headerList.get("X-WP-TotalPages"));
                     Log.e(TAG, "total page is: " + totalPage);
+                    mPageCount.setValue(totalPage);
                 }
-                mPageCount.setValue(totalPage);
-
                 List<CategoryItem> items = response.body();
                 mCategoryItems.addAll(items);
                 mCategoriesListLiveData.setValue(mCategoryItems);
@@ -123,6 +80,33 @@ public class ProductRepository {
 
             @Override
             public void onFailure(Call<List<CategoryItem>> call, Throwable t) {
+                Log.e(TAG, t.getMessage(), t);
+            }
+        });
+    }
+
+    public void fetchProductItemsAsync(int page, int categoryId) {
+        if(page == 1)
+            mProductItems = new ArrayList<>();
+
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getProductsOptions(page, categoryId));
+        call.enqueue(new Callback<List<ProductItem>>() {
+            @Override
+            public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
+                Headers headerList = response.headers();
+                for (int i = 0; i < headerList.size(); i++) {
+                    int totalPage = Integer.parseInt(headerList.get("X-WP-TotalPages"));
+                    mPageCount.setValue(totalPage);
+                }
+                List<ProductItem> items = response.body();
+                mProductItems.addAll(items);
+                mProductListLiveData.setValue(mProductItems);
+                mCategoryItemId.setValue(categoryId);
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductItem>> call, Throwable t) {
                 Log.e(TAG, t.getMessage(), t);
             }
         });

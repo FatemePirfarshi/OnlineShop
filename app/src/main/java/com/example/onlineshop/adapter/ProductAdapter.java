@@ -35,7 +35,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
     @Override
     public void onBindViewHolder(@NonNull ProductHolder holder, int position) {
         ProductItem item = mViewModel.getCurrentItems().get(position);
-        holder.bindProductItem(item);
+        holder.bindProductItem(position, item);
     }
 
     @Override
@@ -50,12 +50,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductH
         public ProductHolder(ItemProductListBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
-
+            mBinding.setProductListViewModel(mViewModel);
         }
 
-        public void bindProductItem(ProductItem item) {
-            mBinding.titleProduct.setText(item.getProductName());
-            mBinding.priceProduct.setText("تومان " + item.getProductPrice());
+        public void bindProductItem(int position, ProductItem item) {
+            mBinding.setPosition(position);
 
             Picasso.get()
                     .load(item.getImages().get(0))

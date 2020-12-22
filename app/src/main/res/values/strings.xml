@@ -21,6 +21,10 @@
     <string name="item_category"> کالا </string>
     <string name="item_product"> تومان </string>
 
+    <string name="Popular_list">محبوب ترین محصولات:</string>
+    <string name="newest_list">جدیدترین محصولات:</string>
+    <string name="recent_list">محصولات اخیر:</string>
+
     <string name="hello_world">Hello Square World!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

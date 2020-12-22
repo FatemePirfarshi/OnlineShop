@@ -14,36 +14,11 @@ import retrofit2.http.QueryMap;
 
 public interface WoocommerceService {
 
-    //    @GET("products/")
-//    Call<String> getPages(@Header("X-WP-TotalPages") String pages);
-//    @Headers("Cache-Control: max-age=640000")
-//    @Header("rel: next")
     @GET("products/")
     Call<List<ProductItem>> listProductItems(
-//            @Header("Accept-Language") String lang,
-//            @Header("X-WP-TotalPages") String pages,
-            @HeaderMap Map<String, String> pages,
+//            @HeaderMap Map<String, String> pages,
             @QueryMap Map<String, String> options
     );
-
-//    @Headers("Cache-Control: max-age=640000")
-//    @GET("/")
-//    Call<List<ProductItem>> listProductItemsp(
-////            @Header("X-WP-TotalPages") String pages,
-////            @HeaderMap
-//            @QueryMap Map<String, String> options
-//    );
-
-//    @Headers({
-//            "X-Foo: Bar",
-//            "X-Ping: Pong"
-//    })
-//    @GET("/")
-//    Call<List<ProductItem>> listProductItemsPages(
-////            @Header("X-WP-TotalPages") String pages,
-////            @HeaderMap
-//            @QueryMap Map<String, String> options
-//    );
 
     @GET("products/{id}")
     Call<ProductItem> getProductItem(

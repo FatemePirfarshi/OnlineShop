@@ -15,30 +15,38 @@ import java.util.List;
 
 public class ProductListViewModel extends AndroidViewModel {
 
-    public static final String TAG = "callOpenDrawer";
+    public static final String TAG = "ProductListViewModel";
     private ProductRepository mRepository;
-    private final LiveData<List<ProductItem>> mListLiveData;
+    private final LiveData<List<ProductItem>> mProductListLiveData;
+    private final LiveData<Integer> mPageCount;
+    private final LiveData<Integer> mCategoryItemId;
 
     private MutableLiveData<Boolean> mOpenedLiveData = new MutableLiveData<>();
 
-    public LiveData<List<ProductItem>> getListLiveData() {
-        return mListLiveData;
+    public LiveData<List<ProductItem>> getProductListLiveData() {
+        return mProductListLiveData;
     }
 
-    public MutableLiveData<Boolean> getOpenedLiveData() {
+    public LiveData<Integer> getPageCount() {
+        return mPageCount;
+    }
+
+    public LiveData<Boolean> getOpenedLiveData() {
         return mOpenedLiveData;
+    }
+
+    public LiveData<Integer> getCategoryItemId() {
+        return mCategoryItemId;
     }
 
     public ProductListViewModel(@NonNull Application application) {
         super(application);
 
         mRepository = ProductRepository.getInstance();
-        mListLiveData = mRepository.getListLiveData();
+        mProductListLiveData = mRepository.getProductListLiveData();
+        mPageCount = mRepository.getPageCount();
+        mCategoryItemId = mRepository.getCategoryItemId();
     }
-
-//    public LiveData<List<ProductItem>> getCurrentList(){
-//
-//    }
 
     public void openDrawer() {
         mOpenedLiveData.setValue(true);
@@ -46,11 +54,11 @@ public class ProductListViewModel extends AndroidViewModel {
     }
 
     public List<ProductItem> getCurrentItems() {
-        return mListLiveData.getValue();
+        return mProductListLiveData.getValue();
     }
 
-    public void fetchItems() {
-        mRepository.fetchItemsAsync();
+    public void fetchProductItems(int page) {
+        mRepository.fetchProductItemsAsync(page, mCategoryItemId.getValue());
     }
     //    public void fetchItems(int state){
 //        switch (state){
