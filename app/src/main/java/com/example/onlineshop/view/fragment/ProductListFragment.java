@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,7 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.onlineshop.R;
 import com.example.onlineshop.adapter.ProductAdapter;
 import com.example.onlineshop.data.model.ProductItem;
-import com.example.onlineshop.databinding.FragmentProductListBinding;
+import com.example.onlineshop.databinding.FragmentProductsListBinding;
+import com.example.onlineshop.view.observers.SingleEventObserver;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
 
 import java.util.List;
@@ -25,9 +28,9 @@ public class ProductListFragment extends Fragment {
 
     public static final String ARGS_STATE_OF_LIST = "stateOfList";
     public static final String ARGS_NAME_OF_LIST = "nameOfList";
-    private FragmentProductListBinding mBinding;
-    private int state;
-    private String title;
+    private FragmentProductsListBinding mBinding;
+//    private int state;
+//    private String title;
     private ProductListViewModel mProductListViewModel;
     private int page = 1;
 
@@ -35,11 +38,11 @@ public class ProductListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ProductListFragment newInstance(int state, String name) {
+    public static ProductListFragment newInstance() {
         ProductListFragment fragment = new ProductListFragment();
         Bundle args = new Bundle();
-        args.putInt(ARGS_STATE_OF_LIST, state);
-        args.putString(ARGS_NAME_OF_LIST, name);
+//        args.putInt(ARGS_STATE_OF_LIST, state);
+//        args.putString(ARGS_NAME_OF_LIST, name);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,13 +51,10 @@ public class ProductListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        state = getArguments().getInt(ARGS_STATE_OF_LIST);
-        title = getArguments().getString(ARGS_NAME_OF_LIST);
+//        state = getArguments().getInt(ARGS_STATE_OF_LIST);
+//        title = getArguments().getString(ARGS_NAME_OF_LIST);
 
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
-//        mPage = mProductListViewModel.getCurrentPage().getValue();
-//        mProductListViewModel.getAllProductItems();
-//        mProductListViewModel.fetchProductItems();
         setLiveDataObservers();
     }
 
@@ -73,12 +73,26 @@ public class ProductListFragment extends Fragment {
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.fragment_product_list,
+                R.layout.fragment_products_list,
                 container,
                 false);
 
+        mBinding.setProductListViewModel(mProductListViewModel);
+
         initViews();
         scrollListener();
+
+        LiveData<Boolean> openedLiveData = mProductListViewModel.getOpenedLiveData();
+        openedLiveData.observe(getActivity(),
+                new SingleEventObserver<Boolean>(this, openedLiveData) {
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        if (aBoolean) {
+                            if (!mBinding.drawerLayoutCategories.isDrawerOpen(GravityCompat.START))
+                                mBinding.drawerLayoutCategories.openDrawer(GravityCompat.START);
+                        }
+                    }
+                });
         return mBinding.getRoot();
     }
 
@@ -102,10 +116,6 @@ public class ProductListFragment extends Fragment {
                         mProductListViewModel.getProductListLiveData().getValue().size() == 10)
 
                     mProductListViewModel.fetchProductItems(++page);
-//                if (recyclerView.canScrollHorizontally(1)) {
-//                if (page <= mProductListViewModel.getPageCount().getValue())
-                /*mProductListViewModel.fetchProductItems(++mPage);*/
-//                }
             }
         });
     }

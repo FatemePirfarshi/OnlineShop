@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +19,7 @@ import com.example.onlineshop.R;
 import com.example.onlineshop.adapter.CategoryAdapter;
 import com.example.onlineshop.data.model.CategoryItem;
 import com.example.onlineshop.databinding.FragmentCategoryListBinding;
+import com.example.onlineshop.view.observers.SingleEventObserver;
 import com.example.onlineshop.viewmodel.CategoryListViewModel;
 
 import java.util.List;
@@ -69,7 +72,23 @@ public class CategoryListFragment extends Fragment {
 
         initViews();
         scrollListener();
+        navListener();
+
         return mBinding.getRoot();
+    }
+
+    private void navListener() {
+        LiveData<Boolean> navigateLiveData = mCategoryListViewModel.getNavigateLiveData();
+        navigateLiveData.observe(getViewLifecycleOwner(),
+                new SingleEventObserver<Boolean>(this, navigateLiveData) {
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        if (aBoolean) {
+                            Navigation.findNavController(mBinding.getRoot()).navigate(
+                                    CategoryListFragmentDirections.actionCategoryListFragmentToProductListFragment());
+                        }
+                    }
+                });
     }
 
     private void scrollListener() {

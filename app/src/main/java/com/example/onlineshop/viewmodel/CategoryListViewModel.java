@@ -5,12 +5,11 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.onlineshop.data.model.CategoryItem;
 import com.example.onlineshop.data.repository.ProductRepository;
-import com.example.onlineshop.view.activity.ProductsActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryListViewModel extends AndroidViewModel {
@@ -18,6 +17,11 @@ public class CategoryListViewModel extends AndroidViewModel {
     private ProductRepository mRepository;
     private final LiveData<List<CategoryItem>> mListLiveData;
     private final LiveData<Integer> mPageCount;
+    private MutableLiveData<Boolean> mNavigateLiveData = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> getNavigateLiveData() {
+        return mNavigateLiveData;
+    }
 
     public LiveData<List<CategoryItem>> getListLiveData() {
         return mListLiveData;
@@ -46,6 +50,6 @@ public class CategoryListViewModel extends AndroidViewModel {
     public void onClickListItem(int position) {
         CategoryItem item = mListLiveData.getValue().get(position);
         mRepository.fetchProductItemsAsync(1, item.getId());
-        ProductsActivity.start(getApplication(), item.getName());
+        mNavigateLiveData.setValue(true);
     }
 }

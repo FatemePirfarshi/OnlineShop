@@ -36,22 +36,44 @@
                     android:src="@drawable/ic_menu"
                     android:onClick="@{() -> productListViewModel.openDrawer()}"/>
 
+<!--                <TextView-->
+<!--                    android:id="@+id/list_title"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="18sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:text="productsList" />-->
+
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
                 <TextView
                     android:id="@+id/list_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="20dp"
+                    android:text="TextView"
+                    android:textColor="#66038F"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:text="productsList" />
+                    android:textStyle="bold" />
 
-            </FrameLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_products"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/list_title"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp" />
+            </RelativeLayout>
 
-            <FrameLayout
-                android:id="@+id/fragment_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+
 
 <!--            <androidx.recyclerview.widget.RecyclerView-->
 <!--                android:layout_width="wrap_content"-->

@@ -16,6 +16,8 @@
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
+    <string name="categories">دسته بندی ها</string>
+    <string name="home">خانه</string>
 
     <string name="products_category">دسته بندی محصولات:</string>
     <string name="item_category"> کالا </string>

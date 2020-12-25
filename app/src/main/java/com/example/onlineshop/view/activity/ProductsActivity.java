@@ -12,11 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.onlineshop.R;
-import com.example.onlineshop.databinding.ActivityProductsListBinding;
+import com.example.onlineshop.databinding.FragmentProductsListBinding;
 import com.example.onlineshop.view.fragment.ProductListFragment;
 import com.example.onlineshop.view.observers.SingleEventObserver;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
@@ -34,14 +33,14 @@ public class ProductsActivity extends AppCompatActivity {
     }
 
     public static final String TAG = "CategoriesActivity";
-    private ActivityProductsListBinding mBinding;
+    private FragmentProductsListBinding mBinding;
     private ProductListViewModel mViewModel;
     private String mListCategoryName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_products_list);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.fragment_products_list);
         mListCategoryName = getIntent().getStringExtra(EXTRA_LIST_CATEGORY_NAME);
 
         if (savedInstanceState == null) {
@@ -58,14 +57,14 @@ public class ProductsActivity extends AppCompatActivity {
         LiveData<Boolean> openedLiveData = mViewModel.getOpenedLiveData();
         openedLiveData.observe(this,
                 new SingleEventObserver<Boolean>(this, openedLiveData) {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    if (!mBinding.drawerLayoutCategories.isDrawerOpen(GravityCompat.START))
-                        mBinding.drawerLayoutCategories.openDrawer(GravityCompat.START);
-                }
-            }
-        });
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        if (aBoolean) {
+                            if (!mBinding.drawerLayoutCategories.isDrawerOpen(GravityCompat.START))
+                                mBinding.drawerLayoutCategories.openDrawer(GravityCompat.START);
+                        }
+                    }
+                });
     }
 
     private void setItemListener() {
@@ -96,7 +95,7 @@ public class ProductsActivity extends AppCompatActivity {
     private void addFragment(int state) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, ProductListFragment.newInstance(state, mListCategoryName))
+                .replace(R.id.fragment_container, ProductListFragment.newInstance())
 //                .replace(R.id.fragment_container, CategoryListFragment.newInstance())
                 .commit();
     }
