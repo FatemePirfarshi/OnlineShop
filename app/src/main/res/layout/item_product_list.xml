@@ -12,6 +12,15 @@
             name="position"
             type="Integer" />
 
+        <variable
+            name="productNameList"
+            type="java.util.List&lt;String&gt;" />
+
+        <variable
+            name="productPriceList"
+            type="java.util.List&lt;String&gt;"
+            />
+
     </data>
 
     <androidx.cardview.widget.CardView
@@ -46,7 +55,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="@{productListViewModel.productListLiveData.get(position).productName}"
+                android:text="@{productNameList.get(position)}"
                 android:textColor="@color/black" />
 
             <TextView
@@ -59,7 +68,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="@{productListViewModel.productListLiveData.get(position).productPrice + @string/item_product}"
+                android:text="@{productPriceList.get(position) + @string/item_product}"
                 android:textColor="#66038F"
                 android:textStyle="bold" />
 

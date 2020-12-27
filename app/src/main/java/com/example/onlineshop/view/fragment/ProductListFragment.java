@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.onlineshop.R;
-import com.example.onlineshop.adapter.ProductAdapter;
+import com.example.onlineshop.adapter.ProductsListAdapter;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.FragmentProductsListBinding;
 import com.example.onlineshop.view.observers.SingleEventObserver;
@@ -29,7 +29,7 @@ public class ProductListFragment extends Fragment {
     public static final String ARGS_STATE_OF_LIST = "stateOfList";
     public static final String ARGS_NAME_OF_LIST = "nameOfList";
     private FragmentProductsListBinding mBinding;
-//    private int state;
+    //    private int state;
 //    private String title;
     private ProductListViewModel mProductListViewModel;
     private int page = 1;
@@ -81,7 +81,11 @@ public class ProductListFragment extends Fragment {
 
         initViews();
         scrollListener();
+        openDrawer();
+        return mBinding.getRoot();
+    }
 
+    private void openDrawer() {
         LiveData<Boolean> openedLiveData = mProductListViewModel.getOpenedLiveData();
         openedLiveData.observe(getActivity(),
                 new SingleEventObserver<Boolean>(this, openedLiveData) {
@@ -93,7 +97,6 @@ public class ProductListFragment extends Fragment {
                         }
                     }
                 });
-        return mBinding.getRoot();
     }
 
     private void initViews() {
@@ -121,7 +124,8 @@ public class ProductListFragment extends Fragment {
     }
 
     private void setupAdapter(List<ProductItem> items) {
-        ProductAdapter adapter = new ProductAdapter(mProductListViewModel);
+        ProductsListAdapter adapter = new ProductsListAdapter(mProductListViewModel,
+                mProductListViewModel.getProductListLiveData().getValue());
         mBinding.rvProducts.setAdapter(adapter);
     }
 }

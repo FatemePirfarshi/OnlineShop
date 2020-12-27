@@ -30,8 +30,13 @@ public class ProductRepository {
 
     private MutableLiveData<List<ProductItem>> mProductListLiveData = new MutableLiveData<>();
     private MutableLiveData<List<CategoryItem>> mCategoriesListLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<ProductItem>> mPopularItemsLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<ProductItem>> mRecentItemsLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<ProductItem>> mTopItemsLiveData = new MutableLiveData<>();
+
     private MutableLiveData<Integer> mPageCount = new MutableLiveData<>();
     private MutableLiveData<Integer> mCategoryItemId = new MutableLiveData<>();
+    private MutableLiveData<Integer> mPerPage = new MutableLiveData<>();
 
     public MutableLiveData<List<ProductItem>> getProductListLiveData() {
         return mProductListLiveData;
@@ -39,6 +44,18 @@ public class ProductRepository {
 
     public MutableLiveData<List<CategoryItem>> getCategoriesListLiveData() {
         return mCategoriesListLiveData;
+    }
+
+    public MutableLiveData<List<ProductItem>> getPopularItemsLiveData() {
+        return mPopularItemsLiveData;
+    }
+
+    public MutableLiveData<List<ProductItem>> getRecentItemsLiveData() {
+        return mRecentItemsLiveData;
+    }
+
+    public MutableLiveData<List<ProductItem>> getTopItemsLiveData() {
+        return mTopItemsLiveData;
     }
 
     public MutableLiveData<Integer> getCategoryItemId() {
@@ -49,9 +66,15 @@ public class ProductRepository {
         return mPageCount;
     }
 
+    public MutableLiveData<Integer> getPerPage() {
+        return mPerPage;
+    }
+
     public static ProductRepository getInstance() {
-        if (sInstance == null)
+        if (sInstance == null) {
             sInstance = new ProductRepository();
+//            sInstance.fetchTotalProducts();
+        }
         return sInstance;
     }
 
@@ -71,6 +94,9 @@ public class ProductRepository {
                 for (int i = 0; i < headerList.size(); i++) {
                     int totalPage = Integer.parseInt(headerList.get("X-WP-TotalPages"));
                     Log.e(TAG, "total page is: " + totalPage);
+//                    int total = Integer.parseInt(headerList.get("X-WP-Total"));
+//                    Log.e(TAG, "total from category is: " + total);
+
                     mPageCount.setValue(totalPage);
                 }
                 List<CategoryItem> items = response.body();
@@ -86,7 +112,7 @@ public class ProductRepository {
     }
 
     public void fetchProductItemsAsync(int page, int categoryId) {
-        if(page == 1)
+        if (page == 1)
             mProductItems = new ArrayList<>();
 
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
@@ -97,6 +123,9 @@ public class ProductRepository {
                 Headers headerList = response.headers();
                 for (int i = 0; i < headerList.size(); i++) {
                     int totalPage = Integer.parseInt(headerList.get("X-WP-TotalPages"));
+//                    int total = Integer.parseInt(headerList.get("X-WP-Total"));
+                    Log.e(TAG, "the total products" + totalPage);
+//                    Log.e(TAG, "total from products is: " + total);
                     mPageCount.setValue(totalPage);
                 }
                 List<ProductItem> items = response.body();
@@ -111,15 +140,58 @@ public class ProductRepository {
             }
         });
     }
-//    public List<ProductItem> fetchPopularItems() {
-//        return new ArrayList<>();
-//    }
-//
-//    public List<ProductItem> fetchLatestItems() {
-//        return new ArrayList<>();
-//    }
-//
-//    public List<ProductItem> fetchMostVisited() {
-//        return new ArrayList<>();
-//    }
+
+    public void fetchTotalProducts() {
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getTotalProductsOptions());
+        call.enqueue(new Callback<List<ProductItem>>() {
+            @Override
+            public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
+                Headers headerList = response.headers();
+                for (int i = 0; i < headerList.size(); i++) {
+                   int perPage = Integer.parseInt(headerList.get("X-WP-Total"));
+                    mPerPage.setValue(perPage);
+                }
+            }
+            @Override
+            public void onFailure(Call<List<ProductItem>> call, Throwable t) {
+                Log.e(TAG, t.getMessage(), t);
+            }
+        });
+    }
+
+    public void fetchPopularItems(int perPage) {
+
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getPopularOptions(perPage));
+        call.enqueue(getItemsCallback(mPopularItemsLiveData));
+    }
+
+    public void fetchRecentItems(int perPage) {
+
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getRecentOptions(perPage));
+        call.enqueue(getItemsCallback(mRecentItemsLiveData));
+    }
+
+    public void fetchTopItems(int perPage) {
+
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getTopOptions(perPage));
+        call.enqueue(getItemsCallback(mTopItemsLiveData));
+    }
+
+    private Callback<List<ProductItem>> getItemsCallback(MutableLiveData<List<ProductItem>> topItemsLiveData) {
+        return new Callback<List<ProductItem>>() {
+            @Override
+            public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
+                topItemsLiveData.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductItem>> call, Throwable t) {
+                Log.e(TAG, t.getMessage(), t);
+            }
+        };
+    }
 }

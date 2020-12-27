@@ -21,11 +21,6 @@ public class NetworkParams {
         productOptions.put("category", String.valueOf(categoryId));
         return productOptions;
     }
-//    public static Map<String, String> getPageOptions() {
-//        Map<String, String> pageOptions = new HashMap<>();
-//        pageOptions.put("rel", "next");
-//        return pageOptions;
-//    }
 
     public static Map<String, String> getCategoryOptions(int page) {
         Map<String, String> categoryOptions = new HashMap<>();
@@ -34,10 +29,33 @@ public class NetworkParams {
         return categoryOptions;
     }
 
-    public static Map<String, String> getPopularOptions() {
+    public static Map<String, String> getTotalProductsOptions() {
+        Map<String, String> totalOptions = new HashMap<>();
+        totalOptions.putAll(BASE_OPTIONS);
+        return totalOptions;
+    }
+
+    public static Map<String, String> getPopularOptions(int perPage) {
         Map<String, String> popularOptions = new HashMap<>();
         popularOptions.putAll(BASE_OPTIONS);
-//        popularOptions.put("");
+        popularOptions.put("per_page", String.valueOf(perPage));
+        popularOptions.put("orderby","popularity");
+        return popularOptions;
+    }
+
+    public static Map<String, String> getRecentOptions(int perPage) {
+        Map<String, String> popularOptions = new HashMap<>();
+        popularOptions.putAll(BASE_OPTIONS);
+        popularOptions.put("per_page", String.valueOf(perPage));
+        popularOptions.put("orderby","date");
+        return popularOptions;
+    }
+
+    public static Map<String, String> getTopOptions(int perPage) {
+        Map<String, String> popularOptions = new HashMap<>();
+        popularOptions.putAll(BASE_OPTIONS);
+        popularOptions.put("per_page", String.valueOf(perPage));
+        popularOptions.put("orderby","rating");
         return popularOptions;
     }
 }
