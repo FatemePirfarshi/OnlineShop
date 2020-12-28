@@ -1,5 +1,9 @@
 package com.example.onlineshop.data.remote;
 
+import android.net.Uri;
+
+import com.example.onlineshop.data.model.ProductItem;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,4 +62,5 @@ public class NetworkParams {
         popularOptions.put("orderby","rating");
         return popularOptions;
     }
+
 }

@@ -17,9 +17,9 @@ public class CategoryListViewModel extends AndroidViewModel {
     private ProductRepository mRepository;
     private final LiveData<List<CategoryItem>> mListLiveData;
     private final LiveData<Integer> mPageCount;
-    private MutableLiveData<Boolean> mNavigateLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> mNavigateLiveData = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> getNavigateLiveData() {
+    public MutableLiveData<String> getNavigateLiveData() {
         return mNavigateLiveData;
     }
 
@@ -50,6 +50,6 @@ public class CategoryListViewModel extends AndroidViewModel {
     public void onClickListItem(int position) {
         CategoryItem item = mListLiveData.getValue().get(position);
         mRepository.fetchProductItemsAsync(1, item.getId());
-        mNavigateLiveData.setValue(true);
+        mNavigateLiveData.setValue(item.getName());
     }
 }

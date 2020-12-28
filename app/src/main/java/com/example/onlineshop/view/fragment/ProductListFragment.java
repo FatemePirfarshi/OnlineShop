@@ -1,17 +1,20 @@
 package com.example.onlineshop.view.fragment;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,11 +29,7 @@ import java.util.List;
 
 public class ProductListFragment extends Fragment {
 
-    public static final String ARGS_STATE_OF_LIST = "stateOfList";
-    public static final String ARGS_NAME_OF_LIST = "nameOfList";
     private FragmentProductsListBinding mBinding;
-    //    private int state;
-//    private String title;
     private ProductListViewModel mProductListViewModel;
     private int page = 1;
 
@@ -41,8 +40,6 @@ public class ProductListFragment extends Fragment {
     public static ProductListFragment newInstance() {
         ProductListFragment fragment = new ProductListFragment();
         Bundle args = new Bundle();
-//        args.putInt(ARGS_STATE_OF_LIST, state);
-//        args.putString(ARGS_NAME_OF_LIST, name);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,9 +47,6 @@ public class ProductListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        state = getArguments().getInt(ARGS_STATE_OF_LIST);
-//        title = getArguments().getString(ARGS_NAME_OF_LIST);
 
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
         setLiveDataObservers();
@@ -82,7 +76,31 @@ public class ProductListFragment extends Fragment {
         initViews();
         scrollListener();
         openDrawer();
+        navListener();
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (getArguments() != null) {
+            String categoryName = getArguments().getString("categoryName");
+            mBinding.listTitle.setText(categoryName);
+        }
+    }
+
+    private void navListener() {
+        mProductListViewModel.getProductPageUri().observe(getViewLifecycleOwner(), new Observer<Uri>() {
+            @Override
+            public void onChanged(Uri uri) {
+                if (uri != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("productPageUri", uri);
+                    Navigation.findNavController(mBinding.getRoot())
+                            .navigate(R.id.productPageFragment, bundle);
+                }
+            }
+        });
     }
 
     private void openDrawer() {
@@ -106,7 +124,6 @@ public class ProductListFragment extends Fragment {
                 true);
         layoutManager.setReverseLayout(true);
         mBinding.rvProducts.setLayoutManager(layoutManager);
-//        mBinding.listTitle.setText(title);
     }
 
     private void scrollListener() {
@@ -125,7 +142,8 @@ public class ProductListFragment extends Fragment {
 
     private void setupAdapter(List<ProductItem> items) {
         ProductsListAdapter adapter = new ProductsListAdapter(mProductListViewModel,
-                mProductListViewModel.getProductListLiveData().getValue());
+                mProductListViewModel.getProductListLiveData().getValue(), 0);
         mBinding.rvProducts.setAdapter(adapter);
     }
+
 }

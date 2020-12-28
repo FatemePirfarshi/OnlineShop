@@ -20,10 +20,12 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
     private ProductListViewModel mViewModel;
     private List<ProductItem> mProductItems;
+    private int mListPosition;
 
-    public ProductsListAdapter(ProductListViewModel viewModel, List<ProductItem> productItems) {
+    public ProductsListAdapter(ProductListViewModel viewModel, List<ProductItem> productItems, int listPosition) {
         mViewModel = viewModel;
         mProductItems = productItems;
+        mListPosition = listPosition;
     }
 
     @NonNull
@@ -39,7 +41,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     @Override
     public void onBindViewHolder(@NonNull ProductListHolder holder, int position) {
         ProductItem item = mProductItems.get(position);
-        holder.bindTopProductItem(position, item);
+        holder.bindProductItem(position, item);
     }
 
     @Override
@@ -68,8 +70,9 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             mBinding.setProductPriceList(productsPrice);
         }
 
-        public void bindTopProductItem(int position, ProductItem item) {
+        public void bindProductItem(int position, ProductItem item) {
             mBinding.setPosition(position);
+            mBinding.setProductsListPosition(mListPosition);
 
             Picasso.get()
                     .load(item.getImages().get(0))

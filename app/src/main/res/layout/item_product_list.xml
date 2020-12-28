@@ -21,6 +21,10 @@
             type="java.util.List&lt;String&gt;"
             />
 
+        <variable
+            name="productsListPosition"
+            type="Integer" />
+
     </data>
 
     <androidx.cardview.widget.CardView
@@ -28,7 +32,8 @@
         android:layout_height="300dp"
         tools:context=".view.fragment.ProductListFragment"
         android:layout_margin="2dp"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:onClick="@{() -> productListViewModel.onProductClicked(productsListPosition, position)}">
 
         <RelativeLayout
             android:layout_width="match_parent"

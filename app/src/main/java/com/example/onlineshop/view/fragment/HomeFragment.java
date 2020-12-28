@@ -1,5 +1,6 @@
 package com.example.onlineshop.view.fragment;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,21 +60,21 @@ public class HomeFragment extends Fragment {
         mProductListViewModel.getPopularItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
             @Override
             public void onChanged(List<ProductItem> productItems) {
-                setupAdapter(mProductListViewModel.getPopularItemsLiveData(), mBinding.rvPopular);
+                setupAdapter(mProductListViewModel.getPopularItemsLiveData(), mBinding.rvPopular, 1);
             }
         });
 
         mProductListViewModel.getRecentItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
             @Override
             public void onChanged(List<ProductItem> productItems) {
-                setupAdapter(mProductListViewModel.getRecentItemsLiveData(), mBinding.rvNewest);
+                setupAdapter(mProductListViewModel.getRecentItemsLiveData(), mBinding.rvNewest, 2);
             }
         });
 
         mProductListViewModel.getTopItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
             @Override
             public void onChanged(List<ProductItem> productItems) {
-                setupAdapter(mProductListViewModel.getTopItemsLiveData(), mBinding.rvTop);
+                setupAdapter(mProductListViewModel.getTopItemsLiveData(), mBinding.rvTop, 3);
             }
         });
     }
@@ -86,7 +88,22 @@ public class HomeFragment extends Fragment {
                 container,
                 false);
         initViews();
+        navListener();
         return mBinding.getRoot();
+    }
+
+    private void navListener() {
+        mProductListViewModel.getProductPageUri().observe(getViewLifecycleOwner(), new Observer<Uri>() {
+            @Override
+            public void onChanged(Uri uri) {
+                if (uri != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("productPageUri", uri);
+                    Navigation.findNavController(mBinding.getRoot())
+                            .navigate(R.id.productPageFragment, bundle);
+                }
+            }
+        });
     }
 
     private void initViews() {
@@ -112,9 +129,11 @@ public class HomeFragment extends Fragment {
         mBinding.rvTop.setLayoutManager(layoutManagerTop);
     }
 
-    private void setupAdapter(LiveData<List<ProductItem>> productItemsLiveData, RecyclerView rv) {
+    private void setupAdapter(LiveData<List<ProductItem>> productItemsLiveData,
+                              RecyclerView rv,
+                              int listPosition) {
         ProductsListAdapter popularAdapter = new ProductsListAdapter(mProductListViewModel,
-                productItemsLiveData.getValue());
+                productItemsLiveData.getValue(), listPosition);
         rv.setAdapter(popularAdapter);
     }
 }

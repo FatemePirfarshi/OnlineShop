@@ -78,17 +78,20 @@ public class CategoryListFragment extends Fragment {
     }
 
     private void navListener() {
-        LiveData<Boolean> navigateLiveData = mCategoryListViewModel.getNavigateLiveData();
+        LiveData<String> navigateLiveData = mCategoryListViewModel.getNavigateLiveData();
         navigateLiveData.observe(getViewLifecycleOwner(),
-                new SingleEventObserver<Boolean>(this, navigateLiveData) {
-                    @Override
-                    public void onChanged(Boolean aBoolean) {
-                        if (aBoolean) {
-                            Navigation.findNavController(mBinding.getRoot()).navigate(
-                                    CategoryListFragmentDirections.actionCategoryListFragmentToProductListFragment());
-                        }
-                    }
-                });
+                new SingleEventObserver<String>(this, navigateLiveData) {
+            @Override
+            public void onChanged(String name) {
+//                super.onChanged(s);
+                if(name != null){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("categoryName", name);
+                    Navigation.findNavController(mBinding.getRoot())
+                            .navigate(R.id.productListFragment, bundle);
+                }
+            }
+        });
     }
 
     private void scrollListener() {

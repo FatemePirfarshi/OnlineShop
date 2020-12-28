@@ -1,6 +1,7 @@
 package com.example.onlineshop.viewmodel;
 
 import android.app.Application;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.onlineshop.data.model.ProductItem;
+import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.repository.ProductRepository;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class ProductListViewModel extends AndroidViewModel {
     private final LiveData<Integer> mPerPage;
 
     private MutableLiveData<Boolean> mOpenedLiveData = new MutableLiveData<>();
+    private MutableLiveData<Uri> mProductPageUri = new MutableLiveData<>();
 
     public LiveData<List<ProductItem>> getProductListLiveData() {
         return mProductListLiveData;
@@ -59,6 +62,10 @@ public class ProductListViewModel extends AndroidViewModel {
         return mPerPage;
     }
 
+    public MutableLiveData<Uri> getProductPageUri() {
+        return mProductPageUri;
+    }
+
     public ProductListViewModel(@NonNull Application application) {
         super(application);
 
@@ -81,19 +88,40 @@ public class ProductListViewModel extends AndroidViewModel {
         mRepository.fetchProductItemsAsync(page, mCategoryItemId.getValue());
     }
 
-    public void fetchTotalProducts(){
+    public void fetchTotalProducts() {
         mRepository.fetchTotalProducts();
     }
 
-    public void fetchPopularItems(int perPage){
+    public void fetchPopularItems(int perPage) {
         mRepository.fetchPopularItems(perPage);
     }
 
-    public void fetchRecentItems(int perPage){
+    public void fetchRecentItems(int perPage) {
         mRepository.fetchRecentItems(perPage);
     }
 
-    public void fetchTopItems(int perPage){
+    public void fetchTopItems(int perPage) {
         mRepository.fetchTopItems(perPage);
+    }
+
+    public void onProductClicked(int listPosition, int position) {
+        ProductItem item;
+        switch (listPosition){
+            case 1:
+                item = mPopularItemsLiveData.getValue().get(position);
+                break;
+            case 2:
+                item = mRecentItemsLiveData.getValue().get(position);
+                break;
+            case 3:
+                item = mTopItemsLiveData.getValue().get(position);
+                break;
+            default:
+                item = mProductListLiveData.getValue().get(position);
+                break;
+        }
+        Uri productPageUri = Uri.parse(item.getUrl());
+        Log.e(TAG, productPageUri.toString());
+        mProductPageUri.setValue(productPageUri);
     }
 }
