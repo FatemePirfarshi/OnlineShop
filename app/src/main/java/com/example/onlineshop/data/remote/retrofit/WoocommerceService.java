@@ -22,7 +22,8 @@ public interface WoocommerceService {
 
     @GET("products/{id}")
     Call<ProductItem> getProductItem(
-            @Path("id") Integer id
+            @Path("id") Integer id,
+            @QueryMap Map<String, String> options
     );
 
     @GET("products/categories/")

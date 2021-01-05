@@ -1,8 +1,6 @@
 package com.example.onlineshop.data.remote;
 
-import android.net.Uri;
-
-import com.example.onlineshop.data.model.ProductItem;
+import android.net.MacAddress;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +10,10 @@ public class NetworkParams {
     public static final String BASE_URL = "https://woocommerce.maktabsharif.ir/wp-json/wc/v3/";
     public static final String CONSUMER_KEY = "ck_0cc1aa2f0b4ec228a330d398dcf860db9d3da52d";
     public static final String CONSUMER_SECRET = "cs_70402dac0bf2c9580039977594684829962c669c";
+
+    public static final String POPULAR = "popularity";
+    public static final String RECENT = "date";
+    public static final String TOP = "rating";
 
     public static final Map<String, String> BASE_OPTIONS = new HashMap<String, String>() {{
         put("consumer_key", CONSUMER_KEY);
@@ -33,7 +35,7 @@ public class NetworkParams {
         return categoryOptions;
     }
 
-    public static Map<String, String> getTotalProductsOptions() {
+    public static Map<String, String> getBaseOptions() {
         Map<String, String> totalOptions = new HashMap<>();
         totalOptions.putAll(BASE_OPTIONS);
         return totalOptions;
@@ -43,7 +45,7 @@ public class NetworkParams {
         Map<String, String> popularOptions = new HashMap<>();
         popularOptions.putAll(BASE_OPTIONS);
         popularOptions.put("per_page", String.valueOf(perPage));
-        popularOptions.put("orderby","popularity");
+        popularOptions.put("orderby", POPULAR);
         return popularOptions;
     }
 
@@ -51,7 +53,7 @@ public class NetworkParams {
         Map<String, String> popularOptions = new HashMap<>();
         popularOptions.putAll(BASE_OPTIONS);
         popularOptions.put("per_page", String.valueOf(perPage));
-        popularOptions.put("orderby","date");
+        popularOptions.put("orderby", RECENT);
         return popularOptions;
     }
 
@@ -59,8 +61,12 @@ public class NetworkParams {
         Map<String, String> popularOptions = new HashMap<>();
         popularOptions.putAll(BASE_OPTIONS);
         popularOptions.put("per_page", String.valueOf(perPage));
-        popularOptions.put("orderby","rating");
+        popularOptions.put("orderby", TOP);
         return popularOptions;
     }
 
+//    public static Map<String, String> getProductItemOptions(){
+//        Map<String, String> productItemOptions = new HashMap<>();
+//        productItemOptions.putAll(BASE_OPTIONS);
+//    }
 }

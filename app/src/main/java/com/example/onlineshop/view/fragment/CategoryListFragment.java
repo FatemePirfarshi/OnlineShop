@@ -5,13 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,6 +53,15 @@ public class CategoryListFragment extends Fragment {
         mCategoryListViewModel.fetchCategoryItemsAsync(page);
 
         setLiveDataObservers();
+
+//        NavController navController = NavHostFragment.findNavController(this);
+//        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                navController.popBackStack();
+//            }
+//        };
+//        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     private void setLiveDataObservers() {
@@ -85,10 +98,11 @@ public class CategoryListFragment extends Fragment {
             public void onChanged(String name) {
 //                super.onChanged(s);
                 if(name != null){
-                    Bundle bundle = new Bundle();
-                    bundle.putString("categoryName", name);
-                    Navigation.findNavController(mBinding.getRoot())
-                            .navigate(R.id.productListFragment, bundle);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("categoryName", name);
+                    NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.productListFragment, true).build();
+                    Navigation.findNavController(mBinding.getRoot()).navigate(
+                            CategoryListFragmentDirections.actionCategoryListFragmentToProductListFragment(name), navOptions);
                 }
             }
         });

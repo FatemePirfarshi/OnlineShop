@@ -5,25 +5,28 @@
 
     <data>
         <variable
-            name="productListViewModel"
+            name="productItem"
+            type="com.example.onlineshop.data.model.ProductItem" />
+
+        <variable
+            name="productViewModel"
             type="com.example.onlineshop.viewmodel.ProductListViewModel" />
+
+<!--        <variable-->
+<!--            name="productListItem"-->
+<!--            type="com.example.onlineshop.adapter.ProductsListAdapter.ProductListHolder" />-->
 
         <variable
             name="position"
             type="Integer" />
 
-        <variable
-            name="productNameList"
-            type="java.util.List&lt;String&gt;" />
+<!--        <variable-->
+<!--            name="productsListPosition"-->
+<!--            type="Integer" />-->
 
         <variable
-            name="productPriceList"
-            type="java.util.List&lt;String&gt;"
-            />
-
-        <variable
-            name="productsListPosition"
-            type="Integer" />
+            name="productIdList"
+            type="java.util.List&lt;Integer&gt;" />
 
     </data>
 
@@ -33,7 +36,7 @@
         tools:context=".view.fragment.ProductListFragment"
         android:layout_margin="2dp"
         android:padding="8dp"
-        android:onClick="@{() -> productListViewModel.onProductClicked(productsListPosition, position)}">
+        android:onClick="@{() -> productViewModel.onProductItemClicked(productItem.id)}">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -60,7 +63,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="@{productNameList.get(position)}"
+                android:text="@{productItem.productName}"
                 android:textColor="@color/black" />
 
             <TextView
@@ -73,7 +76,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="@{productPriceList.get(position) + @string/item_product}"
+                android:text="@{productItem.productPrice + @string/item_product}"
                 android:textColor="#66038F"
                 android:textStyle="bold" />
 

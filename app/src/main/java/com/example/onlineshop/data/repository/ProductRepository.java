@@ -24,9 +24,11 @@ public class ProductRepository {
     private static ProductRepository sInstance;
     private WoocommerceService mWoocommerceServiceCategory;
     private WoocommerceService mWoocommerceServiceProduct;
+    private WoocommerceService mWoocommerceServiceProductWithId;
 
     private List<ProductItem> mProductItems;
     private List<CategoryItem> mCategoryItems = new ArrayList<>();
+//    private ProductItem mProductItem;
 
     private MutableLiveData<List<ProductItem>> mProductListLiveData = new MutableLiveData<>();
     private MutableLiveData<List<CategoryItem>> mCategoriesListLiveData = new MutableLiveData<>();
@@ -37,6 +39,13 @@ public class ProductRepository {
     private MutableLiveData<Integer> mPageCount = new MutableLiveData<>();
     private MutableLiveData<Integer> mCategoryItemId = new MutableLiveData<>();
     private MutableLiveData<Integer> mPerPage = new MutableLiveData<>();
+
+    private MutableLiveData<ProductItem> mProductItemLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<ProductItem>> mRelatedItemsLiveData = new MutableLiveData<>();
+
+    public MutableLiveData<List<ProductItem>> getRelatedItemsLiveData() {
+        return mRelatedItemsLiveData;
+    }
 
     public MutableLiveData<List<ProductItem>> getProductListLiveData() {
         return mProductListLiveData;
@@ -70,6 +79,10 @@ public class ProductRepository {
         return mPerPage;
     }
 
+    public MutableLiveData<ProductItem> getProductItemLiveData() {
+        return mProductItemLiveData;
+    }
+
     public static ProductRepository getInstance() {
         if (sInstance == null) {
             sInstance = new ProductRepository();
@@ -81,6 +94,7 @@ public class ProductRepository {
     private ProductRepository() {
         mWoocommerceServiceCategory = RetrofitInstance.getCategoryInstance().create(WoocommerceService.class);
         mWoocommerceServiceProduct = RetrofitInstance.getProductInstance().create(WoocommerceService.class);
+        mWoocommerceServiceProductWithId = RetrofitInstance.getProductInstanceWithId().create(WoocommerceService.class);
     }
 
     public void fetchCategoryItemsAsync(int page) {
@@ -143,16 +157,17 @@ public class ProductRepository {
 
     public void fetchTotalProducts() {
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
-                NetworkParams.getTotalProductsOptions());
+                NetworkParams.getBaseOptions());
         call.enqueue(new Callback<List<ProductItem>>() {
             @Override
             public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
                 Headers headerList = response.headers();
                 for (int i = 0; i < headerList.size(); i++) {
-                   int perPage = Integer.parseInt(headerList.get("X-WP-Total"));
+                    int perPage = Integer.parseInt(headerList.get("X-WP-Total"));
                     mPerPage.setValue(perPage);
                 }
             }
+
             @Override
             public void onFailure(Call<List<ProductItem>> call, Throwable t) {
                 Log.e(TAG, t.getMessage(), t);
@@ -193,5 +208,48 @@ public class ProductRepository {
                 Log.e(TAG, t.getMessage(), t);
             }
         };
+    }
+
+    public void fetchProductItemWithId(int id) {
+
+        Call<ProductItem> call = mWoocommerceServiceProductWithId.getProductItem(
+                id, NetworkParams.getBaseOptions());
+        call.enqueue(new Callback<ProductItem>() {
+            @Override
+            public void onResponse(Call<ProductItem> call, Response<ProductItem> response) {
+//                mProductItem = response.body();
+                mProductItemLiveData.setValue(response.body());
+//                fetchRelatedItems(mProductItem.getRelatedIds());
+//                Log.e(TAG, "this item Clicked: " + response.body().getProductName());
+            }
+
+            @Override
+            public void onFailure(Call<ProductItem> call, Throwable t) {
+                Log.e(TAG, t.getMessage(), t);
+            }
+        });
+//        fetchRelatedItems(mProductItem.getRelatedIds());
+    }
+
+    public void fetchRelatedItems(List<Integer> relatedProductsId) {
+
+        List<ProductItem> relatedItems = new ArrayList<>();
+        for (int i = 0; i < relatedProductsId.size(); i++) {
+            Call<ProductItem> call = mWoocommerceServiceProductWithId.getProductItem(
+                    relatedProductsId.get(i), NetworkParams.getBaseOptions());
+            call.enqueue(new Callback<ProductItem>() {
+                @Override
+                public void onResponse(Call<ProductItem> call, Response<ProductItem> response) {
+                    relatedItems.add(response.body());
+                    Log.e(TAG, "related item is: " + response.body().getProductName());
+                }
+
+                @Override
+                public void onFailure(Call<ProductItem> call, Throwable t) {
+
+                }
+            });
+        }
+        mRelatedItemsLiveData.setValue(relatedItems);
     }
 }

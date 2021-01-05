@@ -1,20 +1,24 @@
 package com.example.onlineshop.data.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class ProductItem {
+public class ProductItem implements Serializable {
     private int mId;
     private String mProductName;
     private String mProductPrice;
     private String mUrl;
     private Date mDateCreated;
     private int mRate;
+    private String mDescription;
     private List<String> mImages;
     private List<Integer> mCategoriesId;
+    private List<Integer> mRelatedIds;
 
     public ProductItem(int id, String productName, String productPrice, String url, Date dateCreated,
-                       int rate, List<String> images, List<Integer> categoriesId) {
+                       int rate, String description, List<String> images, List<Integer> categoriesId,
+                       List<Integer> relatedIds) {
         mId = id;
         mProductName = productName;
         mProductPrice = productPrice;
@@ -23,6 +27,8 @@ public class ProductItem {
         mRate = rate;
         mImages = images;
         mCategoriesId = categoriesId;
+        mDescription = description;
+        mRelatedIds = relatedIds;
     }
 
     public int getId() {
@@ -87,5 +93,21 @@ public class ProductItem {
 
     public void setCategoriesId(List<Integer> categoriesId) {
         mCategoriesId = categoriesId;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
+    public List<Integer> getRelatedIds() {
+        return mRelatedIds;
+    }
+
+    public void setRelatedIds(List<Integer> relatedIds) {
+        mRelatedIds = relatedIds;
     }
 }

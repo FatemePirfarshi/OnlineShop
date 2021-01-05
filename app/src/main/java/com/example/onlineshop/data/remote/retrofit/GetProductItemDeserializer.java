@@ -47,6 +47,8 @@ public class GetProductItemDeserializer implements JsonDeserializer<List<Product
 
             int rate = jsonObject.get("rating_count").getAsInt();
 
+            String description = jsonObject.get("description").getAsString();
+
             JsonArray photoArray = jsonObject.get("images").getAsJsonArray();
             List<String> photoUrl = new ArrayList<>();
             for (int j = 0; j < photoArray.size(); j++) {
@@ -61,8 +63,14 @@ public class GetProductItemDeserializer implements JsonDeserializer<List<Product
                 categoriesId.add(idJsonObject.get("id").getAsInt());
             }
 
+            JsonArray relatedIdArray = jsonObject.get("related_ids").getAsJsonArray();
+            List<Integer> relatedIds = new ArrayList<>();
+            for (int j = 0; j < relatedIdArray.size(); j++) {
+                relatedIds.add(relatedIdArray.get(j).getAsInt());
+            }
+
             items.add(new ProductItem(
-                    id, productName, productPrice, url, date, rate, photoUrl, categoriesId));
+                    id, productName, productPrice, url, date, rate, description, photoUrl, categoriesId, relatedIds));
         }
         return items;
     }

@@ -8,31 +8,37 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.Navigation;
 
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.repository.ProductRepository;
+import com.example.onlineshop.view.fragment.ProductListFragmentDirections;
 
 import java.util.List;
 
-public class ProductListViewModel extends AndroidViewModel {
+public class ProductListViewModel extends ProductViewModel {
 
     public static final String TAG = "ProductListViewModel";
     private ProductRepository mRepository;
     private final LiveData<List<ProductItem>> mProductListLiveData;
     private final LiveData<Integer> mPageCount;
     private final LiveData<Integer> mCategoryItemId;
-    private final LiveData<List<ProductItem>> mPopularItemsLiveData;
-    private final LiveData<List<ProductItem>> mRecentItemsLiveData;
-    private final LiveData<List<ProductItem>> mTopItemsLiveData;
-    private final LiveData<Integer> mPerPage;
+
+//    private final LiveData<ProductItem> mClickedItem;
 
     private MutableLiveData<Boolean> mOpenedLiveData = new MutableLiveData<>();
     private MutableLiveData<Uri> mProductPageUri = new MutableLiveData<>();
+//    private MutableLiveData<ProductItem> mProductItemSelected;
+//    private MutableLiveData<Integer> mClickedProductItem;
 
     public LiveData<List<ProductItem>> getProductListLiveData() {
         return mProductListLiveData;
     }
+
+//    public MutableLiveData<ProductItem> getProductItemSelected() {
+//        return mProductItemSelected;
+//    }
 
     public LiveData<Integer> getPageCount() {
         return mPageCount;
@@ -46,25 +52,19 @@ public class ProductListViewModel extends AndroidViewModel {
         return mCategoryItemId;
     }
 
-    public LiveData<List<ProductItem>> getPopularItemsLiveData() {
-        return mPopularItemsLiveData;
-    }
-
-    public LiveData<List<ProductItem>> getRecentItemsLiveData() {
-        return mRecentItemsLiveData;
-    }
-
-    public LiveData<List<ProductItem>> getTopItemsLiveData() {
-        return mTopItemsLiveData;
-    }
-
-    public LiveData<Integer> getPerPage() {
-        return mPerPage;
-    }
+//    public LiveData<ProductItem> getClickedItem() {
+//        return mClickedItem;
+//    }
 
     public MutableLiveData<Uri> getProductPageUri() {
         return mProductPageUri;
     }
+
+//    public MutableLiveData<Integer> getClickedProductItem() {
+//        mClickedProductItem = new MutableLiveData<>();
+//        Log.e("productItemClicked", "this id clicked in pvm get LiveData");
+//        return mClickedProductItem;
+//    }
 
     public ProductListViewModel(@NonNull Application application) {
         super(application);
@@ -73,10 +73,9 @@ public class ProductListViewModel extends AndroidViewModel {
         mProductListLiveData = mRepository.getProductListLiveData();
         mPageCount = mRepository.getPageCount();
         mCategoryItemId = mRepository.getCategoryItemId();
-        mPerPage = mRepository.getPerPage();
-        mPopularItemsLiveData = mRepository.getPopularItemsLiveData();
-        mRecentItemsLiveData = mRepository.getRecentItemsLiveData();
-        mTopItemsLiveData = mRepository.getTopItemsLiveData();
+
+//        mProductItemSelected = mRepository.getProductItemSelectedLiveData();
+//        mClickedItem = mRepository.getProductItemLiveData();
     }
 
     public void openDrawer() {
@@ -88,40 +87,12 @@ public class ProductListViewModel extends AndroidViewModel {
         mRepository.fetchProductItemsAsync(page, mCategoryItemId.getValue());
     }
 
-    public void fetchTotalProducts() {
-        mRepository.fetchTotalProducts();
-    }
+//    public void onProductSelected(ProductItem item){
+//        mProductItemSelected.setValue(item);
+//    }
 
-    public void fetchPopularItems(int perPage) {
-        mRepository.fetchPopularItems(perPage);
-    }
-
-    public void fetchRecentItems(int perPage) {
-        mRepository.fetchRecentItems(perPage);
-    }
-
-    public void fetchTopItems(int perPage) {
-        mRepository.fetchTopItems(perPage);
-    }
-
-    public void onProductClicked(int listPosition, int position) {
-        ProductItem item;
-        switch (listPosition){
-            case 1:
-                item = mPopularItemsLiveData.getValue().get(position);
-                break;
-            case 2:
-                item = mRecentItemsLiveData.getValue().get(position);
-                break;
-            case 3:
-                item = mTopItemsLiveData.getValue().get(position);
-                break;
-            default:
-                item = mProductListLiveData.getValue().get(position);
-                break;
-        }
-        Uri productPageUri = Uri.parse(item.getUrl());
-        Log.e(TAG, productPageUri.toString());
-        mProductPageUri.setValue(productPageUri);
-    }
+//    public void onProductItemClicked(int id){
+//        Log.e("productItemClicked", "this id clicked in pvm" + id);
+//        mClickedProductItem.setValue(id);
+//    }
 }

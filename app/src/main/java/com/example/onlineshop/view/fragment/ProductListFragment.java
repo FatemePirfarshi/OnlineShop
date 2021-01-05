@@ -1,11 +1,12 @@
 package com.example.onlineshop.view.fragment;
 
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
@@ -14,7 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +28,7 @@ import com.example.onlineshop.databinding.FragmentProductsListBinding;
 import com.example.onlineshop.view.observers.SingleEventObserver;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductListFragment extends Fragment {
@@ -48,8 +52,28 @@ public class ProductListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        NavController navController = NavHostFragment.findNavController(this);
+////        NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.nav_host_fragment);
+////        ProductListViewModel viewModel = new ViewModelProvider(backStackEntry).get(ProductListViewModel.class);
+//        NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.nav_host_fragment);
+//
+//        ViewModelProvider viewModelProvider = new ViewModelProvider(
+//                backStackEntry.getViewModelStore(),
+//                new SavedStateViewModelFactory(
+//                        requireActivity().getApplication(), requireParentFragment()));
+
+//        mProductListViewModel =new ViewModelProvider(backStackEntry).get(ProductListViewModel.class);
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
         setLiveDataObservers();
+
+        NavController navController = NavHostFragment.findNavController(this);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navController.popBackStack(R.id.action_categoryListFragment_to_productListFragment, true);
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     private void setLiveDataObservers() {
@@ -87,18 +111,18 @@ public class ProductListFragment extends Fragment {
             String categoryName = getArguments().getString("categoryName");
             mBinding.listTitle.setText(categoryName);
         }
+
     }
 
     private void navListener() {
-        mProductListViewModel.getProductPageUri().observe(getViewLifecycleOwner(), new Observer<Uri>() {
+
+        mProductListViewModel.getClickedProductItem().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
-            public void onChanged(Uri uri) {
-                if (uri != null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("productPageUri", uri);
-                    Navigation.findNavController(mBinding.getRoot())
-                            .navigate(R.id.productPageFragment, bundle);
-                }
+            public void onChanged(Integer id) {
+                Log.e("productItemClicked", "this id clicked in pvm change LiveData");
+                Bundle bundle = new Bundle();
+                bundle.putInt("productId", id);
+                Navigation.findNavController(mBinding.getRoot()).navigate(R.id.productPageFragment, bundle);
             }
         });
     }
@@ -141,7 +165,7 @@ public class ProductListFragment extends Fragment {
     }
 
     private void setupAdapter(List<ProductItem> items) {
-        ProductsListAdapter adapter = new ProductsListAdapter(mProductListViewModel,
+        ProductsListAdapter adapter = new ProductsListAdapter(this, mProductListViewModel,
                 mProductListViewModel.getProductListLiveData().getValue(), 0);
         mBinding.rvProducts.setAdapter(adapter);
     }

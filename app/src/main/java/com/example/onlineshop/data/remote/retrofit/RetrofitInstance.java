@@ -34,6 +34,16 @@ public class RetrofitInstance {
                 .build();
     }
 
+    public static Retrofit getProductInstanceWithId(){
+        return new Retrofit.Builder()
+                .baseUrl(NetworkParams.BASE_URL)
+                .addConverterFactory(createGsonConverter(
+                        ProductItem.class,
+                        new GetSingleProductItemDeserializer()
+                ))
+                .build();
+    }
+
     private static Converter.Factory createGsonConverter(Type type, Object typeAdapter) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(type, typeAdapter);

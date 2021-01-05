@@ -54,6 +54,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         public void bindCategoryItem(int position, CategoryItem item) {
             mBinding.setPosition(position);
+            mBinding.executePendingBindings();
 
             Picasso.get()
                     .load(item.getImage())

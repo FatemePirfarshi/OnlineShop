@@ -5,6 +5,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.onlineshop.R;
@@ -21,11 +24,14 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     private ProductListViewModel mViewModel;
     private List<ProductItem> mProductItems;
     private int mListPosition;
+    private LifecycleOwner mOwner;
 
-    public ProductsListAdapter(ProductListViewModel viewModel, List<ProductItem> productItems, int listPosition) {
+    public ProductsListAdapter(LifecycleOwner owner, ProductListViewModel viewModel,
+                               List<ProductItem> productItems, int listPosition) {
         mViewModel = viewModel;
         mProductItems = productItems;
         mListPosition = listPosition;
+        mOwner = owner;
     }
 
     @NonNull
@@ -49,30 +55,42 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         return mProductItems.size();
     }
 
-    class ProductListHolder extends RecyclerView.ViewHolder {
+    public class ProductListHolder extends RecyclerView.ViewHolder {
 
         private ItemProductListBinding mBinding;
+//        private MutableLiveData<ProductItem> mProductItemLiveData = new MutableLiveData<>();
 
         public ProductListHolder(ItemProductListBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
-            mBinding.setProductListViewModel(mViewModel);
+            mBinding.setProductViewModel(mViewModel);
+            mBinding.setLifecycleOwner(mOwner);
 
             List<ProductItem> items = mProductItems;
-            List<String> productsName = new ArrayList<>();
-            List<String> productsPrice = new ArrayList<>();
-
+//            List<String> productsName = new ArrayList<>();
+//            List<String> productsPrice = new ArrayList<>();
+            List<Integer> productsId = new ArrayList<>();
+//
             for (int i = 0; i < items.size(); i++) {
-                productsName.add(items.get(i).getProductName());
-                productsPrice.add(items.get(i).getProductPrice());
+//                productsName.add(items.get(i).getProductName());
+//                productsPrice.add(items.get(i).getProductPrice());
+                productsId.add(items.get(i).getId());
             }
-            mBinding.setProductNameList(productsName);
-            mBinding.setProductPriceList(productsPrice);
+//            mBinding.setProductNameList(productsName);
+//            mBinding.setProductPriceList(productsPrice);
+            mBinding.setProductIdList(productsId);
         }
+
+//        public MutableLiveData<ProductItem> getProductItemLiveData() {
+//            return mProductItemLiveData;
+//        }
 
         public void bindProductItem(int position, ProductItem item) {
             mBinding.setPosition(position);
-            mBinding.setProductsListPosition(mListPosition);
+            mBinding.executePendingBindings();
+//            mProductItemLiveData.setValue(item);
+            mBinding.setProductItem(item);
+//            mBinding.setProductsListPosition(mListPosition);
 
             Picasso.get()
                     .load(item.getImages().get(0))

@@ -13,8 +13,11 @@
             android:id="@+id/action_homeFragment_to_productPageFragment"
             app:destination="@id/productPageFragment">
             <argument
-                android:name="productPage"
-                app:argType="android.net.Uri" />
+                android:name="productId"
+                app:argType="integer"/>
+<!--            <argument-->
+<!--                android:name="productPage"-->
+<!--                app:argType="android.net.Uri" />-->
         </action>
     </fragment>
     <fragment
@@ -23,7 +26,9 @@
         android:label="CategoryListFragment" >
         <action
             android:id="@+id/action_categoryListFragment_to_productListFragment"
-            app:destination="@id/productListFragment">
+            app:destination="@id/productListFragment"
+            app:popUpTo="@id/productListFragment"
+            app:popUpToInclusive="true">
             <argument
                 android:name="categoryName"
                 app:argType="string" />
@@ -37,19 +42,27 @@
             android:id="@+id/action_productListFragment_to_productPageFragment"
             app:destination="@id/productPageFragment">
             <argument
-                android:name="productPage"
-                app:argType="android.net.Uri" />
+                android:name="productId"
+                app:argType="integer" />
+<!--            <argument-->
+<!--                android:name="productPage"-->
+<!--                app:argType="android.net.Uri" />-->
         </action>
         <argument
             android:name="categoryName"
             app:argType="string" />
+
     </fragment>
+
     <fragment
         android:id="@+id/productPageFragment"
         android:name="com.example.onlineshop.view.fragment.ProductPageFragment"
         android:label="ProductPageFragment" >
-        <argument
-            android:name="productPage"
-            app:argType="android.net.Uri" />
+<!--        <argument-->
+<!--            android:name="productId"-->
+<!--            app:argType="Integer"/>-->
+<!--        <argument-->
+<!--            android:name="productPage"-->
+<!--            app:argType="android.net.Uri" />-->
     </fragment>
 </navigation>

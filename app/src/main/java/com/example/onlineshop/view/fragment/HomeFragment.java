@@ -1,7 +1,7 @@
 package com.example.onlineshop.view.fragment;
 
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +19,16 @@ import com.example.onlineshop.R;
 import com.example.onlineshop.adapter.ProductsListAdapter;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.FragmentHomeBinding;
+import com.example.onlineshop.viewmodel.HomeViewModel;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
+//    private ProductListViewModel mProductListViewModel;
+    private HomeViewModel mHomeViewModel;
     private ProductListViewModel mProductListViewModel;
     private FragmentHomeBinding mBinding;
 
@@ -43,38 +47,41 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
+        mHomeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
-        mProductListViewModel.fetchTotalProducts();
+
+        mHomeViewModel.fetchTotalProducts();
         setLiveDataObservers();
     }
 
     private void setLiveDataObservers() {
-        mProductListViewModel.getPerPage().observe(this, new Observer<Integer>() {
+        mHomeViewModel.getPerPage().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer perPage) {
-                mProductListViewModel.fetchPopularItems(perPage);
-                mProductListViewModel.fetchRecentItems(perPage);
-                mProductListViewModel.fetchTopItems(perPage);
+                mHomeViewModel.fetchPopularItems(perPage);
+                mHomeViewModel.fetchRecentItems(perPage);
+                mHomeViewModel.fetchTopItems(perPage);
             }
         });
-        mProductListViewModel.getPopularItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
+        mHomeViewModel.getPopularItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
             @Override
             public void onChanged(List<ProductItem> productItems) {
-                setupAdapter(mProductListViewModel.getPopularItemsLiveData(), mBinding.rvPopular, 1);
-            }
-        });
-
-        mProductListViewModel.getRecentItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
-            @Override
-            public void onChanged(List<ProductItem> productItems) {
-                setupAdapter(mProductListViewModel.getRecentItemsLiveData(), mBinding.rvNewest, 2);
+                setupAdapter(mHomeViewModel.getPopularItemsLiveData(), mBinding.rvPopular, 1);
             }
         });
 
-        mProductListViewModel.getTopItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
+        mHomeViewModel.getRecentItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
             @Override
             public void onChanged(List<ProductItem> productItems) {
-                setupAdapter(mProductListViewModel.getTopItemsLiveData(), mBinding.rvTop, 3);
+                setupAdapter(mHomeViewModel.getRecentItemsLiveData(), mBinding.rvNewest, 2);
+            }
+        });
+
+        mHomeViewModel.getTopItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
+            @Override
+            public void onChanged(List<ProductItem> productItems) {
+                setupAdapter(mHomeViewModel.getTopItemsLiveData(), mBinding.rvTop, 3);
             }
         });
     }
@@ -93,15 +100,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void navListener() {
-        mProductListViewModel.getProductPageUri().observe(getViewLifecycleOwner(), new Observer<Uri>() {
+
+        mProductListViewModel.getClickedProductItem().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
-            public void onChanged(Uri uri) {
-                if (uri != null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("productPageUri", uri);
-                    Navigation.findNavController(mBinding.getRoot())
-                            .navigate(R.id.productPageFragment, bundle);
-                }
+            public void onChanged(Integer id) {
+//                Log.e("productItemClicked", "this id clicked in pvm change LiveData");
+                Bundle bundle = new Bundle();
+                bundle.putInt("productId", id);
+                Navigation.findNavController(mBinding.getRoot()).navigate(R.id.productPageFragment, bundle);
             }
         });
     }
@@ -132,7 +138,7 @@ public class HomeFragment extends Fragment {
     private void setupAdapter(LiveData<List<ProductItem>> productItemsLiveData,
                               RecyclerView rv,
                               int listPosition) {
-        ProductsListAdapter popularAdapter = new ProductsListAdapter(mProductListViewModel,
+        ProductsListAdapter popularAdapter = new ProductsListAdapter(this, mProductListViewModel,
                 productItemsLiveData.getValue(), listPosition);
         rv.setAdapter(popularAdapter);
     }
