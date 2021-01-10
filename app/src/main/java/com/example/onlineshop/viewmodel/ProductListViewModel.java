@@ -1,6 +1,8 @@
 package com.example.onlineshop.viewmodel;
 
 import android.app.Application;
+import android.app.SearchManager;
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -87,7 +89,14 @@ public class ProductListViewModel extends ProductViewModel {
         mRepository.fetchProductItemsAsync(page, mCategoryItemId.getValue());
     }
 
-//    public void onProductSelected(ProductItem item){
+    public void sortClicked(){
+
+    }
+
+//    public void searchClicked(){
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//    }
+    //    public void onProductSelected(ProductItem item){
 //        mProductItemSelected.setValue(item);
 //    }
 

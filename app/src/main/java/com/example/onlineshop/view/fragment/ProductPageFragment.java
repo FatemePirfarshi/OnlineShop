@@ -5,15 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -24,7 +19,6 @@ import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.FragmentProductPageBinding;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
 import com.example.onlineshop.viewmodel.ProductPageViewModel;
-import com.example.onlineshop.viewmodel.ProductViewModel;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 
@@ -65,20 +59,29 @@ public class ProductPageFragment extends Fragment {
             @Override
             public void onChanged(ProductItem productItem) {
                 mBinding.setProductPageViewModel(mProductPageViewModel);
-                mProductPageViewModel.fetchRelatedItems(productItem.getRelatedIds());
+//                mProductPageViewModel.fetchRelatedItems(productItem.getRelatedIds());
 
                 ArrayList<String> itemImages = (ArrayList<String>) productItem.getImages();
                 setupSliderAdapter(itemImages);
+
+
+                mProductPageViewModel.getRelatedItemsLiveData().observe(getViewLifecycleOwner(), new Observer<List<ProductItem>>() {
+                    @Override
+                    public void onChanged(List<ProductItem> productItems) {
+//                Log.e(TAG, productItems.get(0).getProductName());
+                        setupAdapter(productItems);
+                    }
+                });
             }
         });
 
-        mProductPageViewModel.getRelatedItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
-            @Override
-            public void onChanged(List<ProductItem> productItems) {
-//                Log.e(TAG, productItems.get(0).getProductName());
-                setupAdapter(productItems);
-            }
-        });
+//        mProductPageViewModel.getRelatedItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
+//            @Override
+//            public void onChanged(List<ProductItem> productItems) {
+////                Log.e(TAG, productItems.get(0).getProductName());
+//                setupAdapter(productItems);
+//            }
+//        });
     }
 
     @Override
@@ -92,48 +95,15 @@ public class ProductPageFragment extends Fragment {
                 false);
         initViews();
 
-//        mBinding.productPageProgressBar.setMax(100);
-
-//        mBinding.productPageWebView.setWebChromeClient(new WebChromeClient() {
-//            @Override
-//            public void onProgressChanged(WebView view, int newProgress) {
-//                if (newProgress == 100) {
-//                    mBinding.productPageProgressBar.setVisibility(View.GONE);
-//                } else {
-//                    mBinding.productPageProgressBar.setVisibility(View.VISIBLE);
-//                    mBinding.productPageProgressBar.setProgress(newProgress);
-//                }
-//            }
-//        });
         return mBinding.getRoot();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (getArguments() != null) {
-//            Uri uri = getArguments().getParcelable("productPageUri");
-//            mBinding.productPageWebView.getSettings().setJavaScriptEnabled(true);
-//            mBinding.productPageWebView.setWebViewClient(new WebViewClient() {
-//                @Override
-//                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                    return false;
-//                }
-//            });
-//            mBinding.productPageWebView.loadUrl(uri.toString());
-
-//            ProductItem item = (ProductItem) getArguments().getSerializable("productItemClicked");
-//            ArrayList<String> itemImages = getArguments().getStringArrayList("productImages");
-//            setupSliderAdapter(itemImages);
-        }
-    }
 
     private void initViews(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 true);
-        layoutManager.setReverseLayout(true);
         mBinding.rvProducts.setLayoutManager(layoutManager);
     }
 

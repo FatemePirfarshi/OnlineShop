@@ -7,11 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.onlineshop.R;
 import com.example.onlineshop.data.model.CategoryItem;
 import com.example.onlineshop.databinding.ItemCategoryListBinding;
 import com.example.onlineshop.viewmodel.CategoryListViewModel;
-import com.squareup.picasso.Picasso;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
 
@@ -56,7 +56,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             mBinding.setPosition(position);
             mBinding.executePendingBindings();
 
-            Picasso.get()
+//            Picasso.get()
+//                    .load(item.getImage())
+//                    .into(mBinding.imageCategory);
+
+            Glide.with(mViewModel.getApplication())
                     .load(item.getImage())
                     .into(mBinding.imageCategory);
         }

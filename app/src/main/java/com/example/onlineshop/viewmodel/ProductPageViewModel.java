@@ -1,20 +1,14 @@
 package com.example.onlineshop.viewmodel;
 
 import android.app.Application;
-import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.navigation.Navigation;
 
-import com.example.onlineshop.R;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.data.repository.ProductRepository;
+import com.example.onlineshop.utilities.QueryPreferences;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductPageViewModel extends ProductViewModel {
@@ -47,4 +41,10 @@ public class ProductPageViewModel extends ProductViewModel {
 //        mRepository.fetchProductItemWithId(id);
 ////        mProductItem = getProductItemLiveData().getValue();
 //    }
+
+    public void addToCartClicked(){
+        ProductItem item = mProductItemLiveData.getValue();
+        QueryPreferences.addCartProduct(getApplication(), item);
+        mRepository.setCartItemLiveData(QueryPreferences.getCartProducts(getApplication()));
+    }
 }

@@ -6,15 +6,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.onlineshop.R;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.ItemProductListBinding;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +62,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
             super(binding.getRoot());
             mBinding = binding;
             mBinding.setProductViewModel(mViewModel);
-            mBinding.setLifecycleOwner(mOwner);
+//            mBinding.setLifecycleOwner(mOwner);
 
             List<ProductItem> items = mProductItems;
 //            List<String> productsName = new ArrayList<>();
@@ -87,14 +85,19 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
 
         public void bindProductItem(int position, ProductItem item) {
             mBinding.setPosition(position);
-            mBinding.executePendingBindings();
+//            mBinding.executePendingBindings();
 //            mProductItemLiveData.setValue(item);
             mBinding.setProductItem(item);
 //            mBinding.setProductsListPosition(mListPosition);
 
-            Picasso.get()
-                    .load(item.getImages().get(0))
-                    .into(mBinding.imageProduct);
+            if (item.getImages().size() > 0)
+                Glide.with(mViewModel.getApplication())
+                        .load(item.getImages().get(0))
+                        .into(mBinding.imageProduct);
+
+//            Picasso.get()
+//                    .load(item.getImages().get(0))
+//                    .into(mBinding.imageProduct);
         }
     }
 }

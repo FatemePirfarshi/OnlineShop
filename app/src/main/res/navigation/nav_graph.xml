@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/drawer_navigation"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_navigation"
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
@@ -33,6 +35,9 @@
                 android:name="categoryName"
                 app:argType="string" />
         </action>
+        <action
+            android:id="@+id/action_categoryListFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
     </fragment>
     <fragment
         android:id="@+id/productListFragment"
@@ -65,4 +70,10 @@
 <!--            android:name="productPage"-->
 <!--            app:argType="android.net.Uri" />-->
     </fragment>
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.onlineshop.view.fragment.CartFragment"
+        android:label="CartFragment" />
+
 </navigation>

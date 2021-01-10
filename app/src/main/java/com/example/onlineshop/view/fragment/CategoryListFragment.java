@@ -5,17 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -113,9 +110,13 @@ public class CategoryListFragment extends Fragment {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (recyclerView.canScrollHorizontally(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    if (page <= mCategoryListViewModel.getPageCount().getValue())
-                        mCategoryListViewModel.fetchCategoryItemsAsync(++page);
+
+                if(newState == 1) {
+                    if (recyclerView.canScrollHorizontally(1)) {
+                        if (page <= mCategoryListViewModel.getPageCount().getValue() &&
+                                mCategoryListViewModel.getListLiveData().getValue().size() == 10)
+                            mCategoryListViewModel.fetchCategoryItemsAsync(++page);
+                    }
                 }
             }
 
@@ -133,7 +134,6 @@ public class CategoryListFragment extends Fragment {
                 getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 true);
-        layoutManager.setReverseLayout(true);
         mBinding.rvCategories.setLayoutManager(layoutManager);
 //        mBinding.listTitle.setText(title);
     }

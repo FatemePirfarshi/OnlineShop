@@ -1,7 +1,5 @@
 package com.example.onlineshop.data.remote;
 
-import android.net.MacAddress;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,30 +39,20 @@ public class NetworkParams {
         return totalOptions;
     }
 
-    public static Map<String, String> getPopularOptions(int perPage) {
-        Map<String, String> popularOptions = new HashMap<>();
-        popularOptions.putAll(BASE_OPTIONS);
-        popularOptions.put("per_page", String.valueOf(perPage));
-        popularOptions.put("orderby", POPULAR);
-        return popularOptions;
+    public static Map<String, String> getHomeProductOptions(int perPage, String position){
+        Map<String, String> options = new HashMap<>();
+        options.putAll(BASE_OPTIONS);
+        options.put("per_page", String.valueOf(perPage));
+        options.put("orderby", position);
+        return options;
     }
 
-    public static Map<String, String> getRecentOptions(int perPage) {
-        Map<String, String> popularOptions = new HashMap<>();
-        popularOptions.putAll(BASE_OPTIONS);
-        popularOptions.put("per_page", String.valueOf(perPage));
-        popularOptions.put("orderby", RECENT);
-        return popularOptions;
+    public static Map<String, String> getSearchOptions(String query){
+        Map<String, String> searchOptions = new HashMap<>();
+        searchOptions.putAll(BASE_OPTIONS);
+        searchOptions.put("search", query);
+        return searchOptions;
     }
-
-    public static Map<String, String> getTopOptions(int perPage) {
-        Map<String, String> popularOptions = new HashMap<>();
-        popularOptions.putAll(BASE_OPTIONS);
-        popularOptions.put("per_page", String.valueOf(perPage));
-        popularOptions.put("orderby", TOP);
-        return popularOptions;
-    }
-
 //    public static Map<String, String> getProductItemOptions(){
 //        Map<String, String> productItemOptions = new HashMap<>();
 //        productItemOptions.putAll(BASE_OPTIONS);

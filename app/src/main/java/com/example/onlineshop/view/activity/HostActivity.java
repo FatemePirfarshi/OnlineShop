@@ -45,6 +45,10 @@ public class HostActivity extends AppCompatActivity {
                                         HostActivity.this,
                                         R.id.nav_host_fragment).navigate(R.id.homeFragment);
                                 break;
+                            case R.id.cartFragment:
+                                Navigation.findNavController(
+                                        HostActivity.this,
+                                        R.id.nav_host_fragment).navigate(R.id.cartFragment);
                         }
                         return true;
                     }

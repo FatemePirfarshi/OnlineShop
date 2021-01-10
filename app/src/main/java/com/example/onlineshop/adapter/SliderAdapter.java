@@ -7,11 +7,10 @@ import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
 
+import com.bumptech.glide.Glide;
 import com.example.onlineshop.R;
-import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.ItemImageSliderBinding;
 import com.smarteist.autoimageslider.SliderViewAdapter;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,9 +59,13 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderHolder>
 
         public void bindProductImage(String imageUrl) {
             Log.e(TAG, imageUrl);
-            Picasso.get()
+//            Picasso.get()
+//                    .load(imageUrl)
+//                    .into(mBinding.ivProductImage);
+            Glide.with(mContext)
                     .load(imageUrl)
                     .into(mBinding.ivProductImage);
+
         }
     }
 }

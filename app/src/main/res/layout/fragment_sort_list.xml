@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".view.fragment.SortListFragment">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/sort"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:gravity="center" />
+
+        <view
+            android:layout_width="match_parent"
+            android:layout_height="0.4dp" />
+
+        <TextView
+            android:id="@+id/tv_sort_best_sellers"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/best_sellers"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_sort_most_expensive"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/most_expensive"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_sort_cheapest"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/cheapest"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_sort_newest"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/newest"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+</layout>

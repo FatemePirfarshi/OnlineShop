@@ -35,6 +35,7 @@ public class ProductRepository {
     private MutableLiveData<List<ProductItem>> mPopularItemsLiveData = new MutableLiveData<>();
     private MutableLiveData<List<ProductItem>> mRecentItemsLiveData = new MutableLiveData<>();
     private MutableLiveData<List<ProductItem>> mTopItemsLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<ProductItem>> mSearchItemsLiveData = new MutableLiveData<>();
 
     private MutableLiveData<Integer> mPageCount = new MutableLiveData<>();
     private MutableLiveData<Integer> mCategoryItemId = new MutableLiveData<>();
@@ -42,6 +43,15 @@ public class ProductRepository {
 
     private MutableLiveData<ProductItem> mProductItemLiveData = new MutableLiveData<>();
     private MutableLiveData<List<ProductItem>> mRelatedItemsLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<ProductItem>> mCartItemLiveData = new MutableLiveData<>();
+
+    public MutableLiveData<List<ProductItem>> getCartItemLiveData() {
+        return mCartItemLiveData;
+    }
+
+    public void setCartItemLiveData(List<ProductItem> cartItemLiveData) {
+        mCartItemLiveData.setValue(cartItemLiveData);
+    }
 
     public MutableLiveData<List<ProductItem>> getRelatedItemsLiveData() {
         return mRelatedItemsLiveData;
@@ -65,6 +75,10 @@ public class ProductRepository {
 
     public MutableLiveData<List<ProductItem>> getTopItemsLiveData() {
         return mTopItemsLiveData;
+    }
+
+    public MutableLiveData<List<ProductItem>> getSearchItemsLiveData() {
+        return mSearchItemsLiveData;
     }
 
     public MutableLiveData<Integer> getCategoryItemId() {
@@ -98,6 +112,7 @@ public class ProductRepository {
     }
 
     public void fetchCategoryItemsAsync(int page) {
+        mCategoriesListLiveData.setValue(new ArrayList<>());
 
         Call<List<CategoryItem>> call = mWoocommerceServiceCategory.listCategoryItems(
                 NetworkParams.getCategoryOptions(page));
@@ -115,6 +130,9 @@ public class ProductRepository {
                 }
                 List<CategoryItem> items = response.body();
                 mCategoryItems.addAll(items);
+                for (int i = 0; i < mCategoryItems.size(); i++) {
+                    Log.e(TAG,"this category id is: " + mCategoryItems.get(i).getId());
+                }
                 mCategoriesListLiveData.setValue(mCategoryItems);
             }
 
@@ -126,8 +144,10 @@ public class ProductRepository {
     }
 
     public void fetchProductItemsAsync(int page, int categoryId) {
-        if (page == 1)
+        if (page == 1) {
             mProductItems = new ArrayList<>();
+            mProductListLiveData.setValue(mProductItems);
+        }
 
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
                 NetworkParams.getProductsOptions(page, categoryId));
@@ -178,29 +198,32 @@ public class ProductRepository {
     public void fetchPopularItems(int perPage) {
 
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
-                NetworkParams.getPopularOptions(perPage));
+                NetworkParams.getHomeProductOptions(perPage, NetworkParams.POPULAR));
         call.enqueue(getItemsCallback(mPopularItemsLiveData));
     }
 
     public void fetchRecentItems(int perPage) {
 
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
-                NetworkParams.getRecentOptions(perPage));
+                NetworkParams.getHomeProductOptions(perPage, NetworkParams.RECENT));
         call.enqueue(getItemsCallback(mRecentItemsLiveData));
     }
 
     public void fetchTopItems(int perPage) {
 
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
-                NetworkParams.getTopOptions(perPage));
+                NetworkParams.getHomeProductOptions(perPage, NetworkParams.TOP));
         call.enqueue(getItemsCallback(mTopItemsLiveData));
     }
 
-    private Callback<List<ProductItem>> getItemsCallback(MutableLiveData<List<ProductItem>> topItemsLiveData) {
+    private Callback<List<ProductItem>> getItemsCallback(MutableLiveData<List<ProductItem>> itemsLiveData) {
+        itemsLiveData.setValue(new ArrayList<>());
+
         return new Callback<List<ProductItem>>() {
             @Override
             public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
-                topItemsLiveData.setValue(response.body());
+                itemsLiveData.setValue(response.body());
+//                Log.e(TAG, "item image is : " + response.body().get(0).getImages().get(0));
             }
 
             @Override
@@ -217,9 +240,9 @@ public class ProductRepository {
         call.enqueue(new Callback<ProductItem>() {
             @Override
             public void onResponse(Call<ProductItem> call, Response<ProductItem> response) {
-//                mProductItem = response.body();
-                mProductItemLiveData.setValue(response.body());
-//                fetchRelatedItems(mProductItem.getRelatedIds());
+                ProductItem mProductItem = response.body();
+                mProductItemLiveData.setValue(mProductItem);
+                fetchRelatedItems(mProductItem.getRelatedIds());
 //                Log.e(TAG, "this item Clicked: " + response.body().getProductName());
             }
 
@@ -241,15 +264,31 @@ public class ProductRepository {
                 @Override
                 public void onResponse(Call<ProductItem> call, Response<ProductItem> response) {
                     relatedItems.add(response.body());
-                    Log.e(TAG, "related item is: " + response.body().getProductName());
+//                    Log.e(TAG, "related item is: " + response.body().getProductName());
                 }
 
                 @Override
                 public void onFailure(Call<ProductItem> call, Throwable t) {
-
+                    Log.e(TAG, t.getMessage(), t);
                 }
             });
         }
         mRelatedItemsLiveData.setValue(relatedItems);
+    }
+
+    public void fetchSearchItems(String query){
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getSearchOptions(query));
+        call.enqueue(new Callback<List<ProductItem>>() {
+            @Override
+            public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
+                mSearchItemsLiveData.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductItem>> call, Throwable t) {
+                Log.e(TAG, t.getMessage(), t);
+            }
+        });
     }
 }

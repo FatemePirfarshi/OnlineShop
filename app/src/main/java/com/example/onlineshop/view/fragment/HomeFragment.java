@@ -1,5 +1,7 @@
 package com.example.onlineshop.view.fragment;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.onlineshop.R;
 import com.example.onlineshop.adapter.ProductsListAdapter;
+import com.example.onlineshop.adapter.SliderAdapter;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.FragmentHomeBinding;
 import com.example.onlineshop.viewmodel.HomeViewModel;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +58,10 @@ public class HomeFragment extends Fragment {
 
         mHomeViewModel.fetchTotalProducts();
         setLiveDataObservers();
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        mBinding.ivSearch.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
     }
 
     private void setLiveDataObservers() {
@@ -95,6 +104,7 @@ public class HomeFragment extends Fragment {
                 container,
                 false);
         initViews();
+
         navListener();
         return mBinding.getRoot();
     }
@@ -117,29 +127,34 @@ public class HomeFragment extends Fragment {
                 getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 true);
-        layoutManagerPopular.setReverseLayout(true);
         mBinding.rvPopular.setLayoutManager(layoutManagerPopular);
 
         LinearLayoutManager layoutManagerRecent = new LinearLayoutManager(
                 getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 true);
-        layoutManagerRecent.setReverseLayout(true);
         mBinding.rvNewest.setLayoutManager(layoutManagerRecent);
 
         LinearLayoutManager layoutManagerTop = new LinearLayoutManager(
                 getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 true);
-        layoutManagerRecent.setReverseLayout(true);
         mBinding.rvTop.setLayoutManager(layoutManagerTop);
     }
 
     private void setupAdapter(LiveData<List<ProductItem>> productItemsLiveData,
                               RecyclerView rv,
                               int listPosition) {
-        ProductsListAdapter popularAdapter = new ProductsListAdapter(this, mProductListViewModel,
+
+        ProductsListAdapter adapter = new ProductsListAdapter(this, mProductListViewModel,
                 productItemsLiveData.getValue(), listPosition);
-        rv.setAdapter(popularAdapter);
+        rv.setAdapter(adapter);
+    }
+
+    private void setupSliderAdapter(ArrayList<String> itemImages) {
+        mBinding.imageSlider.setSliderAdapter(new SliderAdapter(getContext(), itemImages));
+        mBinding.imageSlider.setIndicatorAnimation(IndicatorAnimationType.WORM);
+        mBinding.imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        mBinding.imageSlider.startAutoCycle();
     }
 }

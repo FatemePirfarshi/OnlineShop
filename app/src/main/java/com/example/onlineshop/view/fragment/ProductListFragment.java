@@ -1,5 +1,7 @@
 package com.example.onlineshop.view.fragment;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +30,6 @@ import com.example.onlineshop.databinding.FragmentProductsListBinding;
 import com.example.onlineshop.view.observers.SingleEventObserver;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductListFragment extends Fragment {
@@ -74,6 +75,7 @@ public class ProductListFragment extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+
     }
 
     private void setLiveDataObservers() {
@@ -94,13 +96,15 @@ public class ProductListFragment extends Fragment {
                 R.layout.fragment_products_list,
                 container,
                 false);
-
         mBinding.setProductListViewModel(mProductListViewModel);
 
         initViews();
         scrollListener();
         openDrawer();
         navListener();
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        mBinding.ivSearch.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         return mBinding.getRoot();
     }
 
@@ -111,7 +115,6 @@ public class ProductListFragment extends Fragment {
             String categoryName = getArguments().getString("categoryName");
             mBinding.listTitle.setText(categoryName);
         }
-
     }
 
     private void navListener() {
@@ -146,7 +149,7 @@ public class ProductListFragment extends Fragment {
                 getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 true);
-        layoutManager.setReverseLayout(true);
+//        layoutManager.setReverseLayout(true);
         mBinding.rvProducts.setLayoutManager(layoutManager);
     }
 
@@ -156,12 +159,15 @@ public class ProductListFragment extends Fragment {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                if (page <= mProductListViewModel.getPageCount().getValue() &&
-                        mProductListViewModel.getProductListLiveData().getValue().size() == 10)
+                if(newState == 1) {
+                    if (page <= mProductListViewModel.getPageCount().getValue() &&
+                            mProductListViewModel.getProductListLiveData().getValue().size() == 10)
 
-                    mProductListViewModel.fetchProductItems(++page);
+                        mProductListViewModel.fetchProductItems(++page);
+                }
             }
         });
+
     }
 
     private void setupAdapter(List<ProductItem> items) {
@@ -169,5 +175,4 @@ public class ProductListFragment extends Fragment {
                 mProductListViewModel.getProductListLiveData().getValue(), 0);
         mBinding.rvProducts.setAdapter(adapter);
     }
-
 }
