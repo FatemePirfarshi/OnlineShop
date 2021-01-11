@@ -12,11 +12,13 @@ public class NetworkParams {
     public static final String POPULAR = "popularity";
     public static final String RECENT = "date";
     public static final String TOP = "rating";
+    public static final String ORDERBY = "orderby";
 
     public static final Map<String, String> BASE_OPTIONS = new HashMap<String, String>() {{
         put("consumer_key", CONSUMER_KEY);
         put("consumer_secret", CONSUMER_SECRET);
     }};
+    public static final String PRICE = "price";
 
     public static Map<String, String> getProductsOptions(int page, int categoryId) {
         Map<String, String> productOptions = new HashMap<>();
@@ -39,11 +41,18 @@ public class NetworkParams {
         return totalOptions;
     }
 
+    public static Map<String, String> getPerPageForCategory(int categoryId) {
+        Map<String, String> perPageOptions = new HashMap<>();
+        perPageOptions.putAll(BASE_OPTIONS);
+        perPageOptions.put("category", String.valueOf(categoryId));
+        return perPageOptions;
+    }
+
     public static Map<String, String> getHomeProductOptions(int perPage, String position){
         Map<String, String> options = new HashMap<>();
         options.putAll(BASE_OPTIONS);
         options.put("per_page", String.valueOf(perPage));
-        options.put("orderby", position);
+        options.put(ORDERBY, position);
         return options;
     }
 
@@ -53,8 +62,32 @@ public class NetworkParams {
         searchOptions.put("search", query);
         return searchOptions;
     }
-//    public static Map<String, String> getProductItemOptions(){
-//        Map<String, String> productItemOptions = new HashMap<>();
-//        productItemOptions.putAll(BASE_OPTIONS);
+
+    public static Map<String, String> getCheapest(int perPage, int categoryId){
+        Map<String, String> cheapestOptions = new HashMap<>();
+        cheapestOptions.putAll(BASE_OPTIONS);
+        cheapestOptions.put(ORDERBY, PRICE);
+        cheapestOptions.put("per_page", String.valueOf(perPage));
+        cheapestOptions.put("category", String.valueOf(categoryId));
+        cheapestOptions.put("order", "asc");
+        return cheapestOptions;
+    }
+
+    public static Map<String, String> getMostExpensive(int perPage, int categoryId, String position){
+        Map<String, String> mostExpensiveOptions = new HashMap<>();
+        mostExpensiveOptions.putAll(BASE_OPTIONS);
+        mostExpensiveOptions.put(ORDERBY, position);
+        mostExpensiveOptions.put("per_page", String.valueOf(perPage));
+        mostExpensiveOptions.put("category", String.valueOf(categoryId));
+        return mostExpensiveOptions;
+    }
+//
+//    public static Map<String, String> getNewest(int perPage, int categoryId){
+//        Map<String, String> newestOptions = new HashMap<>();
+//        newestOptions.putAll(BASE_OPTIONS);
+//        newestOptions.put(ORDERBY, RECENT);
+//        newestOptions.put("per_page", String.valueOf(perPage));
+//        newestOptions.put("category", String.valueOf(categoryId));
+//        return newestOptions;
 //    }
 }

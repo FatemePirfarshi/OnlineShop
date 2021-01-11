@@ -64,24 +64,23 @@ public class ProductPageFragment extends Fragment {
                 ArrayList<String> itemImages = (ArrayList<String>) productItem.getImages();
                 setupSliderAdapter(itemImages);
 
-
-                mProductPageViewModel.getRelatedItemsLiveData().observe(getViewLifecycleOwner(), new Observer<List<ProductItem>>() {
-                    @Override
-                    public void onChanged(List<ProductItem> productItems) {
-//                Log.e(TAG, productItems.get(0).getProductName());
-                        setupAdapter(productItems);
-                    }
-                });
+//                mProductPageViewModel.getRelatedItemsLiveData().observe(getViewLifecycleOwner(), new Observer<List<ProductItem>>() {
+//                    @Override
+//                    public void onChanged(List<ProductItem> productItems) {
+////                Log.e(TAG, productItems.get(0).getProductName());
+//                        setupAdapter(productItems);
+//                    }
+//                });
             }
         });
 
-//        mProductPageViewModel.getRelatedItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
-//            @Override
-//            public void onChanged(List<ProductItem> productItems) {
-////                Log.e(TAG, productItems.get(0).getProductName());
-//                setupAdapter(productItems);
-//            }
-//        });
+        mProductPageViewModel.getRelatedItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
+            @Override
+            public void onChanged(List<ProductItem> productItems) {
+//                Log.e(TAG, productItems.get(0).getProductName());
+                setupAdapter(productItems);
+            }
+        });
     }
 
     @Override

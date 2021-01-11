@@ -1,21 +1,14 @@
 package com.example.onlineshop.viewmodel;
 
 import android.app.Application;
-import android.app.SearchManager;
-import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.navigation.Navigation;
 
 import com.example.onlineshop.data.model.ProductItem;
-import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.repository.ProductRepository;
-import com.example.onlineshop.view.fragment.ProductListFragmentDirections;
 
 import java.util.List;
 
@@ -30,7 +23,7 @@ public class ProductListViewModel extends ProductViewModel {
 //    private final LiveData<ProductItem> mClickedItem;
 
     private MutableLiveData<Boolean> mOpenedLiveData = new MutableLiveData<>();
-    private MutableLiveData<Uri> mProductPageUri = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mSortDialogStart = new MutableLiveData<>();
 //    private MutableLiveData<ProductItem> mProductItemSelected;
 //    private MutableLiveData<Integer> mClickedProductItem;
 
@@ -41,6 +34,10 @@ public class ProductListViewModel extends ProductViewModel {
 //    public MutableLiveData<ProductItem> getProductItemSelected() {
 //        return mProductItemSelected;
 //    }
+
+    public MutableLiveData<Boolean> getSortDialogStart() {
+        return mSortDialogStart;
+    }
 
     public LiveData<Integer> getPageCount() {
         return mPageCount;
@@ -57,10 +54,6 @@ public class ProductListViewModel extends ProductViewModel {
 //    public LiveData<ProductItem> getClickedItem() {
 //        return mClickedItem;
 //    }
-
-    public MutableLiveData<Uri> getProductPageUri() {
-        return mProductPageUri;
-    }
 
 //    public MutableLiveData<Integer> getClickedProductItem() {
 //        mClickedProductItem = new MutableLiveData<>();
@@ -90,8 +83,18 @@ public class ProductListViewModel extends ProductViewModel {
     }
 
     public void sortClicked(){
-
+        mSortDialogStart.setValue(true);
     }
+
+//    public void sortClicked(Fragment fragment){
+//        SortListFragment sortListFragment = SortListFragment.newInstance();
+//
+//        sortListFragment.setTargetFragment(fragment,
+//                ProductListFragment.REQUEST_CODE_SORT_LIST);
+//
+//        sortListFragment.show(fragment.getParentFragmentManager(),
+//                ProductListFragment.SORT_DIALOG_FRAGMENT_TAG);
+//    }
 
 //    public void searchClicked(){
 //        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);

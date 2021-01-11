@@ -3,7 +3,6 @@ package com.example.onlineshop.view.fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +56,7 @@ public class HomeFragment extends Fragment {
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
 
         mHomeViewModel.fetchTotalProducts();
+        mHomeViewModel.fetchOfferPics();
         setLiveDataObservers();
 
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
@@ -91,6 +91,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(List<ProductItem> productItems) {
                 setupAdapter(mHomeViewModel.getTopItemsLiveData(), mBinding.rvTop, 3);
+            }
+        });
+
+        mHomeViewModel.getOfferPics().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> offerImages) {
+                setupSliderAdapter((ArrayList<String>) offerImages);
             }
         });
     }

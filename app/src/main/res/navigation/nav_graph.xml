@@ -56,6 +56,9 @@
         <argument
             android:name="categoryName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_productListFragment_to_sortListFragment"
+            app:destination="@id/sortListFragment" />
 
     </fragment>
 
@@ -75,5 +78,10 @@
         android:id="@+id/cartFragment"
         android:name="com.example.onlineshop.view.fragment.CartFragment"
         android:label="CartFragment" />
+
+    <dialog
+        android:id="@+id/sortListFragment"
+        android:name="com.example.onlineshop.view.fragment.SortListFragment"
+        android:label="SortListFragment" />
 
 </navigation>

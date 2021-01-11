@@ -1,12 +1,11 @@
 package com.example.onlineshop.view.fragment;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -33,6 +32,10 @@ import com.example.onlineshop.viewmodel.ProductListViewModel;
 import java.util.List;
 
 public class ProductListFragment extends Fragment {
+
+    public static final int REQUEST_CODE_SORT_LIST = 0;
+
+    public static final String SORT_DIALOG_FRAGMENT_TAG = "SortDialog";
 
     private FragmentProductsListBinding mBinding;
     private ProductListViewModel mProductListViewModel;
@@ -103,8 +106,10 @@ public class ProductListFragment extends Fragment {
         openDrawer();
         navListener();
 
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 //        mBinding.ivSearch.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        setSearchListener();
+
         return mBinding.getRoot();
     }
 
@@ -117,7 +122,49 @@ public class ProductListFragment extends Fragment {
         }
     }
 
+    private void setSearchListener() {
+        mBinding.ivSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+//                SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+//                mBinding.ivSearch.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+//                SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+//                Intent intent = getIntent();
+//                if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//                    String query = intent.getStringExtra(SearchManager.QUERY);
+//                    doMySearch(query);
+//                }
+//                Intent intent = new Intent(getActivity(), SearchActivity.class);
+//                intent.putExtra("query", query);
+//                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        mBinding.ivSearch.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+    }
+
     private void navListener() {
+        LiveData<Boolean> showDialogLiveData = mProductListViewModel.getSortDialogStart();
+        showDialogLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, showDialogLiveData) {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                super.onChanged(aBoolean);
+                if(aBoolean){
+                    Navigation.findNavController(mBinding.getRoot()).navigate(R.id.sortListFragment);
+                }
+            }
+        });
 
         mProductListViewModel.getClickedProductItem().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
@@ -128,6 +175,8 @@ public class ProductListFragment extends Fragment {
                 Navigation.findNavController(mBinding.getRoot()).navigate(R.id.productPageFragment, bundle);
             }
         });
+
+
     }
 
     private void openDrawer() {
@@ -159,7 +208,7 @@ public class ProductListFragment extends Fragment {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                if(newState == 1) {
+                if (newState == 1) {
                     if (page <= mProductListViewModel.getPageCount().getValue() &&
                             mProductListViewModel.getProductListLiveData().getValue().size() == 10)
 

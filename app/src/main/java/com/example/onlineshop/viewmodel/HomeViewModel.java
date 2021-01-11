@@ -18,6 +18,7 @@ public class HomeViewModel extends ProductViewModel {
     private final LiveData<List<ProductItem>> mPopularItemsLiveData;
     private final LiveData<List<ProductItem>> mRecentItemsLiveData;
     private final LiveData<List<ProductItem>> mTopItemsLiveData;
+    private final LiveData<List<String>> mOfferPics;
     private MutableLiveData<List<String>> mImagesLiveData = new MutableLiveData<>();
 
     private MutableLiveData<ProductItem> mClickedProductItem;
@@ -30,6 +31,7 @@ public class HomeViewModel extends ProductViewModel {
         mPopularItemsLiveData = mRepository.getPopularItemsLiveData();
         mRecentItemsLiveData = mRepository.getRecentItemsLiveData();
         mTopItemsLiveData = mRepository.getTopItemsLiveData();
+        mOfferPics = mRepository.getOfferPicsLiveData();
     }
 
     public LiveData<Integer> getPerPage() {
@@ -46,6 +48,10 @@ public class HomeViewModel extends ProductViewModel {
 
     public LiveData<List<ProductItem>> getTopItemsLiveData() {
         return mTopItemsLiveData;
+    }
+
+    public LiveData<List<String>> getOfferPics() {
+        return mOfferPics;
     }
 
     public MutableLiveData<List<String>> getImagesLiveData() {
@@ -68,9 +74,8 @@ public class HomeViewModel extends ProductViewModel {
         mRepository.fetchTopItems(perPage);
     }
 
-    public void fetchRecommendedProducts(){
-//        mRepository.fetchProductItemsAsync(2, 119);
-        //todo:search this category
+    public void fetchOfferPics(){
+        mRepository.fetchOfferPics();
     }
 
     public void navigateToDetail() {

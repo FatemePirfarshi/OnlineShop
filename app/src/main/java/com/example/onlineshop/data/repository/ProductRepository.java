@@ -36,6 +36,7 @@ public class ProductRepository {
     private MutableLiveData<List<ProductItem>> mRecentItemsLiveData = new MutableLiveData<>();
     private MutableLiveData<List<ProductItem>> mTopItemsLiveData = new MutableLiveData<>();
     private MutableLiveData<List<ProductItem>> mSearchItemsLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<String>> mOfferPicsLiveData = new MutableLiveData<>();
 
     private MutableLiveData<Integer> mPageCount = new MutableLiveData<>();
     private MutableLiveData<Integer> mCategoryItemId = new MutableLiveData<>();
@@ -51,6 +52,10 @@ public class ProductRepository {
 
     public void setCartItemLiveData(List<ProductItem> cartItemLiveData) {
         mCartItemLiveData.setValue(cartItemLiveData);
+    }
+
+    public MutableLiveData<List<String>> getOfferPicsLiveData() {
+        return mOfferPicsLiveData;
     }
 
     public MutableLiveData<List<ProductItem>> getRelatedItemsLiveData() {
@@ -195,6 +200,26 @@ public class ProductRepository {
         });
     }
 
+    public void fetchTotalProductsForCategory(int categoryId) {
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getPerPageForCategory(categoryId));
+        call.enqueue(new Callback<List<ProductItem>>() {
+            @Override
+            public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
+                Headers headerList = response.headers();
+                for (int i = 0; i < headerList.size(); i++) {
+                    int perPage = Integer.parseInt(headerList.get("X-WP-Total"));
+                    mPerPage.setValue(perPage);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductItem>> call, Throwable t) {
+                Log.e(TAG, t.getMessage(), t);
+            }
+        });
+    }
+
     public void fetchPopularItems(int perPage) {
 
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
@@ -290,5 +315,62 @@ public class ProductRepository {
                 Log.e(TAG, t.getMessage(), t);
             }
         });
+    }
+
+    public void fetchOfferPics(){
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getSearchOptions("تخفیفات"));
+        call.enqueue(new Callback<List<ProductItem>>() {
+            @Override
+            public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
+                mOfferPicsLiveData.setValue(response.body().get(0).getImages());
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductItem>> call, Throwable t) {
+                Log.e(TAG, t.getMessage(), t);
+            }
+        });
+    }
+
+    public void fetchCheapestProducts(int perPage, int categoryId){
+
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getCheapest(perPage, categoryId));
+        call.enqueue(getSortList(categoryId));
+    }
+
+    public void fetchMostExpensiveProducts(int perPage, int categoryId){
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getMostExpensive(perPage, categoryId, NetworkParams.PRICE));
+        call.enqueue(getSortList(categoryId));
+    }
+
+    public void fetchNewestProducts(int perPage, int categoryId){
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getMostExpensive(perPage, categoryId, NetworkParams.RECENT));
+        call.enqueue(getSortList(categoryId));
+    }
+
+    public void fetchBestSellersProducts(int perPage, int categoryId){
+        Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
+                NetworkParams.getMostExpensive(perPage, categoryId, NetworkParams.POPULAR));
+        call.enqueue(getSortList(categoryId));
+    }
+
+    private Callback<List<ProductItem>> getSortList(int categoryId) {
+        return new Callback<List<ProductItem>>() {
+
+            @Override
+            public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
+                mProductListLiveData.setValue(response.body());
+                mCategoryItemId.setValue(categoryId);
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductItem>> call, Throwable t) {
+                Log.e(TAG, t.getMessage(), t);
+            }
+        };
     }
 }
