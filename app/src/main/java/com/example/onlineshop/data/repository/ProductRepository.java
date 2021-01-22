@@ -303,11 +303,13 @@ public class ProductRepository {
 
     public void fetchSearchItems(String query){
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
-                NetworkParams.getSearchOptions(query));
+                NetworkParams.getSearchOptions(query, mCategoryItemId.getValue()));
         call.enqueue(new Callback<List<ProductItem>>() {
             @Override
             public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
                 mSearchItemsLiveData.setValue(response.body());
+//                String res = response.body().get(0).getProductName();
+//                Log.e("SearchActivity", res);
             }
 
             @Override
@@ -319,7 +321,7 @@ public class ProductRepository {
 
     public void fetchOfferPics(){
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
-                NetworkParams.getSearchOptions("تخفیفات"));
+                NetworkParams.getSearchOptions("تخفیفات", 119));
         call.enqueue(new Callback<List<ProductItem>>() {
             @Override
             public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {

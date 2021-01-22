@@ -23,6 +23,7 @@ public class CartFragment extends Fragment {
 
     private FragmentCartBinding mBinding;
     private CartViewModel mViewModel;
+    private CartAdapter mAdapter;
 
     public CartFragment() {
         // Required empty public constructor
@@ -41,16 +42,24 @@ public class CartFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mViewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        mViewModel.fetchCartItems();
+
         setLiveDataObservers();
     }
 
-    private void setLiveDataObservers(){
+    private void setLiveDataObservers() {
         mViewModel.getCartProductItem().observe(this, new Observer<List<ProductItem>>() {
             @Override
             public void onChanged(List<ProductItem> productItems) {
                 setupAdapter();
             }
         });
+//        mViewModel.getCountProductLiveData().observe(this, new Observer<Integer>() {
+//            @Override
+//            public void onChanged(Integer integer) {
+//                mAdapter.notifyDataSetChanged();
+//            }
+//        });
     }
 
     @Override
@@ -62,18 +71,19 @@ public class CartFragment extends Fragment {
                 R.layout.fragment_cart,
                 container,
                 false);
+
         initViews();
         mBinding.setCartViewModel(mViewModel);
 
         return mBinding.getRoot();
     }
 
-    private void initViews(){
+    private void initViews() {
         mBinding.rvCartProducts.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private void setupAdapter(){
-        CartAdapter adapter = new CartAdapter(mViewModel);
-        mBinding.rvCartProducts.setAdapter(adapter);
+    private void setupAdapter() {
+        mAdapter = new CartAdapter(mViewModel);
+        mBinding.rvCartProducts.setAdapter(mAdapter);
     }
 }

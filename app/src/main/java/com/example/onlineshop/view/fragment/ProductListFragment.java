@@ -1,11 +1,12 @@
 package com.example.onlineshop.view.fragment;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -101,14 +102,13 @@ public class ProductListFragment extends Fragment {
                 false);
         mBinding.setProductListViewModel(mProductListViewModel);
 
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        mBinding.ivSearch.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
         initViews();
         scrollListener();
         openDrawer();
         navListener();
-
-//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-//        mBinding.ivSearch.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        setSearchListener();
 
         return mBinding.getRoot();
     }
@@ -116,42 +116,11 @@ public class ProductListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         if (getArguments() != null) {
             String categoryName = getArguments().getString("categoryName");
             mBinding.listTitle.setText(categoryName);
         }
-    }
-
-    private void setSearchListener() {
-        mBinding.ivSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-//                SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-//                mBinding.ivSearch.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-
-//                SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-//                Intent intent = getIntent();
-//                if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-//                    String query = intent.getStringExtra(SearchManager.QUERY);
-//                    doMySearch(query);
-//                }
-//                Intent intent = new Intent(getActivity(), SearchActivity.class);
-//                intent.putExtra("query", query);
-//                startActivity(intent);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        mBinding.ivSearch.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
     }
 
     private void navListener() {
@@ -160,7 +129,7 @@ public class ProductListFragment extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 super.onChanged(aBoolean);
-                if(aBoolean){
+                if (aBoolean) {
                     Navigation.findNavController(mBinding.getRoot()).navigate(R.id.sortListFragment);
                 }
             }

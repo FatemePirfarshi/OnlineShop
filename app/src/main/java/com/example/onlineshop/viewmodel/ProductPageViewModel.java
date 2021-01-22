@@ -44,6 +44,7 @@ public class ProductPageViewModel extends ProductViewModel {
 
     public void addToCartClicked(){
         ProductItem item = mProductItemLiveData.getValue();
+        item.setCountInCart(1);
         QueryPreferences.addCartProduct(getApplication(), item);
         mRepository.setCartItemLiveData(QueryPreferences.getCartProducts(getApplication()));
     }

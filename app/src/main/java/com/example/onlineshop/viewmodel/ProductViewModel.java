@@ -25,6 +25,7 @@ public class ProductViewModel extends AndroidViewModel {
     }
 
     public void onProductItemClicked(int id){
+
         Log.e("productItemClicked", "this id clicked in pvm" + id);
         mRepository.fetchProductItemWithId(id);
         mClickedProductItem.setValue(id);

@@ -17,7 +17,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
 
     private CartViewModel mViewModel;
 
-    public CartAdapter(CartViewModel viewModel){
+    public CartAdapter(CartViewModel viewModel) {
         mViewModel = viewModel;
     }
 
@@ -42,20 +42,28 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
         return mViewModel.getCartProductItem().getValue().size();
     }
 
-    class CartHolder extends RecyclerView.ViewHolder{
+    class CartHolder extends RecyclerView.ViewHolder {
 
         private ItemCartListBinding mBinding;
 
         public CartHolder(ItemCartListBinding binding) {
             super(binding.getRoot());
-            mBinding= binding;
+            mBinding = binding;
             mBinding.executePendingBindings();
 
             mBinding.setCartProductViewModel(mViewModel);
         }
 
-        public void bindCartItem(ProductItem item, int position){
+        public void bindCartItem(ProductItem item, int position) {
             mBinding.setPosition(position);
+//
+
+//            mViewModel.getCountProductLiveData().observe((LifecycleOwner) this, new Observer<Integer>() {
+//                @Override
+//                public void onChanged(Integer integer) {
+//                    mBinding.tvCountProduct.setText(String.valueOf(integer));
+//                }
+//            });
 
             Glide.with(mViewModel.getApplication())
                     .load(item.getImages().get(0))

@@ -56,10 +56,11 @@ public class NetworkParams {
         return options;
     }
 
-    public static Map<String, String> getSearchOptions(String query){
+    public static Map<String, String> getSearchOptions(String query, int categoryId){
         Map<String, String> searchOptions = new HashMap<>();
         searchOptions.putAll(BASE_OPTIONS);
         searchOptions.put("search", query);
+        searchOptions.put("category", String.valueOf(categoryId));
         return searchOptions;
     }
 

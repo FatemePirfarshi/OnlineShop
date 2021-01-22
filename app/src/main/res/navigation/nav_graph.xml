@@ -65,14 +65,7 @@
     <fragment
         android:id="@+id/productPageFragment"
         android:name="com.example.onlineshop.view.fragment.ProductPageFragment"
-        android:label="ProductPageFragment" >
-<!--        <argument-->
-<!--            android:name="productId"-->
-<!--            app:argType="Integer"/>-->
-<!--        <argument-->
-<!--            android:name="productPage"-->
-<!--            app:argType="android.net.Uri" />-->
-    </fragment>
+        android:label="ProductPageFragment" />
 
     <fragment
         android:id="@+id/cartFragment"
@@ -83,5 +76,14 @@
         android:id="@+id/sortListFragment"
         android:name="com.example.onlineshop.view.fragment.SortListFragment"
         android:label="SortListFragment" />
+    <activity
+        android:id="@+id/searchActivity2"
+        android:name="com.example.onlineshop.view.activity.SearchActivity"
+        android:label="SearchActivity" >
+
+        <argument
+            android:name="productId"
+            app:argType="integer"/>
+    </activity>
 
 </navigation>

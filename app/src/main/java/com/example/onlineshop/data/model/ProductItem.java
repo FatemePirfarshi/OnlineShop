@@ -15,6 +15,7 @@ public class ProductItem implements Serializable {
     private List<String> mImages;
     private List<Integer> mCategoriesId;
     private List<Integer> mRelatedIds;
+    private int countInCart = 0;
 
     public ProductItem(int id, String productName, String productPrice, String url, Date dateCreated,
                        int rate, String description, List<String> images, List<Integer> categoriesId,
@@ -109,5 +110,13 @@ public class ProductItem implements Serializable {
 
     public void setRelatedIds(List<Integer> relatedIds) {
         mRelatedIds = relatedIds;
+    }
+
+    public int getCountInCart() {
+        return countInCart;
+    }
+
+    public void setCountInCart(int countInCart) {
+        this.countInCart = countInCart;
     }
 }
