@@ -51,20 +51,6 @@
                     android:onClick="@{() -> productListViewModel.openDrawer()}"
                     android:src="@drawable/ic_menu" />
 
-<!--                <com.google.android.material.textfield.TextInputLayout-->
-<!--                    android:id="@+id/et_search"-->
-<!--                    style="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_toRightOf="@id/nv_menu"-->
-<!--                    android:layout_alignParentRight="true"-->
-<!--                    android:layout_alignParentTop="true"-->
-<!--                    android:layout_alignParentBottom="true"-->
-<!--                    android:layout_margin="8dp"-->
-<!--                    app:endIconMode="custom"-->
-<!--                    app:endIconDrawable="@drawable/ic_search"-->
-<!--                    android:hint="@string/search_hint"/>-->
-
             </RelativeLayout>
 
             <LinearLayout

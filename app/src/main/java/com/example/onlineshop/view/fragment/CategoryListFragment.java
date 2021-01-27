@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,7 +24,7 @@ import com.example.onlineshop.viewmodel.CategoryListViewModel;
 
 import java.util.List;
 
-public class CategoryListFragment extends Fragment {
+public class CategoryListFragment extends VisibleFragment {
 
     public static final String TAG = "CategoryList";
     private FragmentCategoryListBinding mBinding;

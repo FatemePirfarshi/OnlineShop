@@ -19,6 +19,7 @@
     <string name="categories">دسته بندی ها</string>
     <string name="home">خانه</string>
     <string name="cart">سبد خرید</string>
+    <string name="account">نمایه من</string>
 
     <string name="products_category">دسته بندی محصولات:</string>
     <string name="item_category"> کالا </string>
@@ -33,6 +34,8 @@
 
     <string name="search_hint">جستجو در کالاها</string>
     <string name="search_result">محصولات جستجو شده:</string>
+    <string name="related_items">محصولات مشابه:</string>
+    <string name="review_item">نظرات:</string>
 
     <string name="sort">مرتب سازی</string>
     <string name="best_sellers">پرفروش ترین ها</string>
@@ -40,7 +43,25 @@
     <string name="cheapest">ارزان ترین ها</string>
     <string name="newest">جدید ترین ها</string>
 
-    <string name="hello_world">Hello Square World!</string>
+    <string name="choose_hour"> انتخاب ساعت هشدار </string>
+    <string name="three_hour"> 3 ساعت یک بار</string>
+    <string name="five_hour"> 5 ساعت یک بار </string>
+    <string name="eight_hour"> 8 ساعت یک بار</string>
+    <string name="twelve_hour"> 12 ساعت یک بار</string>
+    <string name="choose_clock"> تنظیم هشدار </string>
+    <string name="remove_alarm"> غیرفعال کردن </string>
+
+    <string name="channel_id">online_shop_channel_id</string>
+    <string name="channel_name">OnlineShop Channel</string>
+    <string name="channel_description">This is notification channel for OnlineShop</string>
+
+    <string name="new_product_title">New Product in Online Shop</string>
+    <string name="new_product_text">You have a new product in OnlineShop.</string>
+
+    <string name="address"> آدرس خود را وارد کنید</string>
+    <string name="user_name">User Name</string>
+    <string name="email">Email</string>
+    <string name="sign_in">ثبت نام</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

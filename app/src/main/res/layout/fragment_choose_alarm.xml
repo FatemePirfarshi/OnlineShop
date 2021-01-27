@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="chooseAlarmViewModel"
+            type="com.example.onlineshop.viewmodel.ChooseAlarmViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".view.fragment.ChooseAlarmFragment">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/choose_clock"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:gravity="center" />
+
+        <RadioGroup
+            android:id="@+id/radiogp_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/btn_three"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/three_hour" />
+
+            <RadioButton
+                android:id="@+id/btn_five"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/five_hour" />
+
+            <RadioButton
+                android:id="@+id/btn_eight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/eight_hour" />
+
+            <RadioButton
+                android:id="@+id/btn_twelve"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/twelve_hour" />
+
+            <RadioButton
+                android:id="@+id/btn_choose_hour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/choose_hour" />
+
+        </RadioGroup>
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_deactive_alarm"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:onClick="@{() -> chooseAlarmViewModel.togglePolling()}"/>
+
+    </LinearLayout>
+</layout>

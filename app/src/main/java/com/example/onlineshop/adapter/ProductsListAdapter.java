@@ -14,7 +14,6 @@ import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.ItemProductListBinding;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapter.ProductListHolder> {
@@ -56,48 +55,22 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
     public class ProductListHolder extends RecyclerView.ViewHolder {
 
         private ItemProductListBinding mBinding;
-//        private MutableLiveData<ProductItem> mProductItemLiveData = new MutableLiveData<>();
 
         public ProductListHolder(ItemProductListBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
             mBinding.setProductViewModel(mViewModel);
-//            mBinding.setLifecycleOwner(mOwner);
+            mBinding.setLifecycleOwner(mOwner);
 
-            List<ProductItem> items = mProductItems;
-//            List<String> productsName = new ArrayList<>();
-//            List<String> productsPrice = new ArrayList<>();
-            List<Integer> productsId = new ArrayList<>();
-//
-            for (int i = 0; i < items.size(); i++) {
-//                productsName.add(items.get(i).getProductName());
-//                productsPrice.add(items.get(i).getProductPrice());
-                productsId.add(items.get(i).getId());
-            }
-//            mBinding.setProductNameList(productsName);
-//            mBinding.setProductPriceList(productsPrice);
-            mBinding.setProductIdList(productsId);
         }
 
-//        public MutableLiveData<ProductItem> getProductItemLiveData() {
-//            return mProductItemLiveData;
-//        }
-
         public void bindProductItem(int position, ProductItem item) {
-            mBinding.setPosition(position);
-//            mBinding.executePendingBindings();
-//            mProductItemLiveData.setValue(item);
             mBinding.setProductItem(item);
-//            mBinding.setProductsListPosition(mListPosition);
 
             if (item.getImages().size() > 0)
                 Glide.with(mViewModel.getApplication())
                         .load(item.getImages().get(0))
                         .into(mBinding.imageProduct);
-
-//            Picasso.get()
-//                    .load(item.getImages().get(0))
-//                    .into(mBinding.imageProduct);
         }
     }
 }

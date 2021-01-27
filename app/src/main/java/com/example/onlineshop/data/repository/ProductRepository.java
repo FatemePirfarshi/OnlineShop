@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.onlineshop.data.model.CategoryItem;
+import com.example.onlineshop.data.model.Customer;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.remote.retrofit.RetrofitInstance;
@@ -25,8 +26,10 @@ public class ProductRepository {
     private WoocommerceService mWoocommerceServiceCategory;
     private WoocommerceService mWoocommerceServiceProduct;
     private WoocommerceService mWoocommerceServiceProductWithId;
+    private WoocommerceService mWoocommerceServiceCustomer;
 
     private List<ProductItem> mProductItems;
+    private List<ProductItem> relatedItems;
     private List<CategoryItem> mCategoryItems = new ArrayList<>();
 //    private ProductItem mProductItem;
 
@@ -114,6 +117,7 @@ public class ProductRepository {
         mWoocommerceServiceCategory = RetrofitInstance.getCategoryInstance().create(WoocommerceService.class);
         mWoocommerceServiceProduct = RetrofitInstance.getProductInstance().create(WoocommerceService.class);
         mWoocommerceServiceProductWithId = RetrofitInstance.getProductInstanceWithId().create(WoocommerceService.class);
+        mWoocommerceServiceCustomer = RetrofitInstance.getCustomerInstance().create(WoocommerceService.class);
     }
 
     public void fetchCategoryItemsAsync(int page) {
@@ -136,7 +140,7 @@ public class ProductRepository {
                 List<CategoryItem> items = response.body();
                 mCategoryItems.addAll(items);
                 for (int i = 0; i < mCategoryItems.size(); i++) {
-                    Log.e(TAG,"this category id is: " + mCategoryItems.get(i).getId());
+                    Log.e(TAG, "this category id is: " + mCategoryItems.get(i).getId());
                 }
                 mCategoriesListLiveData.setValue(mCategoryItems);
             }
@@ -268,7 +272,7 @@ public class ProductRepository {
                 ProductItem mProductItem = response.body();
                 mProductItemLiveData.setValue(mProductItem);
                 fetchRelatedItems(mProductItem.getRelatedIds());
-//                Log.e(TAG, "this item Clicked: " + response.body().getProductName());
+                Log.e(TAG, "this item Clicked: " + response.body().getProductName());
             }
 
             @Override
@@ -281,7 +285,8 @@ public class ProductRepository {
 
     public void fetchRelatedItems(List<Integer> relatedProductsId) {
 
-        List<ProductItem> relatedItems = new ArrayList<>();
+        relatedItems = new ArrayList<>();
+
         for (int i = 0; i < relatedProductsId.size(); i++) {
             Call<ProductItem> call = mWoocommerceServiceProductWithId.getProductItem(
                     relatedProductsId.get(i), NetworkParams.getBaseOptions());
@@ -289,25 +294,30 @@ public class ProductRepository {
                 @Override
                 public void onResponse(Call<ProductItem> call, Response<ProductItem> response) {
                     relatedItems.add(response.body());
-//                    Log.e(TAG, "related item is: " + response.body().getProductName());
-                }
+                    mRelatedItemsLiveData.setValue(relatedItems);
 
+//                    Log.e("RelatedItems", "related item is: " + response.body().getProductName());
+                }
                 @Override
                 public void onFailure(Call<ProductItem> call, Throwable t) {
                     Log.e(TAG, t.getMessage(), t);
                 }
             });
         }
-        mRelatedItemsLiveData.setValue(relatedItems);
+
+        for (ProductItem item : relatedItems) {
+            Log.e("RelatedItems", "related item is: " + item.getProductName());
+        }
     }
 
-    public void fetchSearchItems(String query){
+    public void fetchSearchItems(String query) {
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
                 NetworkParams.getSearchOptions(query, mCategoryItemId.getValue()));
         call.enqueue(new Callback<List<ProductItem>>() {
             @Override
             public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
-                mSearchItemsLiveData.setValue(response.body());
+//                mSearchItemsLiveData.setValue(response.body());
+                mProductListLiveData.setValue(response.body());
 //                String res = response.body().get(0).getProductName();
 //                Log.e("SearchActivity", res);
             }
@@ -319,7 +329,7 @@ public class ProductRepository {
         });
     }
 
-    public void fetchOfferPics(){
+    public void fetchOfferPics() {
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
                 NetworkParams.getSearchOptions("تخفیفات", 119));
         call.enqueue(new Callback<List<ProductItem>>() {
@@ -335,26 +345,26 @@ public class ProductRepository {
         });
     }
 
-    public void fetchCheapestProducts(int perPage, int categoryId){
+    public void fetchCheapestProducts(int perPage, int categoryId) {
 
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
                 NetworkParams.getCheapest(perPage, categoryId));
         call.enqueue(getSortList(categoryId));
     }
 
-    public void fetchMostExpensiveProducts(int perPage, int categoryId){
+    public void fetchMostExpensiveProducts(int perPage, int categoryId) {
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
                 NetworkParams.getMostExpensive(perPage, categoryId, NetworkParams.PRICE));
         call.enqueue(getSortList(categoryId));
     }
 
-    public void fetchNewestProducts(int perPage, int categoryId){
+    public void fetchNewestProducts(int perPage, int categoryId) {
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
                 NetworkParams.getMostExpensive(perPage, categoryId, NetworkParams.RECENT));
         call.enqueue(getSortList(categoryId));
     }
 
-    public void fetchBestSellersProducts(int perPage, int categoryId){
+    public void fetchBestSellersProducts(int perPage, int categoryId) {
         Call<List<ProductItem>> call = mWoocommerceServiceProduct.listProductItems(
                 NetworkParams.getMostExpensive(perPage, categoryId, NetworkParams.POPULAR));
         call.enqueue(getSortList(categoryId));
@@ -374,5 +384,22 @@ public class ProductRepository {
                 Log.e(TAG, t.getMessage(), t);
             }
         };
+    }
+
+    public void postCustomer(Customer customer) {
+        Log.e("postCustomer", "post custoemr called");
+
+        Call<Customer> call = mWoocommerceServiceCustomer.createCustomer(customer);
+        call.enqueue(new Callback<Customer>() {
+            @Override
+            public void onResponse(Call<Customer> call, Response<Customer> response) {
+                Log.e("postCustomer", "your customer post successfully");
+            }
+
+            @Override
+            public void onFailure(Call<Customer> call, Throwable t) {
+                Log.e(TAG, "post customer failed");
+            }
+        });
     }
 }

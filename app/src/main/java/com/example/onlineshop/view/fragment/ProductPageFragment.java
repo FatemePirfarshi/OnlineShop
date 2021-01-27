@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.onlineshop.R;
@@ -25,7 +25,7 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductPageFragment extends Fragment {
+public class ProductPageFragment extends VisibleFragment {
 
     public static final String TAG = "ProductPageFragment";
     private FragmentProductPageBinding mBinding;
@@ -93,8 +93,21 @@ public class ProductPageFragment extends Fragment {
                 container,
                 false);
         initViews();
+        navListener();
 
         return mBinding.getRoot();
+    }
+
+    private void navListener() {
+        mProductListViewModel.getClickedProductItem().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer id) {
+                Log.e("productItemClicked", "this id clicked in pvm change LiveData");
+                Bundle bundle = new Bundle();
+                bundle.putInt("productId", id);
+                Navigation.findNavController(mBinding.getRoot()).navigate(R.id.productPageFragment, bundle);
+            }
+        });
     }
 
 
@@ -107,6 +120,7 @@ public class ProductPageFragment extends Fragment {
     }
 
     private void setupAdapter(List<ProductItem> items) {
+//        Log.e("RelatedItems", mProductPageViewModel.getRelatedItemsLiveData().getValue().get(0).getProductName());
         ProductsListAdapter adapter = new ProductsListAdapter(this, mProductListViewModel,
                 mProductPageViewModel.getRelatedItemsLiveData().getValue(), 0);
         mBinding.rvProducts.setAdapter(adapter);

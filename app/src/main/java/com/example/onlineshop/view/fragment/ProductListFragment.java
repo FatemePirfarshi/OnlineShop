@@ -1,19 +1,17 @@
 package com.example.onlineshop.view.fragment;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,7 +30,7 @@ import com.example.onlineshop.viewmodel.ProductListViewModel;
 
 import java.util.List;
 
-public class ProductListFragment extends Fragment {
+public class ProductListFragment extends VisibleFragment {
 
     public static final int REQUEST_CODE_SORT_LIST = 0;
 
@@ -102,9 +100,21 @@ public class ProductListFragment extends Fragment {
                 false);
         mBinding.setProductListViewModel(mProductListViewModel);
 
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        mBinding.ivSearch.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        mBinding.ivSearch.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
+        mBinding.ivSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mProductListViewModel.fetchSearchItems(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         initViews();
         scrollListener();
         openDrawer();

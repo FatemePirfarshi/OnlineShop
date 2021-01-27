@@ -1,6 +1,7 @@
 package com.example.onlineshop.data.remote.retrofit;
 
 import com.example.onlineshop.data.model.CategoryItem;
+import com.example.onlineshop.data.model.Customer;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.data.remote.NetworkParams;
 import com.google.gson.Gson;
@@ -41,6 +42,16 @@ public class RetrofitInstance {
                         ProductItem.class,
                         new GetSingleProductItemDeserializer()
                 ))
+                .build();
+    }
+
+    public static Retrofit getCustomerInstance() {
+        return new Retrofit.Builder()
+                .baseUrl(NetworkParams.BASE_URL)
+                .addConverterFactory(createGsonConverter(
+                        new TypeToken<Customer>() {
+                        }.getType(),
+                        new GetCustomerSerializer()))
                 .build();
     }
 

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,7 +28,7 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends VisibleFragment {
 
 //    private ProductListViewModel mProductListViewModel;
     private HomeViewModel mHomeViewModel;

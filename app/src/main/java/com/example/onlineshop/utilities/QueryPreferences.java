@@ -13,6 +13,18 @@ import java.util.List;
 public class QueryPreferences {
 
     private static final String PREF_CART_PRODUCT = "cartProduct";
+    private static final String PREF_LAST_PRODUCT_ID = "lastProductId";
+
+    public static int getLastProductId(Context context){
+        return getSharedPreferences(context).getInt(PREF_LAST_PRODUCT_ID, 0);
+    }
+
+    public static void setLastProductId(Context context, int lastProductId){
+        getSharedPreferences(context)
+                .edit()
+                .putInt(PREF_LAST_PRODUCT_ID, lastProductId)
+                .apply();
+    }
 
     public static void setCartProducts(Context context, List<ProductItem> productItems){
 

@@ -11,24 +11,16 @@
         <variable
             name="productViewModel"
             type="com.example.onlineshop.viewmodel.ProductListViewModel" />
-
+    </data>
 <!--        <variable-->
-<!--            name="productListItem"-->
-<!--            type="com.example.onlineshop.adapter.ProductsListAdapter.ProductListHolder" />-->
-
-        <variable
-            name="position"
-            type="Integer" />
-
-<!--        <variable-->
-<!--            name="productsListPosition"-->
+<!--            name="position"-->
 <!--            type="Integer" />-->
 
-        <variable
-            name="productIdList"
-            type="java.util.List&lt;Integer&gt;" />
+<!--        <variable-->
+<!--            name="productIdList"-->
+<!--            type="java.util.List&lt;Integer&gt;" />-->
 
-    </data>
+
 
     <androidx.cardview.widget.CardView
         android:layout_width="200dp"

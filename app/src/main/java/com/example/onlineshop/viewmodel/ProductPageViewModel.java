@@ -22,6 +22,7 @@ public class ProductPageViewModel extends ProductViewModel {
         mRepository = ProductRepository.getInstance();
         mProductItemLiveData = mRepository.getProductItemLiveData();
         mRelatedItemsLiveData = mRepository.getRelatedItemsLiveData();
+//        Log.e("RelatedItemsViewModel", mRepository.getRelatedItemsLiveData().getValue().get(0).getProductName());
     }
 
     public LiveData<ProductItem> getProductItemLiveData() {

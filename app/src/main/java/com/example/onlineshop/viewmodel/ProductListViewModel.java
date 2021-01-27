@@ -24,6 +24,8 @@ public class ProductListViewModel extends ProductViewModel {
 
     private MutableLiveData<Boolean> mOpenedLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mSortDialogStart = new MutableLiveData<>();
+    private LiveData<List<ProductItem>> mSearchLiveData;
+
 //    private MutableLiveData<ProductItem> mProductItemSelected;
 //    private MutableLiveData<Integer> mClickedProductItem;
 
@@ -51,6 +53,14 @@ public class ProductListViewModel extends ProductViewModel {
         return mCategoryItemId;
     }
 
+    public void fetchSearchItems(String query){
+        mRepository.fetchSearchItems(query);
+    }
+
+    public LiveData<List<ProductItem>> getSearchLiveData() {
+        return mSearchLiveData;
+    }
+
 //    public LiveData<ProductItem> getClickedItem() {
 //        return mClickedItem;
 //    }
@@ -68,6 +78,7 @@ public class ProductListViewModel extends ProductViewModel {
         mProductListLiveData = mRepository.getProductListLiveData();
         mPageCount = mRepository.getPageCount();
         mCategoryItemId = mRepository.getCategoryItemId();
+        mSearchLiveData = mRepository.getSearchItemsLiveData();
 
 //        mProductItemSelected = mRepository.getProductItemSelectedLiveData();
 //        mClickedItem = mRepository.getProductItemLiveData();

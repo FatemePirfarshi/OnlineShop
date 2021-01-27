@@ -1,5 +1,7 @@
 package com.example.onlineshop.view.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -15,6 +17,10 @@ import com.example.onlineshop.databinding.ActivityHostBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HostActivity extends AppCompatActivity {
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, HostActivity.class);
+    }
 
     private ActivityHostBinding mBinding;
 
@@ -49,6 +55,12 @@ public class HostActivity extends AppCompatActivity {
                                 Navigation.findNavController(
                                         HostActivity.this,
                                         R.id.nav_host_fragment).navigate(R.id.cartFragment);
+                                break;
+                            case R.id.accountFragment:
+                                Navigation.findNavController(
+                                        HostActivity.this,
+                                        R.id.nav_host_fragment).navigate(R.id.accountFragment);
+                                break;
                         }
                         return true;
                     }

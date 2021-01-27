@@ -65,25 +65,45 @@
     <fragment
         android:id="@+id/productPageFragment"
         android:name="com.example.onlineshop.view.fragment.ProductPageFragment"
-        android:label="ProductPageFragment" />
+        android:label="ProductPageFragment" >
+        <action
+            android:id="@+id/action_productPageFragment_self"
+            app:destination="@id/productPageFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/cartFragment"
         android:name="com.example.onlineshop.view.fragment.CartFragment"
-        android:label="CartFragment" />
+        android:label="CartFragment" >
+        <action
+            android:id="@+id/action_cartFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
+    </fragment>
 
     <dialog
         android:id="@+id/sortListFragment"
         android:name="com.example.onlineshop.view.fragment.SortListFragment"
         android:label="SortListFragment" />
-    <activity
-        android:id="@+id/searchActivity2"
-        android:name="com.example.onlineshop.view.activity.SearchActivity"
-        android:label="SearchActivity" >
 
-        <argument
-            android:name="productId"
-            app:argType="integer"/>
-    </activity>
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.onlineshop.view.fragment.AccountFragment"
+        android:label="AccountFragment" >
+        <action
+            android:id="@+id/action_accountFragment_to_chooseAlarmFragment"
+            app:destination="@id/chooseAlarmFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_locatorFragment"
+            app:destination="@id/locatorFragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/chooseAlarmFragment"
+        android:name="com.example.onlineshop.view.fragment.ChooseAlarmFragment"
+        android:label="ChooseAlarmFragment" />
+    <fragment
+        android:id="@+id/locatorFragment"
+        android:name="com.example.onlineshop.view.fragment.LocatorFragment"
+        android:label="LocatorFragment" />
 
 </navigation>
