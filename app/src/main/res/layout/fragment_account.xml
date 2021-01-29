@@ -49,39 +49,56 @@
                 android:layout_margin="16dp"
                 android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputLayout
+                <EditText
                     android:id="@+id/et_email"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:hint="@string/email"
-                    android:padding="2dp"
-                    app:errorEnabled="true"
-                    app:helperText="*Required">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/et_user_name"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:padding="4dp"
+                    android:onTextChanged="@{accountViewModel::onTextChangedEmail}"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/user_name"
-                    android:padding="2dp"
-                    app:errorEnabled="true"
-                    app:helperText="*Required">
+                    android:layout_height="60dp"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text" />
+                <EditText
+                    android:id="@+id/et_user_name"
+                    android:hint="@string/user"
+                    android:padding="4dp"
+                    android:onTextChanged="@{accountViewModel::onTextChangedUserName}"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"/>
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:id="@+id/et_email"-->
+<!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="@string/email"-->
+<!--                    android:padding="2dp"-->
+<!--                    app:errorEnabled="true"-->
+<!--                    app:helperText="*Required">-->
 
-                </com.google.android.material.textfield.TextInputLayout>
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:onTextChanged="@{accountViewModel::onTextChangedEmail}"-->
+<!--                        android:inputType="text" />-->
+
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:id="@+id/et_user_name"-->
+<!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="@string/user_name"-->
+<!--                    android:padding="2dp"-->
+<!--                    app:errorEnabled="true"-->
+<!--                    app:helperText="*Required">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:onTextChanged="@{accountViewModel::onTextChangedUserName}"-->
+<!--                        android:inputType="text" />-->
+
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -103,6 +120,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/address"
+                        android:layout_toRightOf="@id/iv_location"
                         android:layout_gravity="right"
                         android:padding="12dp"
                         app:errorEnabled="true" />

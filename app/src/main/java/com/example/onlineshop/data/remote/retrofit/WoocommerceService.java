@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
@@ -34,9 +34,21 @@ public interface WoocommerceService {
             @QueryMap Map<String, String> options
     );
 
-    @Headers("Content-Type: application/json")
+//    @Headers("Content-Type: application/json")
+//    @POST("customers")
+//    Call<Customer> createCustomer(
+//            @Body Customer customer
+//            );
+
+    @FormUrlEncoded
     @POST("customers")
-    Call<Customer> createCustomer(
-            @Body Customer customer
-            );
+    Call<Customer> postCustomer(
+            @Field("email") String email,
+            @QueryMap Map<String,String> options);
+
+    @FormUrlEncoded
+    @POST("orders")
+    Call<Customer> postOrder(
+            @Field("email") String email,
+            @QueryMap Map<String,String> options);
 }

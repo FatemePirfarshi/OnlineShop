@@ -13,12 +13,18 @@ public class NetworkParams {
     public static final String RECENT = "date";
     public static final String TOP = "rating";
     public static final String ORDERBY = "orderby";
+    public static final String PRICE = "price";
 
     public static final Map<String, String> BASE_OPTIONS = new HashMap<String, String>() {{
         put("consumer_key", CONSUMER_KEY);
         put("consumer_secret", CONSUMER_SECRET);
     }};
-    public static final String PRICE = "price";
+
+    public static Map<String, String> getBaseOptions() {
+        Map<String, String> totalOptions = new HashMap<>();
+        totalOptions.putAll(BASE_OPTIONS);
+        return totalOptions;
+    }
 
     public static Map<String, String> getProductsOptions(int page, int categoryId) {
         Map<String, String> productOptions = new HashMap<>();
@@ -33,12 +39,6 @@ public class NetworkParams {
         categoryOptions.putAll(BASE_OPTIONS);
         categoryOptions.put("page", String.valueOf(page));
         return categoryOptions;
-    }
-
-    public static Map<String, String> getBaseOptions() {
-        Map<String, String> totalOptions = new HashMap<>();
-        totalOptions.putAll(BASE_OPTIONS);
-        return totalOptions;
     }
 
     public static Map<String, String> getPerPageForCategory(int categoryId) {

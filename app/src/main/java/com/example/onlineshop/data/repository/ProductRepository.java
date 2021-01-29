@@ -117,7 +117,7 @@ public class ProductRepository {
         mWoocommerceServiceCategory = RetrofitInstance.getCategoryInstance().create(WoocommerceService.class);
         mWoocommerceServiceProduct = RetrofitInstance.getProductInstance().create(WoocommerceService.class);
         mWoocommerceServiceProductWithId = RetrofitInstance.getProductInstanceWithId().create(WoocommerceService.class);
-        mWoocommerceServiceCustomer = RetrofitInstance.getCustomerInstance().create(WoocommerceService.class);
+//        mWoocommerceServiceCustomer = RetrofitInstance.getCustomerInstance().create(WoocommerceService.class);
     }
 
     public void fetchCategoryItemsAsync(int page) {
@@ -298,6 +298,7 @@ public class ProductRepository {
 
 //                    Log.e("RelatedItems", "related item is: " + response.body().getProductName());
                 }
+
                 @Override
                 public void onFailure(Call<ProductItem> call, Throwable t) {
                     Log.e(TAG, t.getMessage(), t);
@@ -386,19 +387,18 @@ public class ProductRepository {
         };
     }
 
-    public void postCustomer(Customer customer) {
-        Log.e("postCustomer", "post custoemr called");
-
-        Call<Customer> call = mWoocommerceServiceCustomer.createCustomer(customer);
+    public void postCustomer(String email) {
+        Call<Customer> call = mWoocommerceServiceProduct.postCustomer(email, NetworkParams.getBaseOptions());
         call.enqueue(new Callback<Customer>() {
             @Override
             public void onResponse(Call<Customer> call, Response<Customer> response) {
-                Log.e("postCustomer", "your customer post successfully");
+                if (response.isSuccessful())
+                    Log.e("postCustomer", "post customer called");
             }
 
             @Override
             public void onFailure(Call<Customer> call, Throwable t) {
-                Log.e(TAG, "post customer failed");
+
             }
         });
     }
