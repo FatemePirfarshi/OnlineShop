@@ -2,6 +2,7 @@ package com.example.onlineshop.view.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,11 +17,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.onlineshop.R;
 import com.example.onlineshop.databinding.FragmentLocatorBinding;
 import com.example.onlineshop.viewmodel.LocatorViewModel;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class LocatorFragment extends Fragment {
@@ -30,6 +39,8 @@ public class LocatorFragment extends Fragment {
 
     private FragmentLocatorBinding mBinding;
     private LocatorViewModel mViewModel;
+
+    private GoogleMap mMap;
 
     public LocatorFragment() {
         // Required empty public constructor
@@ -49,6 +60,12 @@ public class LocatorFragment extends Fragment {
         setHasOptionsMenu(true);
 
         mViewModel = new ViewModelProvider(this).get(LocatorViewModel.class);
+        mViewModel.getMyLocation().observe(this, new Observer<Location>() {
+            @Override
+            public void onChanged(Location location) {
+                updateUI();
+            }
+        });
     }
 
     @Override
@@ -60,7 +77,18 @@ public class LocatorFragment extends Fragment {
                 R.layout.fragment_locator,
                 container,
                 false);
-        initToolbar ();
+        initToolbar();
+
+        SupportMapFragment supportMapFragment =
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+
+        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMap = googleMap;
+                updateUI();
+            }
+        });
         return mBinding.getRoot();
     }
 
@@ -130,10 +158,25 @@ public class LocatorFragment extends Fragment {
 
         return isFineLocation && isCoarseLocation;
     }
-    
+
     private void requestLocation() {
         if(!hasLocationAccess())
             return;
         mViewModel.requestLocation();
+    }
+
+    private void updateUI(){
+        Location location = mViewModel.getMyLocation().getValue();
+        if(location == null || mMap == null)
+            return;
+
+        LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        MarkerOptions myMarkerOption = new MarkerOptions().position(myLatLng).title("My Location");
+        mMap.addMarker(myMarkerOption);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(myLatLng);
+        mMap.animateCamera(cameraUpdate);
+
     }
 }
