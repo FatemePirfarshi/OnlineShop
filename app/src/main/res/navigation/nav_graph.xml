@@ -17,9 +17,6 @@
             <argument
                 android:name="productId"
                 app:argType="integer"/>
-<!--            <argument-->
-<!--                android:name="productPage"-->
-<!--                app:argType="android.net.Uri" />-->
         </action>
     </fragment>
     <fragment
@@ -49,9 +46,6 @@
             <argument
                 android:name="productId"
                 app:argType="integer" />
-<!--            <argument-->
-<!--                android:name="productPage"-->
-<!--                app:argType="android.net.Uri" />-->
         </action>
         <argument
             android:name="categoryName"
@@ -95,6 +89,9 @@
         <action
             android:id="@+id/action_accountFragment_to_locatorFragment"
             app:destination="@id/locatorFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 
     <dialog
@@ -105,5 +102,9 @@
         android:id="@+id/locatorFragment"
         android:name="com.example.onlineshop.view.fragment.LocatorFragment"
         android:label="LocatorFragment" />
+    <dialog
+        android:id="@+id/loginFragment"
+        android:name="com.example.onlineshop.view.fragment.LoginFragment"
+        android:label="LoginFragment" />
 
 </navigation>

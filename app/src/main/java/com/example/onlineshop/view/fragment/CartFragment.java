@@ -53,12 +53,6 @@ public class CartFragment extends VisibleFragment {
                 setupAdapter();
             }
         });
-//        mViewModel.getCountProductLiveData().observe(this, new Observer<Integer>() {
-//            @Override
-//            public void onChanged(Integer integer) {
-//                mAdapter.notifyDataSetChanged();
-//            }
-//        });
     }
 
     @Override

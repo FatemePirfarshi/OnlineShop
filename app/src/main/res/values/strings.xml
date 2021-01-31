@@ -62,7 +62,11 @@
     <string name="user_name">User Name</string>
     <string name="email">Email</string>
     <string name="sign_in">ثبت نام</string>
+    <string name="question"> آیا قبلا ثبت نام کرده اید؟ </string>
+    <string name="login">ورورد</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+    <string name="login_to_account">برای ورورد به حساب کاربری ایمیل خود را وارد کنید:</string>
 </resources>

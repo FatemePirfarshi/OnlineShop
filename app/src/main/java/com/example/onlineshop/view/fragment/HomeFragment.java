@@ -1,7 +1,5 @@
 package com.example.onlineshop.view.fragment;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +28,6 @@ import java.util.List;
 
 public class HomeFragment extends VisibleFragment {
 
-//    private ProductListViewModel mProductListViewModel;
     private HomeViewModel mHomeViewModel;
     private ProductListViewModel mProductListViewModel;
     private FragmentHomeBinding mBinding;
@@ -50,7 +47,6 @@ public class HomeFragment extends VisibleFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
         mHomeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
 
@@ -58,7 +54,7 @@ public class HomeFragment extends VisibleFragment {
         mHomeViewModel.fetchOfferPics();
         setLiveDataObservers();
 
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 //        mBinding.ivSearch.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
     }

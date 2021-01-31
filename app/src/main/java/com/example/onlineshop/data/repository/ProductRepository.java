@@ -5,7 +5,6 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.onlineshop.data.model.CategoryItem;
-import com.example.onlineshop.data.model.Customer;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.remote.retrofit.RetrofitInstance;
@@ -387,19 +386,19 @@ public class ProductRepository {
         };
     }
 
-    public void postCustomer(String email) {
-        Call<Customer> call = mWoocommerceServiceProduct.postCustomer(email, NetworkParams.getBaseOptions());
-        call.enqueue(new Callback<Customer>() {
-            @Override
-            public void onResponse(Call<Customer> call, Response<Customer> response) {
-                if (response.isSuccessful())
-                    Log.e("postCustomer", "post customer called");
-            }
-
-            @Override
-            public void onFailure(Call<Customer> call, Throwable t) {
-
-            }
-        });
-    }
+//    public void postCustomer(String email) {
+//        Call<Customer> call = mWoocommerceServiceProduct.postCustomer(email, NetworkParams.getBaseOptions());
+//        call.enqueue(new Callback<Customer>() {
+//            @Override
+//            public void onResponse(Call<Customer> call, Response<Customer> response) {
+//                if (response.isSuccessful())
+//                    Log.e("postCustomer", "post customer called");
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Customer> call, Throwable t) {
+//
+//            }
+//        });
+//    }
 }

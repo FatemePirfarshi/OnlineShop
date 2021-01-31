@@ -15,6 +15,7 @@ public class QueryPreferences {
     private static final String PREF_CART_PRODUCT = "cartProduct";
     private static final String PREF_LAST_PRODUCT_ID = "lastProductId";
     private static final String PREF_CUSTOMER_EMAIL = "userEmail";
+    private static final String PREF_CUSTOMER_USERNAME = "userName";
 
     public static String getEmailQuery(Context context) {
         return getSharedPreferences(context).getString(PREF_CUSTOMER_EMAIL, null);
@@ -24,6 +25,17 @@ public class QueryPreferences {
         getSharedPreferences(context)
                 .edit()
                 .putString(PREF_CUSTOMER_EMAIL, email)
+                .apply();
+    }
+
+    public static String getUserNameQuery(Context context) {
+        return getSharedPreferences(context).getString(PREF_CUSTOMER_USERNAME, null);
+    }
+
+    public static void setUserNameQuery(Context context, String userName) {
+        getSharedPreferences(context)
+                .edit()
+                .putString(PREF_CUSTOMER_USERNAME, userName)
                 .apply();
     }
 

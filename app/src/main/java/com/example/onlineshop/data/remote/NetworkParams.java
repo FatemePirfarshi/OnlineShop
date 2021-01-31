@@ -82,7 +82,13 @@ public class NetworkParams {
         mostExpensiveOptions.put("category", String.valueOf(categoryId));
         return mostExpensiveOptions;
     }
-//
+
+    public static Map<String, String> getCustomer(String email){
+        Map<String, String> customerOptions = new HashMap<>();
+        customerOptions.putAll(BASE_OPTIONS);
+        customerOptions.put("email", email);
+        return customerOptions;
+    }
 //    public static Map<String, String> getNewest(int perPage, int categoryId){
 //        Map<String, String> newestOptions = new HashMap<>();
 //        newestOptions.putAll(BASE_OPTIONS);

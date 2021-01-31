@@ -4,21 +4,24 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.onlineshop.R;
+import com.example.onlineshop.data.model.Customer;
 import com.example.onlineshop.databinding.FragmentAccountBinding;
+import com.example.onlineshop.utilities.QueryPreferences;
 import com.example.onlineshop.view.observers.SingleEventObserver;
 import com.example.onlineshop.viewmodel.AccountViewModel;
 
 public class AccountFragment extends VisibleFragment {
 
     private AccountViewModel mAccountViewModel;
-//    private ChooseAlarmViewModel mChooseAlarmViewModel;
     private FragmentAccountBinding mBinding;
 
     public AccountFragment() {
@@ -37,8 +40,6 @@ public class AccountFragment extends VisibleFragment {
         super.onCreate(savedInstanceState);
 
         mAccountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-//        mChooseAlarmViewModel = new ViewModelProvider(this).get(ChooseAlarmViewModel.class);
-
     }
 
     @Override
@@ -58,21 +59,6 @@ public class AccountFragment extends VisibleFragment {
         return mBinding.getRoot();
     }
 
-//    private void setLiveDataObservers() {
-//        LiveData<Boolean> toggleLiveData = mAccountViewModel.alarmClicked();
-//        toggleLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, toggleLiveData) {
-//            @Override
-//            public void onChanged(Boolean aBoolean) {
-//                super.onChanged(aBoolean);
-//                if (aBoolean) {
-//                    if (mAccountViewModel.isTaskScheduled())
-//                        mBinding.ivAlarm.setImageResource(R.drawable.ic_active_alarm);
-//                    else
-//                        mBinding.ivAlarm.setImageResource(R.drawable.ic_deactive_alarm);
-//                }
-//            }
-//        });
-//    }
 
     private void navListener() {
         LiveData<Boolean> alarmDialogLiveData = mAccountViewModel.getAlarmDialogStart();
@@ -93,6 +79,53 @@ public class AccountFragment extends VisibleFragment {
                 super.onChanged(aBoolean);
                 if (aBoolean) {
                     Navigation.findNavController(mBinding.getRoot()).navigate(R.id.locatorFragment);
+                }
+            }
+        });
+
+        LiveData<Boolean> loginLiveData = mAccountViewModel.getLoginClicked();
+        loginLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, loginLiveData) {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                super.onChanged(aBoolean);
+                if (aBoolean) {
+                    Navigation.findNavController(mBinding.getRoot()).navigate(R.id.loginFragment);
+                }
+            }
+        });
+
+        LiveData<Boolean> registeredLiveData = mAccountViewModel.getRegisterLiveData();
+        registeredLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, registeredLiveData) {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                super.onChanged(aBoolean);
+                if (aBoolean)
+                    Toast.makeText(
+                            getActivity(),
+                            "ثبت نام شما انجام شد.",
+                            Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(
+                            getActivity(),
+                            " قبلا ثبت نام کرده اید یا ایمیل شما نامعتبر است.",
+                            Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mAccountViewModel.getSearchCustomer().observe(getViewLifecycleOwner(), new Observer<Customer>() {
+            @Override
+            public void onChanged(Customer customer) {
+                if (customer == null) {
+                    Toast.makeText(
+                            getActivity(),
+                            "ایمیل شما نامعتبر است.",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    QueryPreferences.setEmailQuery(getActivity(), customer.getEmail());
+                    QueryPreferences.setUserNameQuery(getActivity(), customer.getUserName());
+
+                    mBinding.etEmail.setText(QueryPreferences.getEmailQuery(getActivity()));
+                    mBinding.etUserName.setText(QueryPreferences.getUserNameQuery(getActivity()));
                 }
             }
         });

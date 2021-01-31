@@ -55,17 +55,7 @@ public class ProductListFragment extends VisibleFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        NavController navController = NavHostFragment.findNavController(this);
-////        NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.nav_host_fragment);
-////        ProductListViewModel viewModel = new ViewModelProvider(backStackEntry).get(ProductListViewModel.class);
-//        NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.nav_host_fragment);
-//
-//        ViewModelProvider viewModelProvider = new ViewModelProvider(
-//                backStackEntry.getViewModelStore(),
-//                new SavedStateViewModelFactory(
-//                        requireActivity().getApplication(), requireParentFragment()));
 
-//        mProductListViewModel =new ViewModelProvider(backStackEntry).get(ProductListViewModel.class);
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
         setLiveDataObservers();
 
@@ -177,7 +167,6 @@ public class ProductListFragment extends VisibleFragment {
                 getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 true);
-//        layoutManager.setReverseLayout(true);
         mBinding.rvProducts.setLayoutManager(layoutManager);
     }
 

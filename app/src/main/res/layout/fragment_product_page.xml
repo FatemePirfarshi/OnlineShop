@@ -57,7 +57,7 @@
                     android:padding="16dp"
                     android:text="@{productPageViewModel.productItemLiveData.productName}"
                     android:textColor="@color/black"
-                    android:textSize="36sp" />
+                    android:textSize="24sp" />
 
                 <TextView
                     android:layout_width="match_parent"

@@ -49,15 +49,6 @@ public class CategoryListFragment extends VisibleFragment {
         mCategoryListViewModel.fetchCategoryItemsAsync(page);
 
         setLiveDataObservers();
-
-//        NavController navController = NavHostFragment.findNavController(this);
-//        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-//            @Override
-//            public void handleOnBackPressed() {
-//                navController.popBackStack();
-//            }
-//        };
-//        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     private void setLiveDataObservers() {
@@ -88,14 +79,12 @@ public class CategoryListFragment extends VisibleFragment {
 
     private void navListener() {
         LiveData<String> navigateLiveData = mCategoryListViewModel.getNavigateLiveData();
+
         navigateLiveData.observe(getViewLifecycleOwner(),
                 new SingleEventObserver<String>(this, navigateLiveData) {
             @Override
             public void onChanged(String name) {
-//                super.onChanged(s);
                 if(name != null){
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("categoryName", name);
                     NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.productListFragment, true).build();
                     Navigation.findNavController(mBinding.getRoot()).navigate(
                             CategoryListFragmentDirections.actionCategoryListFragmentToProductListFragment(name), navOptions);
@@ -134,7 +123,6 @@ public class CategoryListFragment extends VisibleFragment {
                 LinearLayoutManager.HORIZONTAL,
                 true);
         mBinding.rvCategories.setLayoutManager(layoutManager);
-//        mBinding.listTitle.setText(title);
     }
 
     private void setupAdapter(List<CategoryItem> items) {

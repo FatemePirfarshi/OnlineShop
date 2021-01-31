@@ -37,12 +37,6 @@ public class ProductPageViewModel extends ProductViewModel {
         mRepository.fetchRelatedItems(relatedProductsId);
     }
 
-//    public void fetchProductItemWithId(int id) {
-//        Log.e("productItemClicked", "this id clicked in ppvm " + id);
-//        mRepository.fetchProductItemWithId(id);
-////        mProductItem = getProductItemLiveData().getValue();
-//    }
-
     public void addToCartClicked(){
         ProductItem item = mProductItemLiveData.getValue();
         item.setCountInCart(1);

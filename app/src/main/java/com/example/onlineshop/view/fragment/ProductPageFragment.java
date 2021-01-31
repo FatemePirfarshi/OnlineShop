@@ -52,25 +52,16 @@ public class ProductPageFragment extends VisibleFragment {
         if (getArguments() != null) {
             int id = getArguments().getInt("productId");
             Log.e("productItemClicked", "this id clicked in ppf " + id);
-//            mProductPageViewModel.fetchProductItemWithId(id);
         }
 
         mProductPageViewModel.getProductItemLiveData().observe(this, new Observer<ProductItem>() {
             @Override
             public void onChanged(ProductItem productItem) {
                 mBinding.setProductPageViewModel(mProductPageViewModel);
-//                mProductPageViewModel.fetchRelatedItems(productItem.getRelatedIds());
 
                 ArrayList<String> itemImages = (ArrayList<String>) productItem.getImages();
                 setupSliderAdapter(itemImages);
 
-//                mProductPageViewModel.getRelatedItemsLiveData().observe(getViewLifecycleOwner(), new Observer<List<ProductItem>>() {
-//                    @Override
-//                    public void onChanged(List<ProductItem> productItems) {
-////                Log.e(TAG, productItems.get(0).getProductName());
-//                        setupAdapter(productItems);
-//                    }
-//                });
             }
         });
 
