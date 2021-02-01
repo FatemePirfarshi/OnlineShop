@@ -2,6 +2,7 @@ package com.example.onlineshop.data.remote.retrofit;
 
 import com.example.onlineshop.data.model.CategoryItem;
 import com.example.onlineshop.data.model.Customer;
+import com.example.onlineshop.data.model.Order;
 import com.example.onlineshop.data.model.ProductItem;
 
 import java.util.List;
@@ -48,6 +49,13 @@ public interface WoocommerceService {
     @GET("customers")
     Call<List<Customer>> getCustomer(@QueryMap Map<String, String> options);
 
+    @POST
+    Call<Order> sendOrder(
+            @Url String url,
+            @Body Order order,
+            @Query("consumer_key") String consumerKey,
+            @Query("consumer_secret") String consumerSecret
+    );
 
 //    @Headers("Content-Type: application/json")
 //    @POST("customers")
@@ -60,10 +68,10 @@ public interface WoocommerceService {
 //    Call<Customer> postCustomer(
 //            @Field("email") String email,
 //            @QueryMap Map<String,String> options);
-
-    @FormUrlEncoded
-    @POST("orders")
-    Call<Customer> postOrder(
-            @Field("email") String email,
-            @QueryMap Map<String,String> options);
+//
+//    @FormUrlEncoded
+//    @POST("orders")
+//    Call<Customer> postOrder(
+//            @Field("email") String email,
+//            @QueryMap Map<String,String> options);
 }

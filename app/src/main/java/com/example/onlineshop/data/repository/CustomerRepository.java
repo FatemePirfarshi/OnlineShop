@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.onlineshop.data.model.Customer;
+import com.example.onlineshop.data.model.Order;
 import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.remote.retrofit.RetrofitInstance;
 import com.example.onlineshop.data.remote.retrofit.WoocommerceService;
@@ -23,6 +24,7 @@ public class CustomerRepository {
     private MutableLiveData<Customer> mCustomerLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> mRegisterLiveData = new MutableLiveData<>();
     private MutableLiveData<Customer> mSearchEmailLiveData = new MutableLiveData<>();
+    private MutableLiveData<Order> mOrderLiveData = new MutableLiveData<>();
 
     public MutableLiveData<Customer> getCustomerLiveData() {
         return mCustomerLiveData;
@@ -35,6 +37,7 @@ public class CustomerRepository {
     public MutableLiveData<Customer> getSearchEmailLiveData() {
         return mSearchEmailLiveData;
     }
+
 
     public static CustomerRepository getInstance() {
         if (sInstance == null)
@@ -60,8 +63,11 @@ public class CustomerRepository {
                 Log.e(TAG, "onResponse: " + response.code());
                 if (response.isSuccessful()) {
                     mRegisterLiveData.setValue(true);
+                    mCustomerLiveData.setValue(response.body());
+
 //                    mCustomerLiveData.setValue(response.body());
                     Log.e(TAG, "onResponse: " + response.body().getEmail());
+                    Log.e(TAG, "customer Id: " + response.body().getId());
                 } else {
                     mRegisterLiveData.setValue(false);
                     Log.e(TAG, response.errorBody().toString());
@@ -81,16 +87,43 @@ public class CustomerRepository {
         call.enqueue(new Callback<List<Customer>>() {
             @Override
             public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
-                if(response.isSuccessful()) {
-                    mCustomerLiveData.setValue(response.body().get(0));
+                if (response.isSuccessful()) {
+//                    mCustomerLiveData.setValue(response.body().get(0));
                     Log.e(TAG, "searchEmail:" + response.body().get(0).getEmail());
+                    Log.e(TAG, "searchId:" + response.body().get(0).getId());
+
                     mSearchEmailLiveData.setValue(response.body().get(0));
-                }else
+                } else
                     mSearchEmailLiveData.setValue(null);
             }
 
             @Override
             public void onFailure(Call<List<Customer>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void sendOrder(Order order) {
+        Call<Order> call = mWoocommerceServiceCustomer.sendOrder(
+                "https://woocommerce.maktabsharif.ir/wp-json/wc/v3/orders",
+                order,
+                NetworkParams.CONSUMER_KEY,
+                NetworkParams.CONSUMER_SECRET
+        );
+        call.enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                if (response.isSuccessful()) {
+                    mOrderLiveData.setValue(response.body());
+                    Log.e(TAG,"post order: " + response.code());
+                    Log.e(TAG,"post order: " + response.body().getBilling().getEmail());
+                }else
+                    mOrderLiveData.setValue(null);
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
 
             }
         });

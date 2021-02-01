@@ -29,6 +29,7 @@ public class ProductsListAdapter extends RecyclerView.Adapter<ProductsListAdapte
         mProductItems = productItems;
         mListPosition = listPosition;
         mOwner = owner;
+
     }
 
     @NonNull

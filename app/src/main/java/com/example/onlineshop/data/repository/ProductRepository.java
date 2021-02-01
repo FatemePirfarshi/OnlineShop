@@ -251,6 +251,7 @@ public class ProductRepository {
             @Override
             public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
                 itemsLiveData.setValue(response.body());
+
 //                Log.e(TAG, "item image is : " + response.body().get(0).getImages().get(0));
             }
 

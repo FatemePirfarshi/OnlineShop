@@ -92,15 +92,7 @@ public class AccountViewModel extends AndroidViewModel {
     public void getLogin() {
         mRepository.searchCustomer(mLoginEmail);
         mLoginAccount.setValue(true);
-//        QueryPreferences.setEmailQuery();
     }
-//    public void signInClick() {
-//        Customer customer = new Customer();
-//        customer.setEmail(mEmail);
-//        customer.setUserName(mUserName);
-//        QueryPreferences.setEmailQuery(getApplication(), mEmail);
-//        mRepository.postCustomer(mEmail);
-//    }
 
     public void signInClick() {
         Customer customer = new Customer(mEmail);

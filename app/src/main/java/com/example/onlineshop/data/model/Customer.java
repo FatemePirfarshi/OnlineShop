@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Customer {
 
+    @SerializedName("id")
+    private Integer mId;
+
     @SerializedName("email")
     private String mEmail;
 
@@ -77,6 +80,14 @@ public class Customer {
 
     public void setShipping(Shipping shipping) {
         mShipping = shipping;
+    }
+
+    public void setId(Integer id) {
+        mId = id;
+    }
+
+    public Integer getId() {
+        return mId;
     }
 }
 

@@ -16,6 +16,18 @@ public class QueryPreferences {
     private static final String PREF_LAST_PRODUCT_ID = "lastProductId";
     private static final String PREF_CUSTOMER_EMAIL = "userEmail";
     private static final String PREF_CUSTOMER_USERNAME = "userName";
+    private static final String PREF_CUSTOMER_ID = "id";
+
+    public static Integer getIdQuery(Context context) {
+        return getSharedPreferences(context).getInt(PREF_CUSTOMER_ID, 0);
+    }
+
+    public static void setIdQuery(Context context, Integer id) {
+        getSharedPreferences(context)
+                .edit()
+                .putInt(PREF_CUSTOMER_ID, id)
+                .apply();
+    }
 
     public static String getEmailQuery(Context context) {
         return getSharedPreferences(context).getString(PREF_CUSTOMER_EMAIL, null);

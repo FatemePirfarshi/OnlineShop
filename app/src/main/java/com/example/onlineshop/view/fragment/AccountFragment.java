@@ -102,12 +102,12 @@ public class AccountFragment extends VisibleFragment {
                 if (aBoolean)
                     Toast.makeText(
                             getActivity(),
-                            "ثبت نام شما انجام شد.",
+                            R.string.sign_in_successful,
                             Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(
                             getActivity(),
-                            " قبلا ثبت نام کرده اید یا ایمیل شما نامعتبر است.",
+                            R.string.invalidate_email_or_registered,
                             Toast.LENGTH_LONG).show();
             }
         });
@@ -118,15 +118,24 @@ public class AccountFragment extends VisibleFragment {
                 if (customer == null) {
                     Toast.makeText(
                             getActivity(),
-                            "ایمیل شما نامعتبر است.",
+                            R.string.invalidate_email,
                             Toast.LENGTH_LONG).show();
                 } else {
                     QueryPreferences.setEmailQuery(getActivity(), customer.getEmail());
                     QueryPreferences.setUserNameQuery(getActivity(), customer.getUserName());
+//                    QueryPreferences.setIdQuery(getActivity(), customer.getId());
 
                     mBinding.etEmail.setText(QueryPreferences.getEmailQuery(getActivity()));
                     mBinding.etUserName.setText(QueryPreferences.getUserNameQuery(getActivity()));
                 }
+            }
+        });
+        mAccountViewModel.getCustomerLiveData().observe(getViewLifecycleOwner(), new Observer<Customer>() {
+            @Override
+            public void onChanged(Customer customer) {
+                QueryPreferences.setEmailQuery(getActivity(), customer.getEmail());
+                QueryPreferences.setUserNameQuery(getActivity(), customer.getUserName());
+                QueryPreferences.setIdQuery(getActivity(), customer.getId());
             }
         });
     }

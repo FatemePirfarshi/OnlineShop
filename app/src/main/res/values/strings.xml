@@ -64,9 +64,20 @@
     <string name="sign_in">ثبت نام</string>
     <string name="question"> آیا قبلا ثبت نام کرده اید؟ </string>
     <string name="login">ورورد</string>
+    <string name="cancel">انصراف</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="login_to_account">برای ورورد به حساب کاربری ایمیل خود را وارد کنید:</string>
+    <string name="invalidate_email">ایمیل شما نامعتبر است.</string>
+    <string name="sign_in_successful">ثبت نام شما انجام شد.</string>
+    <string name="invalidate_email_or_registered">\" قبلا ثبت نام کرده اید یا ایمیل شما نامعتبر است.\"</string>
+    <string name="please_login">برای ثبت سفارش باید ابتدا وارد حساب کاربری خود شوید</string>
+    <string name="navigate_to_account">ورود به حساب کاربری</string>
+    <string name="coupon_code">کد تخفیف:</string>
+    <string name="send_to">ارسال به:</string>
+    <string name="your_total_price">جمع کل خرید شما:</string>
+    <string name="send">ثبت</string>
+    <string name="send_order">ارسال سفارش</string>
 </resources>

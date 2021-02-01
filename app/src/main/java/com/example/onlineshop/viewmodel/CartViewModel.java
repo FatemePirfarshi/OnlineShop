@@ -18,6 +18,8 @@ public class CartViewModel extends AndroidViewModel {
     private MutableLiveData<List<ProductItem>> mCartProductItem;
     private MutableLiveData<Integer> mCountProductLiveData = new MutableLiveData<>();
     private MutableLiveData<ProductItem> mCurrentItem = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mStartAccountDialog = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mSendDialogLiveData = new MutableLiveData<>();
 
     public CartViewModel(@NonNull Application application) {
         super(application);
@@ -35,6 +37,14 @@ public class CartViewModel extends AndroidViewModel {
 
     public MutableLiveData<ProductItem> getCurrentItem() {
         return mCurrentItem;
+    }
+
+    public MutableLiveData<Boolean> getStartAccountDialog() {
+        return mStartAccountDialog;
+    }
+
+    public MutableLiveData<Boolean> getSendDialogLiveData() {
+        return mSendDialogLiveData;
     }
 
     public void deleteFromCart(ProductItem item) {
@@ -61,7 +71,7 @@ public class CartViewModel extends AndroidViewModel {
             return "";
     }
 
-    public String setItemCount(int position){
+    public String setItemCount(int position) {
         return String.valueOf(mCartProductItem.getValue().get(position).getCountInCart());
     }
 
@@ -74,7 +84,14 @@ public class CartViewModel extends AndroidViewModel {
 //        List<ProductItem> cartItems = QueryPreferences.getCartProducts(getApplication());
 //    }
 
-    public void setCountProductLiveData(){
+    public void requestOrder() {
+        if (QueryPreferences.getEmailQuery(getApplication()) == null)
+            mStartAccountDialog.setValue(true);
+        else
+            mSendDialogLiveData.setValue(true);
+    }
+
+    public void setCountProductLiveData() {
 
     }
 }

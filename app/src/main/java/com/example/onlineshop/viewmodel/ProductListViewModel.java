@@ -19,6 +19,7 @@ public class ProductListViewModel extends ProductViewModel {
     private final LiveData<List<ProductItem>> mProductListLiveData;
     private final LiveData<Integer> mPageCount;
     private final LiveData<Integer> mCategoryItemId;
+    private final LiveData<Integer> mPerPage;
 
 //    private final LiveData<ProductItem> mClickedItem;
 
@@ -61,7 +62,11 @@ public class ProductListViewModel extends ProductViewModel {
         return mSearchLiveData;
     }
 
-//    public LiveData<ProductItem> getClickedItem() {
+    public LiveData<Integer> getPerPage() {
+        return mPerPage;
+    }
+
+    //    public LiveData<ProductItem> getClickedItem() {
 //        return mClickedItem;
 //    }
 
@@ -79,6 +84,7 @@ public class ProductListViewModel extends ProductViewModel {
         mPageCount = mRepository.getPageCount();
         mCategoryItemId = mRepository.getCategoryItemId();
         mSearchLiveData = mRepository.getSearchItemsLiveData();
+        mPerPage = mRepository.getPerPage();
 
 //        mProductItemSelected = mRepository.getProductItemSelectedLiveData();
 //        mClickedItem = mRepository.getProductItemLiveData();

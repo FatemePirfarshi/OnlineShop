@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -10,7 +11,7 @@
 
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.fragment.CartFragment">
@@ -18,12 +19,19 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_cart_products"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/order_layout"
+            android:layout_alignParentTop="true" />
 
         <LinearLayout
+            android:id="@+id/order_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_below="@+id/rv_cart_products"
             android:layout_margin="16dp">
 
             <TextView
@@ -35,6 +43,7 @@
                 android:text="@{cartViewModel.setTotalPrice()}"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
+                android:background="@color/white"
                 android:layout_weight="1"/>
 
             <Button
@@ -44,10 +53,12 @@
                 android:textStyle="bold"
                 android:layout_weight="1"
                 android:textSize="18sp"
+                android:backgroundTint="@color/purple"
+                android:onClick="@{() -> cartViewModel.requestOrder()}"
                 android:text="@string/sendOrder"/>
 
         </LinearLayout>
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

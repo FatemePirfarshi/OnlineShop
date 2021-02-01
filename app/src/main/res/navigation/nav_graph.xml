@@ -72,6 +72,12 @@
         <action
             android:id="@+id/action_cartFragment_to_accountFragment"
             app:destination="@id/accountFragment" />
+        <action
+            android:id="@+id/action_cartFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_cartFragment_to_sendOrderFragment"
+            app:destination="@id/sendOrderFragment" />
     </fragment>
 
     <dialog
@@ -106,5 +112,9 @@
         android:id="@+id/loginFragment"
         android:name="com.example.onlineshop.view.fragment.LoginFragment"
         android:label="LoginFragment" />
+    <dialog
+        android:id="@+id/sendOrderFragment"
+        android:name="com.example.onlineshop.view.fragment.SendOrderFragment"
+        android:label="SendOrderFragment" />
 
 </navigation>
