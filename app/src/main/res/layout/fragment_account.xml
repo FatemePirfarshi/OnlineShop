@@ -55,7 +55,8 @@
                     android:padding="4dp"
                     android:onTextChanged="@{accountViewModel::onTextChangedEmail}"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"/>
+                    android:layout_height="60dp"
+                    android:text="@{accountViewModel.emailLiveData}" />
 
                 <EditText
                     android:id="@+id/et_user_name"
@@ -63,7 +64,8 @@
                     android:padding="4dp"
                     android:onTextChanged="@{accountViewModel::onTextChangedUserName}"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"/>
+                    android:layout_height="60dp"
+                    android:text="@{accountViewModel.userNameLiveData}" />
 <!--                <com.google.android.material.textfield.TextInputLayout-->
 <!--                    android:id="@+id/et_email"-->
 <!--                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
@@ -120,10 +122,36 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:hint="@string/address"
+                        android:onTextChanged="@{accountViewModel::onTextChangedAddress}"
+                        android:text="@{accountViewModel.addressLiveData}"
                         android:layout_toRightOf="@id/iv_location"
                         android:layout_gravity="right"
                         android:padding="12dp"
                         app:errorEnabled="true" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ad_address"
+                        android:padding="8dp"
+                        android:textColor="@color/black"
+                        android:onClick="@{() -> accountViewModel.addAddressClicked()}"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/list_of_addresses"
+                        android:textColor="@color/black"
+                        android:layout_alignParentRight="true"
+                        android:padding="8dp"
+                        android:onClick="@{() -> accountViewModel.showAddressList()}"/>
 
                 </RelativeLayout>
 

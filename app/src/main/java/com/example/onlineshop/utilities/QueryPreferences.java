@@ -8,7 +8,9 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class QueryPreferences {
 
@@ -17,6 +19,19 @@ public class QueryPreferences {
     private static final String PREF_CUSTOMER_EMAIL = "userEmail";
     private static final String PREF_CUSTOMER_USERNAME = "userName";
     private static final String PREF_CUSTOMER_ID = "id";
+    public static final String PREF_USER_ADDRESSES = "userAddresses";
+    public static final String PREF_CURRENT_ADDRESS = "currentAddress";
+
+    public static String getCurrentAddressQuery(Context context) {
+        return getSharedPreferences(context).getString(PREF_CURRENT_ADDRESS, null);
+    }
+
+    public static void setCurrentAddressQuery(Context context, String address) {
+        getSharedPreferences(context)
+                .edit()
+                .putString(PREF_CURRENT_ADDRESS, address)
+                .apply();
+    }
 
     public static Integer getIdQuery(Context context) {
         return getSharedPreferences(context).getInt(PREF_CUSTOMER_ID, 0);
@@ -60,6 +75,25 @@ public class QueryPreferences {
                 .edit()
                 .putInt(PREF_LAST_PRODUCT_ID, lastProductId)
                 .apply();
+    }
+
+    public static void setUserAddress(Context context, Set<String> customerAddress){
+        getSharedPreferences(context)
+                .edit()
+                .putStringSet(PREF_USER_ADDRESSES, customerAddress)
+                .apply();
+    }
+
+    public static void addUserAddress(Context context, String address){
+        Set<String> addressItems = getUserAddresses(context);
+        if(addressItems == null)
+            addressItems = new HashSet<>();
+        addressItems.add(address);
+        setUserAddress(context, addressItems);
+    }
+
+    public static Set<String> getUserAddresses(Context context){
+        return getSharedPreferences(context).getStringSet(PREF_USER_ADDRESSES, null);
     }
 
     public static void setCartProducts(Context context, List<ProductItem> productItems){

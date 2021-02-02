@@ -87,4 +87,6 @@
     <string name="name">نام</string>
     <string name="send_review_successfuly">نظر شما ارسال شد</string>
     <string name="please_try_again">لطفا مجددا تلاش کنید</string>
+    <string name="ad_address">افزودن آدرس جدید</string>
+    <string name="list_of_addresses">لیست همه ی آدرس ها</string>
 </resources>

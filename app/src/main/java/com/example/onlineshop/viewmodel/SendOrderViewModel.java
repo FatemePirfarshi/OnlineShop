@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.onlineshop.data.model.CouponLines;
 import com.example.onlineshop.data.model.Customer;
 import com.example.onlineshop.data.model.LineItem;
 import com.example.onlineshop.data.model.Order;
@@ -21,6 +22,8 @@ public class SendOrderViewModel extends AndroidViewModel {
 
     private CustomerRepository mRepository;
     private LiveData<Customer> mCustomerLiveData;
+    private String mCoupon;
+    private CouponLines mCouponLines;
 
     public SendOrderViewModel(@NonNull Application application) {
         super(application);
@@ -44,14 +47,22 @@ public class SendOrderViewModel extends AndroidViewModel {
             return "";
     }
 
-    public void sendOrder(){
+    public void sendOrder() {
         List<ProductItem> items = QueryPreferences.getCartProducts(getApplication());
         List<LineItem> lineItems = new ArrayList<>();
         for (int i = 0; i < items.size(); i++) {
-            LineItem item = new LineItem(items.get(i).getId(),1);
+            LineItem item = new LineItem(items.get(i).getId(), 1);
             lineItems.add(item);
         }
         Order order = new Order(QueryPreferences.getIdQuery(getApplication()), lineItems);
         mRepository.sendOrder(order);
+    }
+
+    public void onTextChangedCoupon(CharSequence charSequence, int i, int i1, int i2) {
+        mCoupon = charSequence.toString();
+    }
+
+    public void insertCode(){
+//        mCouponLines = new CouponLines(mCoupon,);
     }
 }

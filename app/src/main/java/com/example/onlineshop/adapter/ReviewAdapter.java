@@ -1,6 +1,5 @@
 package com.example.onlineshop.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -46,13 +45,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewList
 
         private final ItemReviewListBinding mBinding;
 
-        public ReviewListHolder(ItemReviewListBinding binding){
+        public ReviewListHolder(ItemReviewListBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
             mBinding.setProductPageViewModel(mViewModel);
         }
 
-        public void bindReviewItem(Review reviewItem, int position){
+        public void bindReviewItem(Review reviewItem, int position) {
             mBinding.setPosition(position);
         }
     }

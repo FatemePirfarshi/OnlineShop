@@ -98,6 +98,9 @@
         <action
             android:id="@+id/action_accountFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_addressListFragment"
+            app:destination="@id/addressListFragment" />
     </fragment>
 
     <dialog
@@ -116,5 +119,9 @@
         android:id="@+id/sendOrderFragment"
         android:name="com.example.onlineshop.view.fragment.SendOrderFragment"
         android:label="SendOrderFragment" />
+    <dialog
+        android:id="@+id/addressListFragment"
+        android:name="com.example.onlineshop.view.fragment.AddressListFragment"
+        android:label="AddressListFragment" />
 
 </navigation>

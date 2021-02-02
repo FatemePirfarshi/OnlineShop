@@ -1,6 +1,7 @@
 package com.example.onlineshop.view.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.example.onlineshop.databinding.FragmentAccountBinding;
 import com.example.onlineshop.utilities.QueryPreferences;
 import com.example.onlineshop.view.observers.SingleEventObserver;
 import com.example.onlineshop.viewmodel.AccountViewModel;
+
+import java.util.Set;
 
 public class AccountFragment extends VisibleFragment {
 
@@ -40,6 +43,9 @@ public class AccountFragment extends VisibleFragment {
         super.onCreate(savedInstanceState);
 
         mAccountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
+        mAccountViewModel.setAddressItems();
+
+        mAccountViewModel.fetchCurrentUser();
     }
 
     @Override
@@ -94,6 +100,16 @@ public class AccountFragment extends VisibleFragment {
             }
         });
 
+        LiveData<Boolean> showAddressLiveData = mAccountViewModel.getShowAddressList();
+        showAddressLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, showAddressLiveData) {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                super.onChanged(aBoolean);
+                if (aBoolean) {
+                    Navigation.findNavController(mBinding.getRoot()).navigate(R.id.addressListFragment);
+                }
+            }
+        });
         LiveData<Boolean> registeredLiveData = mAccountViewModel.getRegisterLiveData();
         registeredLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, registeredLiveData) {
             @Override
@@ -136,6 +152,15 @@ public class AccountFragment extends VisibleFragment {
                 QueryPreferences.setEmailQuery(getActivity(), customer.getEmail());
                 QueryPreferences.setUserNameQuery(getActivity(), customer.getUserName());
                 QueryPreferences.setIdQuery(getActivity(), customer.getId());
+            }
+        });
+
+        mAccountViewModel.getAddressLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                QueryPreferences.setCurrentAddressQuery(getActivity(), s);
+                Log.e("useAddressFrag",s);
+                mBinding.etAddress.setText(QueryPreferences.getCurrentAddressQuery(getActivity()));
             }
         });
     }

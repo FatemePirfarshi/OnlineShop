@@ -8,9 +8,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.onlineshop.data.model.Customer;
+import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.data.repository.CustomerRepository;
 import com.example.onlineshop.utilities.QueryPreferences;
 import com.example.onlineshop.work.PollWorker;
+
+import java.util.List;
+import java.util.Set;
 
 public class AccountViewModel extends AndroidViewModel {
 
@@ -19,6 +23,14 @@ public class AccountViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> mRequestPermission = new MutableLiveData<>();
     private MutableLiveData<Boolean> mLoginClicked = new MutableLiveData<>();
     private MutableLiveData<Boolean> mLoginAccount = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mShowAddressList = new MutableLiveData<>();
+    private MutableLiveData<String> mClickedAddress = new MutableLiveData<>();
+
+    private MutableLiveData<Set<String>> mAddressListLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> mAddressLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> mEmailLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> mUserNameLiveData = new MutableLiveData<>();
+
 
     private CustomerRepository mRepository;
     private LiveData<Customer> mCustomerLiveData;
@@ -28,6 +40,13 @@ public class AccountViewModel extends AndroidViewModel {
     private String mEmail;
     private String mLoginEmail;
     private String mUserName;
+    private String mCurrentAddress;
+
+    public void fetchCurrentUser(){
+        mAddressLiveData.setValue(QueryPreferences.getCurrentAddressQuery(getApplication()));
+        mEmailLiveData.setValue(QueryPreferences.getEmailQuery(getApplication()));
+        mUserNameLiveData.setValue(QueryPreferences.getUserNameQuery(getApplication()));
+    }
 
     public LiveData<Customer> getCustomerLiveData() {
         return mCustomerLiveData;
@@ -35,6 +54,26 @@ public class AccountViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> getRegisterLiveData() {
         return mRegisterLiveData;
+    }
+
+    public MutableLiveData<Set<String>> getAddressListLiveData() {
+        return mAddressListLiveData;
+    }
+
+    public MutableLiveData<Boolean> getShowAddressList() {
+        return mShowAddressList;
+    }
+
+    public MutableLiveData<String> getClickedAddress() {
+        return mClickedAddress;
+    }
+
+    public MutableLiveData<String> getEmailLiveData() {
+        return mEmailLiveData;
+    }
+
+    public MutableLiveData<String> getUserNameLiveData() {
+        return mUserNameLiveData;
     }
 
     public AccountViewModel(@NonNull Application application) {
@@ -63,6 +102,10 @@ public class AccountViewModel extends AndroidViewModel {
 
     public MutableLiveData<Boolean> getLoginAccount() {
         return mLoginAccount;
+    }
+
+    public MutableLiveData<String> getAddressLiveData() {
+        return mAddressLiveData;
     }
 
     public LiveData<Customer> getSearchCustomer() {
@@ -114,4 +157,29 @@ public class AccountViewModel extends AndroidViewModel {
         mRequestPermission.setValue(true);
     }
 
+    public void onTextChangedAddress(CharSequence charSequence, int i, int i1, int i2) {
+        mCurrentAddress = charSequence.toString();
+//        mAddressLiveData.setValue(charSequence.toString());
+    }
+
+    public void addAddressClicked(){
+        QueryPreferences.addUserAddress(getApplication(), mCurrentAddress);
+    }
+
+    public void setAddressItems() {
+        Set<String> addressItems = QueryPreferences.getUserAddresses(getApplication());
+        if (addressItems != null)
+            mAddressListLiveData.setValue(addressItems);
+    }
+
+    public void showAddressList(){
+        mShowAddressList.setValue(true);
+    }
+
+    public void addressClicked(String address){
+        QueryPreferences.setCurrentAddressQuery(getApplication(), address);
+        mClickedAddress.setValue(address);
+        //callback
+        mAddressLiveData.setValue(address);
+    }
 }
