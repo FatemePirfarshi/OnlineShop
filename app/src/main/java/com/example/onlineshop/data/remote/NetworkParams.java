@@ -1,5 +1,7 @@
 package com.example.onlineshop.data.remote;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,7 +91,15 @@ public class NetworkParams {
         customerOptions.put("email", email);
         return customerOptions;
     }
-//    public static Map<String, String> getNewest(int perPage, int categoryId){
+
+    public static Map<String, String> getReviews(int productId){
+        Map<String, String> reviewOptions = new HashMap<>();
+        reviewOptions.putAll(BASE_OPTIONS);
+        reviewOptions.put("product", String.valueOf(productId));
+        Log.e("productReview", String.valueOf(productId));
+        return reviewOptions;
+    }
+    //    public static Map<String, String> getNewest(int perPage, int categoryId){
 //        Map<String, String> newestOptions = new HashMap<>();
 //        newestOptions.putAll(BASE_OPTIONS);
 //        newestOptions.put(ORDERBY, RECENT);

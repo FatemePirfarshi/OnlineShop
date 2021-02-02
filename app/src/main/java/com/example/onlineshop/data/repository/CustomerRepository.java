@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.onlineshop.data.model.Customer;
 import com.example.onlineshop.data.model.Order;
+import com.example.onlineshop.data.model.Review;
 import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.remote.retrofit.RetrofitInstance;
 import com.example.onlineshop.data.remote.retrofit.WoocommerceService;
@@ -21,10 +22,14 @@ public class CustomerRepository {
     public static final String TAG = "CustomerRepository";
     private static CustomerRepository sInstance;
     private WoocommerceService mWoocommerceServiceCustomer;
+    private WoocommerceService mWoocommerceServiceReview;
     private MutableLiveData<Customer> mCustomerLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> mRegisterLiveData = new MutableLiveData<>();
     private MutableLiveData<Customer> mSearchEmailLiveData = new MutableLiveData<>();
     private MutableLiveData<Order> mOrderLiveData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mSendReview = new MutableLiveData<>();
+
+    private MutableLiveData<List<Review>> mReviewsLiveData = new MutableLiveData<>();
 
     public MutableLiveData<Customer> getCustomerLiveData() {
         return mCustomerLiveData;
@@ -38,6 +43,13 @@ public class CustomerRepository {
         return mSearchEmailLiveData;
     }
 
+    public MutableLiveData<List<Review>> getReviewsLiveData() {
+        return mReviewsLiveData;
+    }
+
+    public MutableLiveData<Boolean> getSendReview() {
+        return mSendReview;
+    }
 
     public static CustomerRepository getInstance() {
         if (sInstance == null)
@@ -47,6 +59,7 @@ public class CustomerRepository {
 
     private CustomerRepository() {
         mWoocommerceServiceCustomer = RetrofitInstance.getCustomerInstance().create(WoocommerceService.class);
+        mWoocommerceServiceReview = RetrofitInstance.getReviewInstance().create(WoocommerceService.class);
     }
 
     public void createCustomer(Customer customer) {
@@ -124,6 +137,44 @@ public class CustomerRepository {
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void fetchProductReviews(int productId){
+        Call<List<Review>> call =
+                mWoocommerceServiceReview.getReviews(NetworkParams.getReviews(productId));
+        call.enqueue(new Callback<List<Review>>() {
+            @Override
+            public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
+                mReviewsLiveData.setValue(response.body());
+//                Log.e(TAG, "this product review is : " + response.body().get(0).getReview());
+            }
+
+            @Override
+            public void onFailure(Call<List<Review>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void sendReview(Review review){
+        Call<Review> call = mWoocommerceServiceReview.sendReview(
+                "https://woocommerce.maktabsharif.ir/wp-json/wc/v3/products/reviews",
+                review,
+                NetworkParams.CONSUMER_KEY,
+                NetworkParams.CONSUMER_SECRET
+        );
+        call.enqueue(new Callback<Review>() {
+            @Override
+            public void onResponse(Call<Review> call, Response<Review> response) {
+                if(response.isSuccessful())
+                    mSendReview.setValue(true);
+            }
+
+            @Override
+            public void onFailure(Call<Review> call, Throwable t) {
 
             }
         });

@@ -5,8 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -14,9 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.onlineshop.R;
 import com.example.onlineshop.adapter.ProductsListAdapter;
+import com.example.onlineshop.adapter.ReviewAdapter;
 import com.example.onlineshop.adapter.SliderAdapter;
 import com.example.onlineshop.data.model.ProductItem;
+import com.example.onlineshop.data.model.Review;
 import com.example.onlineshop.databinding.FragmentProductPageBinding;
+import com.example.onlineshop.view.observers.SingleEventObserver;
 import com.example.onlineshop.viewmodel.ProductListViewModel;
 import com.example.onlineshop.viewmodel.ProductPageViewModel;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -72,6 +77,32 @@ public class ProductPageFragment extends VisibleFragment {
                 setupAdapter(productItems);
             }
         });
+
+        mProductPageViewModel.getReviewsLiveData().observe(this, new Observer<List<Review>>() {
+            @Override
+            public void onChanged(List<Review> reviews) {
+//                Log.e("review",reviews.get(0).getReview());
+                setupReviewAdapter(reviews);
+            }
+        });
+
+        LiveData<Boolean> sendReviewLiveData = mProductPageViewModel.getSendReviewLiveData();
+        sendReviewLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, sendReviewLiveData) {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                super.onChanged(aBoolean);
+                if (aBoolean)
+                    Toast.makeText(
+                            getActivity(),
+                            R.string.send_review_successfuly,
+                            Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(
+                            getActivity(),
+                            R.string.please_try_again,
+                            Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -108,6 +139,8 @@ public class ProductPageFragment extends VisibleFragment {
                 LinearLayoutManager.HORIZONTAL,
                 true);
         mBinding.rvProducts.setLayoutManager(layoutManager);
+
+        mBinding.rvReviews.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void setupAdapter(List<ProductItem> items) {
@@ -122,5 +155,10 @@ public class ProductPageFragment extends VisibleFragment {
         mBinding.imageSlider.setIndicatorAnimation(IndicatorAnimationType.WORM);
         mBinding.imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         mBinding.imageSlider.startAutoCycle();
+    }
+
+    private void setupReviewAdapter(List<Review> reviews){
+        ReviewAdapter adapter = new ReviewAdapter(mProductPageViewModel);
+        mBinding.rvReviews.setAdapter(adapter);
     }
 }

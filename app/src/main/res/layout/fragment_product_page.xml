@@ -60,6 +60,18 @@
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="20dp"
+                    android:text = "@string/description"
+                    android:layout_marginTop="16dp"
+                    android:textColor="#66038F"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
@@ -79,13 +91,60 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="match_parent"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_reviews"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:padding="16dp"
-                    android:text="@{productPageViewModel.productItemLiveData.description}"
-                    android:textSize="18sp" />
+                    android:layout_gravity="right"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="16dp"
+                    android:textColor="#66038F"
+                    android:textSize="18sp"
+                    android:layout_marginRight="20dp"
+                    android:text="@string/your_rating"/>
+
+                <EditText
+                    android:id="@+id/et_your_rate"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:onTextChanged="@{productPageViewModel::onTextChangedRating}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="20dp"
+                    android:text = "@string/send_description"
+                    android:layout_marginTop="16dp"
+                    android:textColor="#66038F"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_margin="16dp"
+                    android:onTextChanged="@{productPageViewModel::onTextChangedReview}" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/purple"
+                    android:text="ثبت نظر"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:onClick="@{() -> productPageViewModel.sendReview()}"/>
 
                 <TextView
                     android:id="@+id/list_title"
@@ -107,38 +166,48 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"/>
+
             </LinearLayout>
         </ScrollView>
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:background="@color/white">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#ffffff"
                 android:padding="8dp"
-                android:layout_margin="16dp"
                 android:text="@{productPageViewModel.productItemLiveData.productPrice  + @string/item_product}"
                 android:textColor="@color/black"
-                android:background="#ffffff"
-                android:textSize="24sp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"/>
+                android:textSize="24sp" />
 
             <Button
                 android:id="@+id/btn_add_to_cart"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_to_cart"
-                android:textSize="18sp"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:textStyle="bold"
                 android:backgroundTint="@color/purple"
-                android:layout_margin="16dp"
-                android:onClick="@{() -> productPageViewModel.addToCartClicked()}" />
+                android:onClick="@{() -> productPageViewModel.addToCartClicked()}"
+                android:text="@string/add_to_cart"
+                android:textSize="18sp" />
 
         </RelativeLayout>
 

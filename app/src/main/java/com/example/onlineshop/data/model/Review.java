@@ -5,46 +5,83 @@ import com.google.gson.annotations.SerializedName;
 public class Review {
 
     @SerializedName("reviewer")
-    private String reviewer;
+    private String mReviewer;
 
     @SerializedName("reviewer_email")
-    private String reviewerEmail;
+    private String mReviewerEmail;
 
     @SerializedName("review")
-    private String review;
+    private String mReview;
 
     @SerializedName("product_id")
-    private int productId;
+    private int mProductId;
+
+    @SerializedName("rating")
+    private int mRating;
+
+    @SerializedName("date_created")
+    private String mDateCreated;
+
+    public Review(String reviewer, String reviewerEmail, int rating, String review, int productId) {
+        mReviewer = reviewer;
+        mReviewerEmail = reviewerEmail;
+        mReview = review;
+        mRating = rating;
+        mProductId = productId;
+    }
+
+    public Review(String reviewer, int rating, String review, String date){
+        mReviewer = reviewer;
+        mRating = rating;
+        mReview = review;
+        mDateCreated = date;
+    }
 
     public String getReviewer() {
-        return reviewer;
+        return mReviewer;
     }
 
     public void setReviewer(String reviewer) {
-        this.reviewer = reviewer;
+        mReviewer = reviewer;
     }
 
     public String getReviewerEmail() {
-        return reviewerEmail;
+        return mReviewerEmail;
     }
 
     public void setReviewerEmail(String reviewerEmail) {
-        this.reviewerEmail = reviewerEmail;
+        mReviewerEmail = reviewerEmail;
     }
 
     public String getReview() {
-        return review;
+        return mReview;
     }
 
     public void setReview(String review) {
-        this.review = review;
+        mReview = review;
     }
 
     public int getProductId() {
-        return productId;
+        return mProductId;
     }
 
     public void setProductId(int productId) {
-        this.productId = productId;
+        mProductId = productId;
+    }
+
+    public int getRating() {
+        return mRating;
+    }
+
+    public void setRating(int rating) {
+        mRating = rating;
+    }
+
+    public String getDateCreated() {
+        return mDateCreated;
+    }
+
+    public void setDateCreated(String dateCreated) {
+        mDateCreated = dateCreated;
     }
 }

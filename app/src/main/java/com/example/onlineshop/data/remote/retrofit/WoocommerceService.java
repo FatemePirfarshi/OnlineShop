@@ -4,6 +4,7 @@ import com.example.onlineshop.data.model.CategoryItem;
 import com.example.onlineshop.data.model.Customer;
 import com.example.onlineshop.data.model.Order;
 import com.example.onlineshop.data.model.ProductItem;
+import com.example.onlineshop.data.model.Review;
 
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,18 @@ public interface WoocommerceService {
             @Query("consumer_secret") String consumerSecret
     );
 
+    @GET("products/reviews")
+    Call<List<Review>> getReviews(
+            @QueryMap Map<String, String> options
+    );
+
+    @POST
+    Call<Review> sendReview(
+            @Url String url,
+            @Body Review review,
+            @Query("consumer_key") String consumerKey,
+            @Query("consumer_secret") String consumerSecret
+    );
 //    @Headers("Content-Type: application/json")
 //    @POST("customers")
 //    Call<Customer> createCustomer(

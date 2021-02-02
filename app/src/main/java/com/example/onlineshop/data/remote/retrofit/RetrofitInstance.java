@@ -3,6 +3,7 @@ package com.example.onlineshop.data.remote.retrofit;
 import com.example.onlineshop.data.model.CategoryItem;
 import com.example.onlineshop.data.model.Customer;
 import com.example.onlineshop.data.model.ProductItem;
+import com.example.onlineshop.data.model.Review;
 import com.example.onlineshop.data.remote.NetworkParams;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -51,6 +52,16 @@ public class RetrofitInstance {
                 .addConverterFactory(createGsonConverter(
                         new TypeToken<List<Customer>>() {}.getType(),
                         new GetCustomerDeserializer()
+                ))
+                .build();
+    }
+
+    public static Retrofit getReviewInstance(){
+        return new Retrofit.Builder()
+                .baseUrl(NetworkParams.BASE_URL)
+                .addConverterFactory(createGsonConverter(
+                        new TypeToken<List<Review>>() {}.getType(),
+                        new GetReviewDeserializer()
                 ))
                 .build();
     }
