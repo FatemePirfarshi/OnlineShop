@@ -99,6 +99,13 @@ public class NetworkParams {
         Log.e("productReview", String.valueOf(productId));
         return reviewOptions;
     }
+
+    public static Map<String, String> getCouponOptions(String code){
+        Map<String, String> couponOptions = new HashMap<>();
+        couponOptions.putAll(BASE_OPTIONS);
+        couponOptions.put("code", code);
+        return couponOptions;
+    }
     //    public static Map<String, String> getNewest(int perPage, int categoryId){
 //        Map<String, String> newestOptions = new HashMap<>();
 //        newestOptions.putAll(BASE_OPTIONS);

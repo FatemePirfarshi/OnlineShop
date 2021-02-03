@@ -80,4 +80,8 @@ public class ProductPageViewModel extends ProductViewModel {
                 getProductItemLiveData().getValue().getId());
         mCustomerRepository.sendReview(review);
     }
+
+    public void setCustomerSettingLiveData(){
+        mCustomerRepository.setCustomerSettingLiveData();
+    }
 }

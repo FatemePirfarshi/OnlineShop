@@ -86,23 +86,6 @@ public class ProductPageFragment extends VisibleFragment {
             }
         });
 
-        LiveData<Boolean> sendReviewLiveData = mProductPageViewModel.getSendReviewLiveData();
-        sendReviewLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, sendReviewLiveData) {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                super.onChanged(aBoolean);
-                if (aBoolean)
-                    Toast.makeText(
-                            getActivity(),
-                            R.string.send_review_successfuly,
-                            Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(
-                            getActivity(),
-                            R.string.please_try_again,
-                            Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     @Override
@@ -121,6 +104,28 @@ public class ProductPageFragment extends VisibleFragment {
     }
 
     private void navListener() {
+
+
+        LiveData<Boolean> sendReviewLiveData = mProductPageViewModel.getSendReviewLiveData();
+        sendReviewLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, sendReviewLiveData) {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                super.onChanged(aBoolean);
+                if (aBoolean)
+                    Toast.makeText(
+                            getActivity(),
+                            R.string.send_review_successfuly,
+                            Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(
+                            getActivity(),
+                            R.string.please_try_again,
+                            Toast.LENGTH_LONG).show();
+
+                mProductPageViewModel.setCustomerSettingLiveData();
+            }
+        });
+
         mProductListViewModel.getClickedProductItem().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer id) {

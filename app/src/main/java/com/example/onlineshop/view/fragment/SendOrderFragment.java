@@ -4,16 +4,26 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.onlineshop.R;
+import com.example.onlineshop.data.model.CouponLines;
+import com.example.onlineshop.data.model.Order;
+import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.FragmentSendOrderBinding;
+import com.example.onlineshop.utilities.QueryPreferences;
 import com.example.onlineshop.viewmodel.SendOrderViewModel;
+import com.google.android.gms.maps.internal.IStreetViewPanoramaDelegate;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import java.util.List;
 
 
 public class SendOrderFragment extends BottomSheetDialogFragment {
@@ -49,6 +59,24 @@ public class SendOrderFragment extends BottomSheetDialogFragment {
                 container,
                 false);
         mBinding.setSendOrderViewModel(mOrderViewModel);
+
+        mOrderViewModel.getOrderLiveData().observe(this, new Observer<Order>() {
+            @Override
+            public void onChanged(Order order) {
+                if (order != null) {
+                    dismiss();
+//                    QueryPreferences.removeAllCartProducts(getActivity());
+                    mOrderViewModel.deleteCartItems(true);
+                }
+            }
+        });
+        mOrderViewModel.getCouponLinesLiveData().observe(this, new Observer<CouponLines>() {
+            @Override
+            public void onChanged(CouponLines couponLines) {
+                int result = mOrderViewModel.getTotal() - (int) Double.parseDouble(couponLines.getAmount());
+                mBinding.tvTotalPrice.setText("" + result);
+            }
+        });
 
         return mBinding.getRoot();
     }

@@ -56,6 +56,11 @@ public class ProductRepository {
         mCartItemLiveData.setValue(cartItemLiveData);
     }
 
+    public void deleteCartItems(boolean flag) {
+        if (flag)
+            mCartItemLiveData.setValue(new ArrayList<>());
+    }
+
     public MutableLiveData<List<String>> getOfferPicsLiveData() {
         return mOfferPicsLiveData;
     }
@@ -245,7 +250,7 @@ public class ProductRepository {
     }
 
     private Callback<List<ProductItem>> getItemsCallback(MutableLiveData<List<ProductItem>> itemsLiveData) {
-        itemsLiveData.setValue(new ArrayList<>());
+//        itemsLiveData.setValue(new ArrayList<>());
 
         return new Callback<List<ProductItem>>() {
             @Override

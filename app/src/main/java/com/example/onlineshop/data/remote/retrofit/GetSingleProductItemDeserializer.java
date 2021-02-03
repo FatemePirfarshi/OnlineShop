@@ -10,6 +10,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,6 +48,29 @@ public class GetSingleProductItemDeserializer implements JsonDeserializer<Produc
         int rate = jsonObject.get("rating_count").getAsInt();
 
         String description = jsonObject.get("description").getAsString();
+
+//        String html = description;
+//        Document doc = Jsoup.parse(html);
+//
+//        doc.select("<br/>").remove();
+//        doc.select("br").last().remove();
+//        doc.select("<p/>").remove();
+//        doc.select("p").last().remove();
+//        description = doc.body().text();
+        //        Document doc = Jsoup.parse(description, "", Parser.htmlParser());
+//        Element imgs = doc.select("des");
+//        imgs.remove();
+//        String jsoupUrl = NetworkParams.BASE_URL
+//                + "products/" + id + "?consumer_key="
+//                + NetworkParams.CONSUMER_KEY +
+//                "&consumer_secret=" + NetworkParams.CONSUMER_SECRET;
+//        try {
+//            Document document = Jsoup.connect(jsoupUrl).get();
+//            description = document.ownText();
+////            description = document.select("description").first().absUrl("description");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         JsonArray photoArray = jsonObject.get("images").getAsJsonArray();
         List<String> photoUrl = new ArrayList<>();

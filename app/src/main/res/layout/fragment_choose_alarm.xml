@@ -34,6 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
+                android:onClick="@{() -> chooseAlarmViewModel.setAlarmForThreeHour()}"
                 android:text="@string/three_hour" />
 
             <RadioButton
@@ -41,6 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
+                android:onClick="@{() -> chooseAlarmViewModel.setAlarmForFiveHour()}"
                 android:text="@string/five_hour" />
 
             <RadioButton
@@ -48,6 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
+                android:onClick="@{() -> chooseAlarmViewModel.setAlarmForEightHour()}"
                 android:text="@string/eight_hour" />
 
             <RadioButton
@@ -55,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
+                android:onClick="@{() -> chooseAlarmViewModel.setAlarmForTwelveHour()}"
                 android:text="@string/twelve_hour" />
 
             <RadioButton
@@ -67,6 +71,7 @@
         </RadioGroup>
 
         <ImageView
+            android:id="@+id/iv_silent_alarm"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_deactive_alarm"

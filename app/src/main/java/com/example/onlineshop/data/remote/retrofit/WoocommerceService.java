@@ -1,6 +1,7 @@
 package com.example.onlineshop.data.remote.retrofit;
 
 import com.example.onlineshop.data.model.CategoryItem;
+import com.example.onlineshop.data.model.CouponLines;
 import com.example.onlineshop.data.model.Customer;
 import com.example.onlineshop.data.model.Order;
 import com.example.onlineshop.data.model.ProductItem;
@@ -71,7 +72,10 @@ public interface WoocommerceService {
             @Query("consumer_secret") String consumerSecret
     );
 
-
+    @GET("coupons")
+    Call<List<CouponLines>> getCoupon(
+            @QueryMap Map<String, String> options
+    );
 //    @Headers("Content-Type: application/json")
 //    @POST("customers")
 //    Call<Customer> createCustomer(

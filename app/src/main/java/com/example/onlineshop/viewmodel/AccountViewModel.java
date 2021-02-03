@@ -27,10 +27,10 @@ public class AccountViewModel extends AndroidViewModel {
     private MutableLiveData<String> mClickedAddress = new MutableLiveData<>();
 
     private MutableLiveData<Set<String>> mAddressListLiveData = new MutableLiveData<>();
-    private MutableLiveData<String> mAddressLiveData = new MutableLiveData<>();
     private MutableLiveData<String> mEmailLiveData = new MutableLiveData<>();
     private MutableLiveData<String> mUserNameLiveData = new MutableLiveData<>();
-
+    private MutableLiveData<String> mAddressLiveData;
+    private MutableLiveData<Integer> mCustomerResponseCode;
 
     private CustomerRepository mRepository;
     private LiveData<Customer> mCustomerLiveData;
@@ -76,12 +76,18 @@ public class AccountViewModel extends AndroidViewModel {
         return mUserNameLiveData;
     }
 
+    public MutableLiveData<Integer> getCustomerResponseCode() {
+        return mCustomerResponseCode;
+    }
+
     public AccountViewModel(@NonNull Application application) {
         super(application);
         mRepository = CustomerRepository.getInstance();
         mCustomerLiveData = mRepository.getCustomerLiveData();
         mRegisterLiveData = mRepository.getRegisterLiveData();
         mSearchCustomer = mRepository.getSearchEmailLiveData();
+        mAddressLiveData = mRepository.getCurrentAddressLiveData();
+        mCustomerResponseCode = mRepository.getCustomerResponseCode();
     }
 
     public MutableLiveData<Boolean> getAlarmDialogStart() {
@@ -139,8 +145,10 @@ public class AccountViewModel extends AndroidViewModel {
 
     public void signInClick() {
         Customer customer = new Customer(mEmail);
-        if (mUserName != null)
+        if (mUserName != null){
             customer.setUserName(mUserName);
+            QueryPreferences.setUserNameQuery(getApplication(), mUserName);
+        }
         QueryPreferences.setEmailQuery(getApplication(), mEmail);
         mRepository.createCustomer(customer);
     }
@@ -179,7 +187,12 @@ public class AccountViewModel extends AndroidViewModel {
     public void addressClicked(String address){
         QueryPreferences.setCurrentAddressQuery(getApplication(), address);
         mClickedAddress.setValue(address);
+        mRepository.getCurrentAddress(address);
         //callback
-        mAddressLiveData.setValue(address);
+//        mAddressLiveData.setValue(address);
+    }
+
+    public void setCustomerSettingLiveData(){
+        mRepository.setCustomerSettingLiveData();
     }
 }

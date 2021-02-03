@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.onlineshop.data.model.ProductItem;
+import com.example.onlineshop.data.repository.CustomerRepository;
 import com.example.onlineshop.data.repository.ProductRepository;
 import com.example.onlineshop.utilities.QueryPreferences;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class CartViewModel extends AndroidViewModel {
 
     private ProductRepository mRepository;
+    private CustomerRepository mCustomerRepository;
     private MutableLiveData<List<ProductItem>> mCartProductItem;
     private MutableLiveData<Integer> mCountProductLiveData = new MutableLiveData<>();
     private MutableLiveData<ProductItem> mCurrentItem = new MutableLiveData<>();
@@ -24,6 +26,7 @@ public class CartViewModel extends AndroidViewModel {
     public CartViewModel(@NonNull Application application) {
         super(application);
         mRepository = ProductRepository.getInstance();
+        mCustomerRepository = CustomerRepository.getInstance();
         mCartProductItem = mRepository.getCartItemLiveData();
     }
 
@@ -91,7 +94,7 @@ public class CartViewModel extends AndroidViewModel {
             mSendDialogLiveData.setValue(true);
     }
 
-    public void setCountProductLiveData() {
-
+    public void setCustomerSettingLiveData() {
+        mCustomerRepository.setCustomerSettingCartLiveData();
     }
 }

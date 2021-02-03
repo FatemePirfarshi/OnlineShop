@@ -4,13 +4,16 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.onlineshop.data.model.CouponLines;
 import com.example.onlineshop.data.model.Customer;
 import com.example.onlineshop.data.model.Order;
+import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.data.model.Review;
 import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.remote.retrofit.RetrofitInstance;
 import com.example.onlineshop.data.remote.retrofit.WoocommerceService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -23,13 +26,30 @@ public class CustomerRepository {
     private static CustomerRepository sInstance;
     private WoocommerceService mWoocommerceServiceCustomer;
     private WoocommerceService mWoocommerceServiceReview;
+    private WoocommerceService mWoocommerceServiceCoupon;
+
     private MutableLiveData<Customer> mCustomerLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> mRegisterLiveData = new MutableLiveData<>();
     private MutableLiveData<Customer> mSearchEmailLiveData = new MutableLiveData<>();
     private MutableLiveData<Order> mOrderLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> mSendReview = new MutableLiveData<>();
-
     private MutableLiveData<List<Review>> mReviewsLiveData = new MutableLiveData<>();
+    private MutableLiveData<CouponLines> mCouponLinesLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> mCurrentAddressLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<ProductItem>> mProductItemsInCart = new MutableLiveData<>();
+    private MutableLiveData<Integer> mCustomerResponseCode = new MutableLiveData<>();
+
+    public void setCustomerSettingLiveData() {
+        mSendReview = new MutableLiveData<>();
+        mOrderLiveData = new MutableLiveData<>();
+//        mCustomerLiveData.setValue(null);
+    }
+
+    public void setCustomerSettingCartLiveData() {
+        mSendReview = new MutableLiveData<>();
+        mOrderLiveData = new MutableLiveData<>();
+        mCustomerLiveData.setValue(null);
+    }
 
     public MutableLiveData<Customer> getCustomerLiveData() {
         return mCustomerLiveData;
@@ -43,12 +63,32 @@ public class CustomerRepository {
         return mSearchEmailLiveData;
     }
 
+    public MutableLiveData<Order> getOrderLiveData() {
+        return mOrderLiveData;
+    }
+
     public MutableLiveData<List<Review>> getReviewsLiveData() {
         return mReviewsLiveData;
     }
 
     public MutableLiveData<Boolean> getSendReview() {
         return mSendReview;
+    }
+
+    public MutableLiveData<CouponLines> getCouponLinesLiveData() {
+        return mCouponLinesLiveData;
+    }
+
+    public MutableLiveData<String> getCurrentAddressLiveData() {
+        return mCurrentAddressLiveData;
+    }
+
+    public MutableLiveData<List<ProductItem>> getProductItemsInCart() {
+        return mProductItemsInCart;
+    }
+
+    public MutableLiveData<Integer> getCustomerResponseCode() {
+        return mCustomerResponseCode;
     }
 
     public static CustomerRepository getInstance() {
@@ -60,9 +100,11 @@ public class CustomerRepository {
     private CustomerRepository() {
         mWoocommerceServiceCustomer = RetrofitInstance.getCustomerInstance().create(WoocommerceService.class);
         mWoocommerceServiceReview = RetrofitInstance.getReviewInstance().create(WoocommerceService.class);
+        mWoocommerceServiceCoupon = RetrofitInstance.getCouponInstance().create(WoocommerceService.class);
     }
 
     public void createCustomer(Customer customer) {
+
         Call<Customer> call = mWoocommerceServiceCustomer.createCustomer(
                 "https://woocommerce.maktabsharif.ir/wp-json/wc/v3/customers",
                 customer,
@@ -70,6 +112,7 @@ public class CustomerRepository {
                 NetworkParams.CONSUMER_SECRET
         );
         call.enqueue(new Callback<Customer>() {
+
             @Override
             public void onResponse(Call<Customer> call, Response<Customer> response) {
 
@@ -77,12 +120,13 @@ public class CustomerRepository {
                 if (response.isSuccessful()) {
                     mRegisterLiveData.setValue(true);
                     mCustomerLiveData.setValue(response.body());
-
+                    mCustomerResponseCode.setValue(response.code());
 //                    mCustomerLiveData.setValue(response.body());
                     Log.e(TAG, "onResponse: " + response.body().getEmail());
                     Log.e(TAG, "customer Id: " + response.body().getId());
                 } else {
                     mRegisterLiveData.setValue(false);
+                    mCustomerLiveData.setValue(null);
                     Log.e(TAG, response.errorBody().toString());
                 }
             }
@@ -101,7 +145,7 @@ public class CustomerRepository {
             @Override
             public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
                 if (response.isSuccessful()) {
-//                    mCustomerLiveData.setValue(response.body().get(0));
+                    mCustomerLiveData.setValue(response.body().get(0));
                     Log.e(TAG, "searchEmail:" + response.body().get(0).getEmail());
                     Log.e(TAG, "searchId:" + response.body().get(0).getId());
 
@@ -129,9 +173,9 @@ public class CustomerRepository {
             public void onResponse(Call<Order> call, Response<Order> response) {
                 if (response.isSuccessful()) {
                     mOrderLiveData.setValue(response.body());
-                    Log.e(TAG,"post order: " + response.code());
-                    Log.e(TAG,"post order: " + response.body().getBilling().getEmail());
-                }else
+                    Log.e(TAG, "post order: " + response.code());
+                    Log.e(TAG, "post order: " + response.body().getBilling().getEmail());
+                } else
                     mOrderLiveData.setValue(null);
             }
 
@@ -142,7 +186,7 @@ public class CustomerRepository {
         });
     }
 
-    public void fetchProductReviews(int productId){
+    public void fetchProductReviews(int productId) {
         Call<List<Review>> call =
                 mWoocommerceServiceReview.getReviews(NetworkParams.getReviews(productId));
         call.enqueue(new Callback<List<Review>>() {
@@ -159,7 +203,7 @@ public class CustomerRepository {
         });
     }
 
-    public void sendReview(Review review){
+    public void sendReview(Review review) {
         Call<Review> call = mWoocommerceServiceReview.sendReview(
                 "https://woocommerce.maktabsharif.ir/wp-json/wc/v3/products/reviews",
                 review,
@@ -169,7 +213,7 @@ public class CustomerRepository {
         call.enqueue(new Callback<Review>() {
             @Override
             public void onResponse(Call<Review> call, Response<Review> response) {
-                if(response.isSuccessful())
+                if (response.isSuccessful())
                     mSendReview.setValue(true);
             }
 
@@ -179,4 +223,26 @@ public class CustomerRepository {
             }
         });
     }
+
+    public void getCoupon(String code) {
+        Call<List<CouponLines>> call =
+                mWoocommerceServiceCoupon.getCoupon(NetworkParams.getCouponOptions(code));
+        call.enqueue(new Callback<List<CouponLines>>() {
+            @Override
+            public void onResponse(Call<List<CouponLines>> call, Response<List<CouponLines>> response) {
+                mCouponLinesLiveData.setValue(response.body().get(0));
+                Log.e("coupon", "coupon code: " + response.body().get(0).getAmount());
+            }
+
+            @Override
+            public void onFailure(Call<List<CouponLines>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void getCurrentAddress(String address){
+        mCurrentAddressLiveData.setValue(address);
+    }
+
 }

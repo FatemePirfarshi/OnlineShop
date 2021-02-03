@@ -22,6 +22,19 @@ public class QueryPreferences {
     public static final String PREF_USER_ADDRESSES = "userAddresses";
     public static final String PREF_CURRENT_ADDRESS = "currentAddress";
 
+    public static final String PREF_LAST_CHOOSE_ALARM = "currentAlarm";
+
+    public static int getLastAlarmChoose(Context context) {
+        return getSharedPreferences(context).getInt(PREF_LAST_CHOOSE_ALARM, 0);
+    }
+
+    public static void setLastAlarmChoose(Context context, int lastHour) {
+        getSharedPreferences(context)
+                .edit()
+                .putInt(PREF_LAST_CHOOSE_ALARM, lastHour)
+                .apply();
+    }
+
     public static String getCurrentAddressQuery(Context context) {
         return getSharedPreferences(context).getString(PREF_CURRENT_ADDRESS, null);
     }
@@ -66,37 +79,37 @@ public class QueryPreferences {
                 .apply();
     }
 
-    public static int getLastProductId(Context context){
+    public static int getLastProductId(Context context) {
         return getSharedPreferences(context).getInt(PREF_LAST_PRODUCT_ID, 0);
     }
 
-    public static void setLastProductId(Context context, int lastProductId){
+    public static void setLastProductId(Context context, int lastProductId) {
         getSharedPreferences(context)
                 .edit()
                 .putInt(PREF_LAST_PRODUCT_ID, lastProductId)
                 .apply();
     }
 
-    public static void setUserAddress(Context context, Set<String> customerAddress){
+    public static void setUserAddress(Context context, Set<String> customerAddress) {
         getSharedPreferences(context)
                 .edit()
                 .putStringSet(PREF_USER_ADDRESSES, customerAddress)
                 .apply();
     }
 
-    public static void addUserAddress(Context context, String address){
+    public static void addUserAddress(Context context, String address) {
         Set<String> addressItems = getUserAddresses(context);
-        if(addressItems == null)
+        if (addressItems == null)
             addressItems = new HashSet<>();
         addressItems.add(address);
         setUserAddress(context, addressItems);
     }
 
-    public static Set<String> getUserAddresses(Context context){
+    public static Set<String> getUserAddresses(Context context) {
         return getSharedPreferences(context).getStringSet(PREF_USER_ADDRESSES, null);
     }
 
-    public static void setCartProducts(Context context, List<ProductItem> productItems){
+    public static void setCartProducts(Context context, List<ProductItem> productItems) {
 
         Gson gson = new Gson();
         String jsonProducts = gson.toJson(productItems);
@@ -107,25 +120,35 @@ public class QueryPreferences {
                 .apply();
     }
 
-    public static void addCartProduct(Context context, ProductItem item){
+    public static void addCartProduct(Context context, ProductItem item) {
         List<ProductItem> productItems = getCartProducts(context);
-        if(productItems == null)
+        if (productItems == null)
             productItems = new ArrayList<>();
         productItems.add(item);
         setCartProducts(context, productItems);
     }
 
-    public static void removeCartProduct(Context context, ProductItem item){
+    public static void removeCartProduct(Context context, ProductItem item) {
         ArrayList<ProductItem> productItems = getCartProducts(context);
-        if(productItems != null){
-            productItems.remove(productItems);
+        if (productItems != null) {
+            productItems.remove(item);
             setCartProducts(context, productItems);
         }
     }
 
-    public static ArrayList<ProductItem> getCartProducts(Context context){
+    public static void removeAllCartProducts(Context context) {
+        ArrayList<ProductItem> productItems = getCartProducts(context);
+        if (productItems != null)
+            productItems.removeAll(productItems);
+//            for (int i = 0; i < productItems.size(); i++) {
+//                productItems.remove(i);
+//            }
+        setCartProducts(context, productItems);
+    }
 
-        if(getSharedPreferences(context).contains(PREF_CART_PRODUCT)){
+    public static ArrayList<ProductItem> getCartProducts(Context context) {
+
+        if (getSharedPreferences(context).contains(PREF_CART_PRODUCT)) {
             String jsonProducts = getSharedPreferences(context).getString(PREF_CART_PRODUCT, null);
             Gson gson = new Gson();
             ProductItem[] productItems = gson.fromJson(jsonProducts, ProductItem[].class);

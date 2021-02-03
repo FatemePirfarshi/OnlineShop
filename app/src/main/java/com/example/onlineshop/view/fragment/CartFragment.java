@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
@@ -16,10 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.onlineshop.R;
 import com.example.onlineshop.adapter.CartAdapter;
+import com.example.onlineshop.data.model.Order;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.databinding.FragmentCartBinding;
 import com.example.onlineshop.view.observers.SingleEventObserver;
 import com.example.onlineshop.viewmodel.CartViewModel;
+import com.example.onlineshop.viewmodel.SendOrderViewModel;
 
 import java.util.List;
 
@@ -27,6 +30,7 @@ public class CartFragment extends VisibleFragment {
 
     private FragmentCartBinding mBinding;
     private CartViewModel mViewModel;
+    private SendOrderViewModel mOrderViewModel;
     private CartAdapter mAdapter;
 
     public CartFragment() {
@@ -36,7 +40,6 @@ public class CartFragment extends VisibleFragment {
     public static CartFragment newInstance() {
         CartFragment fragment = new CartFragment();
         Bundle args = new Bundle();
-
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,7 +49,9 @@ public class CartFragment extends VisibleFragment {
         super.onCreate(savedInstanceState);
 
         mViewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        mOrderViewModel = new ViewModelProvider(this).get(SendOrderViewModel.class);
         mViewModel.fetchCartItems();
+//        mViewModel.setCustomerSettingLiveData();
 
         setLiveDataObservers();
     }
@@ -55,6 +60,18 @@ public class CartFragment extends VisibleFragment {
         mViewModel.getCartProductItem().observe(this, new Observer<List<ProductItem>>() {
             @Override
             public void onChanged(List<ProductItem> productItems) {
+                if (productItems.size() != 0)
+                    mBinding.ivEmptyBasket.setVisibility(View.GONE);
+                else {
+//                    Toast.makeText(
+//                            getActivity(),
+//                            R.string.send_user_order,
+//                            Toast.LENGTH_LONG).show();
+                    mBinding.ivEmptyBasket.setVisibility(View.VISIBLE);
+                    mBinding.tvTotalPrice.setText("");
+//                    mViewModel.setCustomerSettingLiveData();
+
+                }
                 setupAdapter();
             }
         });
@@ -73,6 +90,23 @@ public class CartFragment extends VisibleFragment {
         initViews();
         mBinding.setCartViewModel(mViewModel);
 
+        createAccountAlertDialog();
+
+        LiveData<Boolean> sendDialogLiveData = mViewModel.getSendDialogLiveData();
+        sendDialogLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, sendDialogLiveData) {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                super.onChanged(aBoolean);
+                if (aBoolean) {
+                    Navigation.findNavController(mBinding.getRoot()).navigate(R.id.sendOrderFragment);
+                }
+            }
+        });
+
+        return mBinding.getRoot();
+    }
+
+    private void createAccountAlertDialog() {
         mViewModel.getStartAccountDialog().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -95,18 +129,6 @@ public class CartFragment extends VisibleFragment {
                 dialogBuilder.show();
             }
         });
-
-        LiveData<Boolean> sendDialogLiveData = mViewModel.getSendDialogLiveData();
-        sendDialogLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, sendDialogLiveData) {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                super.onChanged(aBoolean);
-                if (aBoolean) {
-                    Navigation.findNavController(mBinding.getRoot()).navigate(R.id.sendOrderFragment);
-                }
-            }
-        });
-        return mBinding.getRoot();
     }
 
     private void initViews() {

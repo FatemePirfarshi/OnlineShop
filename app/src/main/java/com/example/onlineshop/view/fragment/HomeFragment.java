@@ -50,7 +50,9 @@ public class HomeFragment extends VisibleFragment {
         mHomeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
 
+//fetch in splash avtivity
         mHomeViewModel.fetchTotalProducts();
+
         mHomeViewModel.fetchOfferPics();
         setLiveDataObservers();
 

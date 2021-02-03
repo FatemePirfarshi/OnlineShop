@@ -35,7 +35,9 @@ public class PollWorker extends Worker {
         return Result.success();
     }
 
-    public static void enqueueWork(Context context, boolean isOn) {
+    public static void enqueueWork(Context context, boolean isOn, int timeRepeat) {
+
+        Log.e(TAG, "enqueueWork call");
         WorkManager workManager = WorkManager.getInstance(context);
 
         if (isOn) {
@@ -46,6 +48,7 @@ public class PollWorker extends Worker {
 
             PeriodicWorkRequest periodicWorkRequest =
 //                    new PeriodicWorkRequest.Builder(PollWorker.class, 3, TimeUnit.HOURS)
+//                    new PeriodicWorkRequest.Builder(PollWorker.class, timeRepeat, TimeUnit.HOURS)
                     new PeriodicWorkRequest.Builder(PollWorker.class, 15, TimeUnit.MINUTES)
                             .setConstraints(constraints)
                             .build();
@@ -54,11 +57,14 @@ public class PollWorker extends Worker {
                     ExistingPeriodicWorkPolicy.REPLACE,
                     periodicWorkRequest);
         } else {
+            Log.d(TAG, "canceled");
             workManager.cancelUniqueWork(POLL_WORKER_NAME);
         }
     }
 
     public static boolean isWorkEnqueued(Context context) {
+
+        Log.e(TAG, " is work enqueued call");
         WorkManager workManager = WorkManager.getInstance(context);
 
         try {

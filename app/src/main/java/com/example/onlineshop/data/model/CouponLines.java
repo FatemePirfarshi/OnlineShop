@@ -10,15 +10,12 @@ public class CouponLines {
     @SerializedName("code")
     private String mCode;
 
-    @SerializedName("discount")
-    private String mDiscount;
+    @SerializedName("amount")
+    private String mAmount;
 
-    @SerializedName("discount_tax")
-    private String mDiscountTax;
-
-    public CouponLines(String code, String discount) {
+    public CouponLines(String code, String amount) {
         mCode = code;
-        mDiscount = discount;
+        mAmount = amount;
     }
 
     public Integer getId() {
@@ -37,19 +34,11 @@ public class CouponLines {
         mCode = code;
     }
 
-    public String getDiscount() {
-        return mDiscount;
+    public String getAmount() {
+        return mAmount;
     }
 
-    public void setDiscount(String discount) {
-        mDiscount = discount;
-    }
-
-    public String getDiscountTax() {
-        return mDiscountTax;
-    }
-
-    public void setDiscountTax(String discountTax) {
-        mDiscountTax = discountTax;
+    public void setAmount(String amount) {
+        mAmount = amount;
     }
 }

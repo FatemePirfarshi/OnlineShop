@@ -11,7 +11,10 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.onlineshop.R;
 import com.example.onlineshop.data.model.ProductItem;
 import com.example.onlineshop.data.repository.ProductRepository;
+import com.example.onlineshop.event.NotificationEvent;
 import com.example.onlineshop.view.activity.HostActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -23,11 +26,14 @@ public class ServicesUtils {
 
         ProductRepository productRepository = ProductRepository.getInstance();
 
+        productRepository.fetchTotalProducts();
         productRepository.fetchRecentItems(productRepository.getPerPage().getValue());
         List<ProductItem> items =  productRepository.getRecentItemsLiveData().getValue();
 
-        if(items.size() == 0 || items == null)
+        if(items.size() == 0 || items == null) {
+            Log.d(tag, "Items from server not fetched");
             return;
+        }
 
         int lastItemId = items.get(0).getId();
         int lastSavedId = QueryPreferences.getLastProductId(context);
@@ -56,8 +62,11 @@ public class ServicesUtils {
                 .setAutoCancel(true)
                 .build();
 
-        NotificationManagerCompat notificationManagerCompat =
-                NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(NOTIFICATION_ID, notification);
+        NotificationEvent notificationEvent =
+                new NotificationEvent(NOTIFICATION_ID, notification);
+        EventBus.getDefault().post(notificationEvent);
+//        NotificationManagerCompat notificationManagerCompat =
+//                NotificationManagerCompat.from(context);
+//        notificationManagerCompat.notify(NOTIFICATION_ID, notification);
     }
 }

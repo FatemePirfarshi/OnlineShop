@@ -16,6 +16,7 @@ import com.example.onlineshop.R;
 import com.example.onlineshop.adapter.AddressAdapter;
 import com.example.onlineshop.adapter.CartAdapter;
 import com.example.onlineshop.databinding.FragmentAddressListBinding;
+import com.example.onlineshop.utilities.QueryPreferences;
 import com.example.onlineshop.viewmodel.AccountViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -46,7 +47,7 @@ public class AddressListFragment extends BottomSheetDialogFragment {
         setLiveDataObservers();
     }
 
-    private void setLiveDataObservers(){
+    private void setLiveDataObservers() {
         mViewModel.getAddressListLiveData().observe(this, new Observer<Set<String>>() {
             @Override
             public void onChanged(Set<String> strings) {
