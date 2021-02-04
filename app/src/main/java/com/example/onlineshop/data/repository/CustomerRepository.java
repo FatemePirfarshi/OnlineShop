@@ -13,7 +13,6 @@ import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.remote.retrofit.RetrofitInstance;
 import com.example.onlineshop.data.remote.retrofit.WoocommerceService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -29,7 +28,6 @@ public class CustomerRepository {
     private WoocommerceService mWoocommerceServiceCoupon;
 
     private MutableLiveData<Customer> mCustomerLiveData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> mRegisterLiveData = new MutableLiveData<>();
     private MutableLiveData<Customer> mSearchEmailLiveData = new MutableLiveData<>();
     private MutableLiveData<Order> mOrderLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> mSendReview = new MutableLiveData<>();
@@ -37,26 +35,19 @@ public class CustomerRepository {
     private MutableLiveData<CouponLines> mCouponLinesLiveData = new MutableLiveData<>();
     private MutableLiveData<String> mCurrentAddressLiveData = new MutableLiveData<>();
     private MutableLiveData<List<ProductItem>> mProductItemsInCart = new MutableLiveData<>();
-    private MutableLiveData<Integer> mCustomerResponseCode = new MutableLiveData<>();
 
     public void setCustomerSettingLiveData() {
         mSendReview = new MutableLiveData<>();
         mOrderLiveData = new MutableLiveData<>();
-//        mCustomerLiveData.setValue(null);
     }
 
     public void setCustomerSettingCartLiveData() {
-        mSendReview = new MutableLiveData<>();
-        mOrderLiveData = new MutableLiveData<>();
+        setCustomerSettingLiveData();
         mCustomerLiveData.setValue(null);
     }
 
     public MutableLiveData<Customer> getCustomerLiveData() {
         return mCustomerLiveData;
-    }
-
-    public MutableLiveData<Boolean> getRegisterLiveData() {
-        return mRegisterLiveData;
     }
 
     public MutableLiveData<Customer> getSearchEmailLiveData() {
@@ -87,10 +78,6 @@ public class CustomerRepository {
         return mProductItemsInCart;
     }
 
-    public MutableLiveData<Integer> getCustomerResponseCode() {
-        return mCustomerResponseCode;
-    }
-
     public static CustomerRepository getInstance() {
         if (sInstance == null)
             sInstance = new CustomerRepository();
@@ -118,14 +105,11 @@ public class CustomerRepository {
 
                 Log.e(TAG, "onResponse: " + response.code());
                 if (response.isSuccessful()) {
-                    mRegisterLiveData.setValue(true);
                     mCustomerLiveData.setValue(response.body());
-                    mCustomerResponseCode.setValue(response.code());
-//                    mCustomerLiveData.setValue(response.body());
+
                     Log.e(TAG, "onResponse: " + response.body().getEmail());
                     Log.e(TAG, "customer Id: " + response.body().getId());
                 } else {
-                    mRegisterLiveData.setValue(false);
                     mCustomerLiveData.setValue(null);
                     Log.e(TAG, response.errorBody().toString());
                 }
@@ -193,7 +177,6 @@ public class CustomerRepository {
             @Override
             public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
                 mReviewsLiveData.setValue(response.body());
-//                Log.e(TAG, "this product review is : " + response.body().get(0).getReview());
             }
 
             @Override
@@ -241,7 +224,7 @@ public class CustomerRepository {
         });
     }
 
-    public void getCurrentAddress(String address){
+    public void getCurrentAddress(String address) {
         mCurrentAddressLiveData.setValue(address);
     }
 

@@ -20,7 +20,6 @@ public class AccountViewModel extends AndroidViewModel {
 
     private MutableLiveData<Boolean> mAlarmDialogStart = new MutableLiveData<>();
     private MutableLiveData<Boolean> mLocatorClicked = new MutableLiveData<>();
-    private MutableLiveData<Boolean> mRequestPermission = new MutableLiveData<>();
     private MutableLiveData<Boolean> mLoginClicked = new MutableLiveData<>();
     private MutableLiveData<Boolean> mLoginAccount = new MutableLiveData<>();
     private MutableLiveData<Boolean> mShowAddressList = new MutableLiveData<>();
@@ -30,11 +29,9 @@ public class AccountViewModel extends AndroidViewModel {
     private MutableLiveData<String> mEmailLiveData = new MutableLiveData<>();
     private MutableLiveData<String> mUserNameLiveData = new MutableLiveData<>();
     private MutableLiveData<String> mAddressLiveData;
-    private MutableLiveData<Integer> mCustomerResponseCode;
 
     private CustomerRepository mRepository;
     private LiveData<Customer> mCustomerLiveData;
-    private LiveData<Boolean> mRegisterLiveData;
     private LiveData<Customer> mSearchCustomer;
 
     private String mEmail;
@@ -50,10 +47,6 @@ public class AccountViewModel extends AndroidViewModel {
 
     public LiveData<Customer> getCustomerLiveData() {
         return mCustomerLiveData;
-    }
-
-    public LiveData<Boolean> getRegisterLiveData() {
-        return mRegisterLiveData;
     }
 
     public MutableLiveData<Set<String>> getAddressListLiveData() {
@@ -76,18 +69,12 @@ public class AccountViewModel extends AndroidViewModel {
         return mUserNameLiveData;
     }
 
-    public MutableLiveData<Integer> getCustomerResponseCode() {
-        return mCustomerResponseCode;
-    }
-
     public AccountViewModel(@NonNull Application application) {
         super(application);
         mRepository = CustomerRepository.getInstance();
         mCustomerLiveData = mRepository.getCustomerLiveData();
-        mRegisterLiveData = mRepository.getRegisterLiveData();
         mSearchCustomer = mRepository.getSearchEmailLiveData();
         mAddressLiveData = mRepository.getCurrentAddressLiveData();
-        mCustomerResponseCode = mRepository.getCustomerResponseCode();
     }
 
     public MutableLiveData<Boolean> getAlarmDialogStart() {
@@ -96,10 +83,6 @@ public class AccountViewModel extends AndroidViewModel {
 
     public MutableLiveData<Boolean> getLocatorClicked() {
         return mLocatorClicked;
-    }
-
-    public MutableLiveData<Boolean> getRequestPermission() {
-        return mRequestPermission;
     }
 
     public MutableLiveData<Boolean> getLoginClicked() {
@@ -122,9 +105,6 @@ public class AccountViewModel extends AndroidViewModel {
         mAlarmDialogStart.setValue(true);
     }
 
-    public boolean isTaskScheduled() {
-        return PollWorker.isWorkEnqueued(getApplication());
-    }
 
     public void onTextChangedEmail(CharSequence charSequence, int i, int i1, int i2) {
         mEmail = charSequence.toString();
@@ -161,13 +141,8 @@ public class AccountViewModel extends AndroidViewModel {
         mLocatorClicked.setValue(true);
     }
 
-    public void startLocate() {
-        mRequestPermission.setValue(true);
-    }
-
     public void onTextChangedAddress(CharSequence charSequence, int i, int i1, int i2) {
         mCurrentAddress = charSequence.toString();
-//        mAddressLiveData.setValue(charSequence.toString());
     }
 
     public void addAddressClicked(){
@@ -188,8 +163,6 @@ public class AccountViewModel extends AndroidViewModel {
         QueryPreferences.setCurrentAddressQuery(getApplication(), address);
         mClickedAddress.setValue(address);
         mRepository.getCurrentAddress(address);
-        //callback
-//        mAddressLiveData.setValue(address);
     }
 
     public void setCustomerSettingLiveData(){

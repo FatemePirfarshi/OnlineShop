@@ -26,8 +26,7 @@
         <action
             android:id="@+id/action_categoryListFragment_to_productListFragment"
             app:destination="@id/productListFragment"
-            app:popUpTo="@id/productListFragment"
-            app:popUpToInclusive="true">
+            >
             <argument
                 android:name="categoryName"
                 app:argType="string" />
@@ -36,6 +35,9 @@
             android:id="@+id/action_categoryListFragment_to_cartFragment"
             app:destination="@id/cartFragment" />
     </fragment>
+
+<!--    app:popUpTo="@id/productListFragment"-->
+<!--    app:popUpToInclusive="true"-->
     <fragment
         android:id="@+id/productListFragment"
         android:name="com.example.onlineshop.view.fragment.ProductListFragment"

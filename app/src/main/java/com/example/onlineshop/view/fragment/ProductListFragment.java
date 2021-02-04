@@ -55,18 +55,17 @@ public class ProductListFragment extends VisibleFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
         setLiveDataObservers();
 
-        NavController navController = NavHostFragment.findNavController(this);
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                navController.popBackStack(R.id.action_categoryListFragment_to_productListFragment, true);
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+//        NavController navController = NavHostFragment.findNavController(this);
+//        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                navController.popBackStack(R.id.action_categoryListFragment_to_productListFragment, true);
+//            }
+//        };
+//        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
     }
 
@@ -144,8 +143,6 @@ public class ProductListFragment extends VisibleFragment {
                 Navigation.findNavController(mBinding.getRoot()).navigate(R.id.productPageFragment, bundle);
             }
         });
-
-
     }
 
     private void openDrawer() {

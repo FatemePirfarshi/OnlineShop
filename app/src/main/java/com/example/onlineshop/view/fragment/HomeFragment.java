@@ -51,7 +51,7 @@ public class HomeFragment extends VisibleFragment {
         mProductListViewModel = new ViewModelProvider(this).get(ProductListViewModel.class);
 
 //fetch in splash avtivity
-        mHomeViewModel.fetchTotalProducts();
+//        mHomeViewModel.fetchTotalProducts();
 
         mHomeViewModel.fetchOfferPics();
         setLiveDataObservers();
@@ -62,14 +62,15 @@ public class HomeFragment extends VisibleFragment {
     }
 
     private void setLiveDataObservers() {
-        mHomeViewModel.getPerPage().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer perPage) {
-                mHomeViewModel.fetchPopularItems(perPage);
-                mHomeViewModel.fetchRecentItems(perPage);
-                mHomeViewModel.fetchTopItems(perPage);
-            }
-        });
+        //splash activity
+//        mHomeViewModel.getPerPage().observe(this, new Observer<Integer>() {
+//            @Override
+//            public void onChanged(Integer perPage) {
+//                mHomeViewModel.fetchPopularItems(perPage);
+//                mHomeViewModel.fetchRecentItems(perPage);
+//                mHomeViewModel.fetchTopItems(perPage);
+//            }
+//        });
         mHomeViewModel.getPopularItemsLiveData().observe(this, new Observer<List<ProductItem>>() {
             @Override
             public void onChanged(List<ProductItem> productItems) {

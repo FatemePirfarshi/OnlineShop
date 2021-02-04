@@ -10,6 +10,11 @@ import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.remote.retrofit.RetrofitInstance;
 import com.example.onlineshop.data.remote.retrofit.WoocommerceService;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.parser.Parser;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,12 +30,10 @@ public class ProductRepository {
     private WoocommerceService mWoocommerceServiceCategory;
     private WoocommerceService mWoocommerceServiceProduct;
     private WoocommerceService mWoocommerceServiceProductWithId;
-    private WoocommerceService mWoocommerceServiceCustomer;
 
     private List<ProductItem> mProductItems;
     private List<ProductItem> relatedItems;
     private List<CategoryItem> mCategoryItems = new ArrayList<>();
-//    private ProductItem mProductItem;
 
     private MutableLiveData<List<ProductItem>> mProductListLiveData = new MutableLiveData<>();
     private MutableLiveData<List<CategoryItem>> mCategoriesListLiveData = new MutableLiveData<>();
@@ -110,10 +113,8 @@ public class ProductRepository {
     }
 
     public static ProductRepository getInstance() {
-        if (sInstance == null) {
+        if (sInstance == null)
             sInstance = new ProductRepository();
-//            sInstance.fetchTotalProducts();
-        }
         return sInstance;
     }
 
@@ -121,11 +122,14 @@ public class ProductRepository {
         mWoocommerceServiceCategory = RetrofitInstance.getCategoryInstance().create(WoocommerceService.class);
         mWoocommerceServiceProduct = RetrofitInstance.getProductInstance().create(WoocommerceService.class);
         mWoocommerceServiceProductWithId = RetrofitInstance.getProductInstanceWithId().create(WoocommerceService.class);
-//        mWoocommerceServiceCustomer = RetrofitInstance.getCustomerInstance().create(WoocommerceService.class);
     }
 
     public void fetchCategoryItemsAsync(int page) {
-        mCategoriesListLiveData.setValue(new ArrayList<>());
+
+        if (page == 1) {
+            mCategoryItems = new ArrayList<>();
+            mCategoriesListLiveData.setValue(mCategoryItems);
+        }
 
         Call<List<CategoryItem>> call = mWoocommerceServiceCategory.listCategoryItems(
                 NetworkParams.getCategoryOptions(page));
@@ -143,9 +147,6 @@ public class ProductRepository {
                 }
                 List<CategoryItem> items = response.body();
                 mCategoryItems.addAll(items);
-                for (int i = 0; i < mCategoryItems.size(); i++) {
-                    Log.e(TAG, "this category id is: " + mCategoryItems.get(i).getId());
-                }
                 mCategoriesListLiveData.setValue(mCategoryItems);
             }
 
@@ -250,14 +251,11 @@ public class ProductRepository {
     }
 
     private Callback<List<ProductItem>> getItemsCallback(MutableLiveData<List<ProductItem>> itemsLiveData) {
-//        itemsLiveData.setValue(new ArrayList<>());
 
         return new Callback<List<ProductItem>>() {
             @Override
             public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
                 itemsLiveData.setValue(response.body());
-
-//                Log.e(TAG, "item image is : " + response.body().get(0).getImages().get(0));
             }
 
             @Override
@@ -275,9 +273,17 @@ public class ProductRepository {
             @Override
             public void onResponse(Call<ProductItem> call, Response<ProductItem> response) {
                 ProductItem mProductItem = response.body();
-                mProductItemLiveData.setValue(mProductItem);
                 fetchRelatedItems(mProductItem.getRelatedIds());
                 Log.e(TAG, "this item Clicked: " + response.body().getProductName());
+
+//                    Document doc = Jsoup.parse(response.body().getDescription(), "", Parser.htmlParser());
+//                    doc.select("br").first().remove();
+//                    doc.select("br").last().remove();
+//                    doc.select("p").first().remove();
+////                    doc.select("p").last().remove();
+//                    mProductItem.setDescription(doc.body().text());
+
+                mProductItemLiveData.setValue(mProductItem);
             }
 
             @Override
@@ -285,7 +291,6 @@ public class ProductRepository {
                 Log.e(TAG, t.getMessage(), t);
             }
         });
-//        fetchRelatedItems(mProductItem.getRelatedIds());
     }
 
     public void fetchRelatedItems(List<Integer> relatedProductsId) {
@@ -300,8 +305,6 @@ public class ProductRepository {
                 public void onResponse(Call<ProductItem> call, Response<ProductItem> response) {
                     relatedItems.add(response.body());
                     mRelatedItemsLiveData.setValue(relatedItems);
-
-//                    Log.e("RelatedItems", "related item is: " + response.body().getProductName());
                 }
 
                 @Override
@@ -322,10 +325,7 @@ public class ProductRepository {
         call.enqueue(new Callback<List<ProductItem>>() {
             @Override
             public void onResponse(Call<List<ProductItem>> call, Response<List<ProductItem>> response) {
-//                mSearchItemsLiveData.setValue(response.body());
                 mProductListLiveData.setValue(response.body());
-//                String res = response.body().get(0).getProductName();
-//                Log.e("SearchActivity", res);
             }
 
             @Override

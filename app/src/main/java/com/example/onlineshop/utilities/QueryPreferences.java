@@ -2,6 +2,7 @@ package com.example.onlineshop.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.onlineshop.data.model.ProductItem;
 import com.google.gson.Gson;
@@ -129,9 +130,22 @@ public class QueryPreferences {
     }
 
     public static void removeCartProduct(Context context, ProductItem item) {
+//        SharedPreferences preferences;
+
         ArrayList<ProductItem> productItems = getCartProducts(context);
         if (productItems != null) {
+
+            getSharedPreferences(context)
+                    .edit()
+                    .remove(PREF_CART_PRODUCT)
+                    .apply();
+
+//            SharedPreferences.Editor editor = setting.edit();
             productItems.remove(item);
+            for (int i = 0; i < productItems.size() ; i++) {
+                Log.e("deleteFromPref", productItems.get(i).getProductName());
+            }
+            Log.e("deleteFromPref", item.getProductName());
             setCartProducts(context, productItems);
         }
     }

@@ -1,6 +1,7 @@
 package com.example.onlineshop.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -52,7 +53,15 @@ public class CartViewModel extends AndroidViewModel {
 
     public void deleteFromCart(ProductItem item) {
         QueryPreferences.removeCartProduct(getApplication(), item);
+        Log.e("Delete", mCartProductItem.getValue().get(0) + "deleted");
+        for (int i = 0; i < QueryPreferences.getCartProducts(getApplication()).size(); i++) {
+            Log.e("Dalate","cartProducts "+ QueryPreferences.getCartProducts(getApplication()).get(i).getProductName());
+        }
     }
+
+//    public void deleteFromCartWithPosition(int position){
+//        QueryPreferences.removeCartProductWithPosition(getApplication(), position);
+//    }
 
     public void addAgain(ProductItem item) {
         int count = item.getCountInCart();

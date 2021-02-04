@@ -46,7 +46,6 @@ public class AccountFragment extends VisibleFragment {
         mAccountViewModel.setAddressItems();
 
         mAccountViewModel.fetchCurrentUser();
-        mAccountViewModel.setCustomerSettingLiveData();
     }
 
     @Override
@@ -113,39 +112,7 @@ public class AccountFragment extends VisibleFragment {
                 }
             }
         });
-//        LiveData<Boolean> registeredLiveData = mAccountViewModel.getRegisterLiveData();
-//        registeredLiveData.observe(getViewLifecycleOwner(), new SingleEventObserver<Boolean>(this, registeredLiveData) {
-//            @Override
-//            public void onChanged(Boolean aBoolean) {
-//                super.onChanged(aBoolean);
-//                if (aBoolean)
-//                    Toast.makeText(
-//                            getActivity(),
-//                            R.string.sign_in_successful,
-//                            Toast.LENGTH_LONG).show();
-//                else
-//                    Toast.makeText(
-//                            getActivity(),
-//                            R.string.invalidate_email_or_registered,
-//                            Toast.LENGTH_LONG).show();
-//            }
-//        });
 
-//        mAccountViewModel.getCustomerResponseCode().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-//            @Override
-//            public void onChanged(Integer integer) {
-//                if(integer == 201)
-//                    Toast.makeText(
-//                            getActivity(),
-//                            R.string.sign_in_successful,
-//                            Toast.LENGTH_LONG).show();
-//                if(integer == 400)
-//                    Toast.makeText(
-//                            getActivity(),
-//                            R.string.invalidate_email_or_registered,
-//                            Toast.LENGTH_LONG).show();
-//            }
-//        });
         mAccountViewModel.getCustomerLiveData().observe(getViewLifecycleOwner(), new Observer<Customer>() {
             @Override
             public void onChanged(Customer customer) {
@@ -161,6 +128,8 @@ public class AccountFragment extends VisibleFragment {
                             getActivity(),
                             R.string.invalidate_email_or_registered,
                             Toast.LENGTH_LONG).show();
+
+                mAccountViewModel.setCustomerSettingLiveData();
             }
         });
         mAccountViewModel.getSearchCustomer().observe(getViewLifecycleOwner(), new Observer<Customer>() {
@@ -179,6 +148,7 @@ public class AccountFragment extends VisibleFragment {
                     mBinding.etEmail.setText(QueryPreferences.getEmailQuery(getActivity()));
                     mBinding.etUserName.setText(QueryPreferences.getUserNameQuery(getActivity()));
                 }
+                mAccountViewModel.setCustomerSettingLiveData();
             }
         });
         mAccountViewModel.getCustomerLiveData().observe(getViewLifecycleOwner(), new Observer<Customer>() {
@@ -196,7 +166,6 @@ public class AccountFragment extends VisibleFragment {
             @Override
             public void onChanged(String s) {
                 QueryPreferences.setCurrentAddressQuery(getActivity(), s);
-//                Log.e("useAddressFrag",s);
                 mBinding.etAddress.setText(QueryPreferences.getCurrentAddressQuery(getActivity()));
             }
         });
