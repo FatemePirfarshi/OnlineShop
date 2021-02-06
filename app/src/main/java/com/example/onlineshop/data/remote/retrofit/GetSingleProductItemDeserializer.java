@@ -49,29 +49,6 @@ public class GetSingleProductItemDeserializer implements JsonDeserializer<Produc
 
         String description = jsonObject.get("description").getAsString();
 
-//        String html = description;
-//        Document doc = Jsoup.parse(html);
-//
-//        doc.select("<br/>").remove();
-//        doc.select("br").last().remove();
-//        doc.select("<p/>").remove();
-//        doc.select("p").last().remove();
-//        description = doc.body().text();
-        //        Document doc = Jsoup.parse(description, "", Parser.htmlParser());
-//        Element imgs = doc.select("des");
-//        imgs.remove();
-//        String jsoupUrl = NetworkParams.BASE_URL
-//                + "products/" + id + "?consumer_key="
-//                + NetworkParams.CONSUMER_KEY +
-//                "&consumer_secret=" + NetworkParams.CONSUMER_SECRET;
-//        try {
-//            Document document = Jsoup.connect(jsoupUrl).get();
-//            description = document.ownText();
-////            description = document.select("description").first().absUrl("description");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         JsonArray photoArray = jsonObject.get("images").getAsJsonArray();
         List<String> photoUrl = new ArrayList<>();
         for (int j = 0; j < photoArray.size(); j++) {

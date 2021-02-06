@@ -13,6 +13,7 @@ import com.example.onlineshop.data.remote.retrofit.WoocommerceService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.parser.Parser;
+import org.jsoup.safety.Whitelist;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -276,14 +277,19 @@ public class ProductRepository {
                 fetchRelatedItems(mProductItem.getRelatedIds());
                 Log.e(TAG, "this item Clicked: " + response.body().getProductName());
 
-//                    Document doc = Jsoup.parse(response.body().getDescription(), "", Parser.htmlParser());
-//                    doc.select("br").first().remove();
-//                    doc.select("br").last().remove();
-//                    doc.select("p").first().remove();
-////                    doc.select("p").last().remove();
-//                    mProductItem.setDescription(doc.body().text());
-
-                //todo
+                String html = mProductItem.getDescription();
+                if(html != null){
+                    Document document = Jsoup.parse(html);
+                    document.outputSettings(new Document.OutputSettings().prettyPrint(false));
+                    document.select("br").append("\\n");
+                    document.select("p").append("\\n\\n");
+                    String s = document.html().replaceAll("\\\\n", "\n");
+                    mProductItem.setDescription(Jsoup.clean(
+                                    s,
+                                    "",
+                                    Whitelist.none(),
+                                    new Document.OutputSettings().prettyPrint(false)));
+                }
                 mProductItemLiveData.setValue(mProductItem);
             }
 

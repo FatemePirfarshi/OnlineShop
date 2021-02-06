@@ -41,10 +41,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_alignParentTop="true"
-                    android:layout_marginTop="12dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="16dp"
                     android:layout_marginRight="24dp"
-                    android:paddingRight="16dp"
-                    android:layout_toLeftOf="@id/tv_username"
+                    android:paddingRight="8dp"
                     android:layout_alignBottom="@id/tv_username"
                     android:text="@{productPageViewModel.reviewsLiveData.get(position).rating + @string/rate}"
                     android:textColor="@color/purple" />

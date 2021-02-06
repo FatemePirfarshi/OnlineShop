@@ -13,6 +13,10 @@ import com.example.onlineshop.data.remote.NetworkParams;
 import com.example.onlineshop.data.remote.retrofit.RetrofitInstance;
 import com.example.onlineshop.data.remote.retrofit.WoocommerceService;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Whitelist;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -177,7 +181,24 @@ public class CustomerRepository {
         call.enqueue(new Callback<List<Review>>() {
             @Override
             public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
-                mReviewsLiveData.setValue(response.body());
+                List<Review> reviewItems = response.body();
+                for (int i = 0; i < reviewItems.size(); i++) {
+                    String html = reviewItems.get(i).getReview();
+                    if(html != null){
+                        Document document = Jsoup.parse(html);
+                        document.outputSettings(new Document.OutputSettings().prettyPrint(false));
+                        document.select("br").append("\\n");
+                        document.select("p").append("\\n\\n");
+                        String s = document.html().replaceAll("\\\\n", "\n");
+                        reviewItems.get(i).setReview(Jsoup.clean(
+                                s,
+                                "",
+                                Whitelist.none(),
+                                new Document.OutputSettings().prettyPrint(false)));
+                    }
+                }
+
+                mReviewsLiveData.setValue(reviewItems);
             }
 
             @Override
