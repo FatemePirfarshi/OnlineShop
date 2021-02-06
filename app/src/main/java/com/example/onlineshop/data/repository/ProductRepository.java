@@ -283,6 +283,7 @@ public class ProductRepository {
 ////                    doc.select("p").last().remove();
 //                    mProductItem.setDescription(doc.body().text());
 
+                //todo
                 mProductItemLiveData.setValue(mProductItem);
             }
 

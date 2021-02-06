@@ -129,7 +129,8 @@ public class CustomerRepository {
             @Override
             public void onResponse(Call<List<Customer>> call, Response<List<Customer>> response) {
                 if (response.isSuccessful()) {
-                    mCustomerLiveData.setValue(response.body().get(0));
+
+                        mCustomerLiveData.setValue(response.body().get(0));
                     Log.e(TAG, "searchEmail:" + response.body().get(0).getEmail());
                     Log.e(TAG, "searchId:" + response.body().get(0).getId());
 

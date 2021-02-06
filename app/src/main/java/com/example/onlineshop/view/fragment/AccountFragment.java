@@ -154,10 +154,11 @@ public class AccountFragment extends VisibleFragment {
         mAccountViewModel.getCustomerLiveData().observe(getViewLifecycleOwner(), new Observer<Customer>() {
             @Override
             public void onChanged(Customer customer) {
-                if(customer != null) {
+                if (customer != null) {
                     QueryPreferences.setEmailQuery(getActivity(), customer.getEmail());
                     QueryPreferences.setUserNameQuery(getActivity(), customer.getUserName());
-                    QueryPreferences.setIdQuery(getActivity(), customer.getId());
+                    if (customer.getId() != null)
+                        QueryPreferences.setIdQuery(getActivity(), customer.getId());
                 }
             }
         });
